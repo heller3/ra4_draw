@@ -17,8 +17,9 @@ An example script is available under src/test.cxx. To execute, compile and then 
     ./run/core/test.exe
     
 Another example for WH is here:
+    ```
     ./run/wh/plot_datamc.exe
-    
+    ```
 ##### Adding branches
 
 The list of branches available for plotting must be specified in txt/variables/full
