@@ -772,7 +772,7 @@ void WriteBaseSource(const set<Variable> &vars){
   file << "void Baby::ActivateChain(){\n";
   file << "  if(chain_) ERROR(\"Chain has already been initialized\");\n";
   file << "  lock_guard<mutex> lock(Multithreading::root_mutex);\n";
-  file << "  chain_ = unique_ptr<TChain>(new TChain(\"tree\"));\n";
+  file << "  chain_ = unique_ptr<TChain>(new TChain(\"t\"));\n";
   file << "  for(const auto &file: file_names_){\n";
   file << "    chain_->Add(file.c_str());\n";
   file << "  }\n";

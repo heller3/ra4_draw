@@ -296,6 +296,8 @@ string CodeToRootTex(string code){
   ReplaceAll(code, "==", " = ");
   ReplaceAll(code, "met_calo", "E_{T,calo}^{miss}");
   ReplaceAll(code, "higd_am","#LTm#GT");
+  ReplaceAll(code, "pfmet", "p_{T}^{miss}");
+  ReplaceAll(code, "mt_met_lep", "m_{T}");
   ReplaceAll(code, "met", "p_{T}^{miss}");
   ReplaceAll(code, "ht_hlt", "H_{T}^{HLT}");
   ReplaceAll(code, "mht", "MHT");
