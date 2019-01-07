@@ -42,3 +42,13 @@ std::vector<float> leps_pt
 std::vector<float> leps_eta
 std::vector<float> leps_phi
 std::vector<float> leps_id
+
+std::vector<float> els_pt
+std::vector<float> els_eta
+std::vector<float> els_phi
+std::vector<float> els_id
+
+std::vector<float> mus_pt
+std::vector<float> mus_eta
+std::vector<float> mus_phi
+std::vector<float> mus_id

@@ -57,8 +57,8 @@ int main(){
 
   double lumi = 35.9;
 
-  string mc_dir = "/Users/rheller/babies/babies_06_01_2018/";
-  string signal_dir = "/Users/rheller/babies/fastsim_noskim_newweights2/";
+  string mc_dir = "/afs/cern.ch/user/k/ksalyer/work/wh_analysis/wh_babies/";
+  string signal_dir = "/afs/cern.ch/user/k/ksalyer/work/wh_analysis/wh_babies/";
   Palette colors("txt/colors.txt", "default");
 
   auto tt1l = Process::MakeShared<Baby_full>("t#bar{t} (1l)", Process::Type::background, colors("tt_1l"),
@@ -109,7 +109,10 @@ int main(){
 
 
 //"ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"
-  NamedFunc preselection = "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV;
+  NamedFunc preselection = "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
+  NamedFunc cr2l_1lep = "ngoodleps==1&&!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
+  NamedFunc cr2l_2lep = "ngoodleps==1&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
+  NamedFunc cr2l = "(ngoodleps==1&&!PassTrackVeto&&!PassTauVeto)||(ngoodleps==1&&nvetoleps==2&&PassTrackVeto&&PassTauVeto)&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
   NamedFunc signalRegion = "mbb>90&&mbb<150&&mct>170&&mt_met_lep>150";
 
 
@@ -130,8 +133,53 @@ int main(){
                   preselection, sample_list, all_plot_types);
 
   pm.Push<Hist1D>(Axis(7, 0, 7, "ngoodjets", "N_{jets}"),
-                  "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV, 
-                  sample_list, all_plot_types);
+                  "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV,
+		  sample_list, all_plot_types);
+
+  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),
+                  cr2l, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "leading b jet p_{T} [GeV]"),
+                  cr2l, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "subleading b jet p_{T} [GeV]"),
+                  cr2l, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  cr2l, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T}(l;#nu) [GeV]"),
+                  cr2l, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  cr2l, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+                  cr2l, sample_list, all_plot_types);
+  
+  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),
+                  cr2l_1lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "leading b jet p_{T} [GeV]"),
+                  cr2l_1lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "subleading b jet p_{T} [GeV]"),
+                  cr2l_1lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  cr2l_1lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T}(l;#nu) [GeV]"),
+                  cr2l_1lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  cr2l_1lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+                  cr2l_1lep, sample_list, all_plot_types);
+
+  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),
+                  cr2l_2lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "leading b jet p_{T} [GeV]"),
+                  cr2l_2lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "subleading b jet p_{T} [GeV]"),
+                  cr2l_2lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  cr2l_2lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T}(l;#nu) [GeV]"),
+                  cr2l_2lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  cr2l_2lep, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+                  cr2l_2lep, sample_list, all_plot_types);
 
   //Signal region
  /* pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
