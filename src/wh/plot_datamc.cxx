@@ -57,8 +57,8 @@ int main(){
 
   double lumi = 35.9;
 
-  string mc_dir = "/afs/cern.ch/user/k/ksalyer/work/wh_analysis/wh_babies/";
-  string signal_dir = "/afs/cern.ch/user/k/ksalyer/work/wh_analysis/wh_babies/";
+  string mc_dir = "/home/users/rheller/wh_babies/babies_2019_01_07/";
+  string signal_dir = "/home/users/rheller/wh_babies/babies_2019_01_06/";
   Palette colors("txt/colors.txt", "default");
 
   auto tt1l = Process::MakeShared<Baby_full>("t#bar{t} (1l)", Process::Type::background, colors("tt_1l"),
@@ -109,10 +109,10 @@ int main(){
 
 
 //"ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"
-  NamedFunc preselection = "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
+  NamedFunc preselection = "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV;
   NamedFunc cr2l_1lep = "ngoodleps==1&&!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
   NamedFunc cr2l_2lep = "ngoodleps==1&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
-  NamedFunc cr2l = "(ngoodleps==1&&!PassTrackVeto&&!PassTauVeto)||(ngoodleps==1&&nvetoleps==2&&PassTrackVeto&&PassTauVeto)&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
+  NamedFunc cr2l = "((ngoodleps==1&&!PassTrackVeto&&!PassTauVeto)||(ngoodleps==1&&nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
   NamedFunc signalRegion = "mbb>90&&mbb<150&&mct>170&&mt_met_lep>150";
 
 

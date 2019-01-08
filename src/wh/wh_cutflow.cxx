@@ -49,8 +49,9 @@ int main(){
 
   double lumi = 35.9;
 
-  string mc_dir = "/Users/rheller/babies/babies_06_01_2018/";
-  string signal_dir = "/Users/rheller/babies/fastsim_noskim_newweights2/";//"/Users/rheller/babies/fastsim_noskim/";
+  string mc_dir = "/home/users/rheller/wh_babies/babies_2019_01_07/";
+  string signal_dir = "/home/users/rheller/wh_babies/babies_2019_01_06/";
+
   string hostname = execute("echo $HOSTNAME");
   if(Contains(hostname, "cms") || Contains(hostname,"compute-")){
     signal_dir = "/net/cms29";
@@ -89,7 +90,7 @@ int main(){
     {signal_dir+"*SMS-TChiWH_WToLNu_HToBB_TuneCUETP8M1_13TeV-madgraphMLM-pythia8*.root"},"mass_stop==500&&mass_lsp==125");
 
 
-  vector<shared_ptr<Process> > sample_list = {ttv,single_t,diboson,tt1l,tt2l,tchiwh_225_75,tchiwh_250_1,tchiwh_350_100, tchiwh_nc, tchiwh_c};
+  vector<shared_ptr<Process> > sample_list = {ttv,single_t,diboson,wjets,tt1l,tt2l,tchiwh_225_75,tchiwh_250_1,tchiwh_350_100, tchiwh_nc, tchiwh_c};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
@@ -129,7 +130,7 @@ int main(){
       TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.)
 
 
-        }, sample_list);
+        }, sample_list,false);
 
   Table & cutflow_no_weight = pm.Push<Table>("cutflow_raw", vector<TableRow>{
       TableRow("1 good lep,","ngoodleps>=1",0,0,"1"),
@@ -145,24 +146,24 @@ int main(){
       TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"1"),
       TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"1")
 
-        }, sample_list);
+        }, sample_list,false);
 
   Table & cutflow_no_btag_sf = pm.Push<Table>("cutflow_no_btag_sf", vector<TableRow>{
-      TableRow("1 good lep,","ngoodleps>=1",0,0,"w_noBtagSF"),
+      TableRow("1 good lep","ngoodleps>=1",0,0,"w_noBtagSF"),
       TableRow("2nd lep veto","ngoodleps==1",0,0,"w_noBtagSF"),
       TableRow("Pass track veto", "ngoodleps==1&&PassTrackVeto",0,0,"w_noBtagSF"),
       TableRow("Pass tau veto", "ngoodleps==1&&PassTrackVeto&&PassTauVeto",0,0,"w_noBtagSF"),
       TableRow("==2jets", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"w_noBtagSF"),
-      TableRow("one loose, one med", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("==2btags", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("M$_{\\rm b\bar{b}}$ window", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("one loose, one med btag", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+     // TableRow("==2btags", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("M$_{\\rm b\\bar{b}}$ window", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
       TableRow("M$_{\\rm CT}>$ 170 GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
       TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
       TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("$125<$E$_{\\rm T}^{\\rm miss}<200$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&pfmet<200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
       TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF")
 
-        }, sample_list);
-
+        }, sample_list,false);
 
 
 //   Table & cutflow = pm.Push<Table>("cutflow", vector<TableRow>{
