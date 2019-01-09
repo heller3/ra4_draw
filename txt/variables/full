@@ -15,6 +15,11 @@ float weight
 float w_noBtagSF
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_pt
+int HLT_SingleEl
+int HLT_SingleMu
+bool pass
+bool goodrun
+bool duplicate
 
 ### isolated tracks ###
 std::vector<int> isoTracks_charge;
