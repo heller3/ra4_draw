@@ -15,6 +15,10 @@ float weight
 float w_noBtagSF
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_pt
+int lep1_pdgid
+int lep2_pdgid
+float lep1_relIso
+float lep2_relIso
 int HLT_SingleEl
 int HLT_SingleMu
 bool pass

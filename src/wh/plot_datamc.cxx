@@ -28,6 +28,19 @@ NamedFunc HasMedLooseCSV("HasMedLooseCSV",[](const Baby &b) -> NamedFunc::Scalar
     else return 0;
   });
 
+NamedFunc WHLeptons("WHLeptons",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nwhleptons=0;
+    if (abs(b.lep1_pdgid())==11&&b.leps_pt()->at(0)>=30&&b.lep1_relIso()*b.leps_pt()->at(0)<=5) nwhleptons++;
+    if (abs(b.lep1_pdgid())==13&&b.leps_pt()->at(0)>=25&&b.lep1_relIso()*b.leps_pt()->at(0)<=5&&abs(b.leps_eta()->at(0))<=2.1) nwhleptons++;
+    
+    if (b.leps_pt()->size()==2){
+      if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>=30&&b.lep2_relIso()*b.leps_pt()->at(1)<=5) nwhleptons++;
+      if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>=25&&b.lep2_relIso()*b.leps_pt()->at(1)<=5&&abs(b.leps_eta()->at(1))<=2.1) nwhleptons++;
+    }
+   
+    return nwhleptons;
+  });
+
 NamedFunc LeadingBJetPt("LeadingBJetPt",[](const Baby &b) -> NamedFunc::ScalarType{
     float maxpt=0;
     for (unsigned i(0); i<b.ak4pfjets_CSV()->size(); i++){
@@ -51,16 +64,18 @@ NamedFunc SubLeadingBJetPt("SubLeadingBJetPt",[](const Baby &b) -> NamedFunc::Sc
     return secondmax;
   });
 
-
 int main(){
   gErrorIgnoreLevel = 6000;
 
   double lumi = 35.9;
 
+  string data_dir = "/home/users/rheller/wh_babies/babies_2019_01_08/";
   string mc_dir = "/home/users/rheller/wh_babies/babies_2019_01_07/";
   string signal_dir = "/home/users/rheller/wh_babies/babies_2019_01_06/";
+  
   Palette colors("txt/colors.txt", "default");
 
+  auto data = Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"),{data_dir+"*data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1)");
   auto tt1l = Process::MakeShared<Baby_full>("t#bar{t} (1l)", Process::Type::background, colors("tt_1l"),
     {mc_dir+"*TTJets_1lep*ext1*.root"});
   auto tt2l = Process::MakeShared<Baby_full>("t#bar{t} (2l)", Process::Type::background, colors("tt_2l"),
@@ -89,11 +104,11 @@ int main(){
     {signal_dir+"*SMS-TChiWH_WToLNu_HToBB_TuneCUETP8M1_13TeV-madgraphMLM-pythia8*.root"},"mass_stop==250&&mass_lsp==1");
 
 
-  vector<shared_ptr<Process> > sample_list = {tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets, single_t, ttv, diboson};
+  vector<shared_ptr<Process> > sample_list = {data, tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets, single_t, ttv, diboson};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
-    //.Bottom(BottomType::ratio)
+    .Bottom(BottomType::ratio)
     .YAxis(YAxisType::log)
     .Stack(StackType::data_norm);
   PlotOpt lin_lumi = log_lumi().YAxis(YAxisType::linear);
@@ -109,11 +124,13 @@ int main(){
 
 
 //"ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"
-  NamedFunc preselection = "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV;
-  NamedFunc cr2l_1lep = "ngoodleps==1&&!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
-  NamedFunc cr2l_2lep = "ngoodleps==1&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
-  NamedFunc cr2l = "((ngoodleps==1&&!PassTrackVeto&&!PassTauVeto)||(ngoodleps==1&&nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV;
+  NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons;
+  NamedFunc cr2l_1lep = "!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons;
+  NamedFunc cr2l_2lep = "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons;
+  NamedFunc cr2l = "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2&&PassTrackVeto&&PassTauVeto))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons;
   NamedFunc signalRegion = "mbb>90&&mbb<150&&mct>170&&mt_met_lep>150";
+
+  NamedFunc preselectionTest = "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV;
 
 
   PlotMaker pm;
@@ -131,7 +148,15 @@ int main(){
                   preselection, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
                   preselection, sample_list, all_plot_types);
-
+  pm.Push<Hist1D>(Axis(25, 0, 500., "els_pt", "Electron p_{T}"),
+		  preselection, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mus_pt", "Muon p_{T}"),
+		  preselection, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(70, -3, 3, "els_eta", "Electron #eta"),
+		  preselection, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(70, -3, 3, "mus_eta", "Muon #eta"),
+		  preselection, sample_list, all_plot_types);
+  
   pm.Push<Hist1D>(Axis(7, 0, 7, "ngoodjets", "N_{jets}"),
                   "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV,
 		  sample_list, all_plot_types);
@@ -181,6 +206,20 @@ int main(){
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
                   cr2l_2lep, sample_list, all_plot_types);
 
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  preselectionTest, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
+                  preselectionTest, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+                  preselectionTest, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "Leading b-jet p_{T} [GeV]"),
+                  preselectionTest, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "Subleading b-jet p_{T} [GeV]"),
+                  preselectionTest, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  preselectionTest, sample_list, all_plot_types);
+
+  
   //Signal region
  /* pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
                   preselection&&signalRegion, sample_list, all_plot_types);
