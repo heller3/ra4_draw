@@ -159,6 +159,22 @@ int main(){
   pm.Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{bb} [GeV]"),
 		  cr0b, sample_list, all_plot_types);
 
+  //cr0b_pfmet50
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "Leading b-jet p_{T} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "Subleading b-jet p_{T} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{bb} [GeV]"),
+                  cr0b_pfmet50, sample_list, all_plot_types);
+
   //crmbb
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
                   crmbb, sample_list, all_plot_types);
@@ -174,23 +190,6 @@ int main(){
 		  crmbb, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{bb} [GeV]"),
   crmbb, sample_list, all_plot_types);
-
-  
-  //crmbb_pfmet50
-  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  crmbb_pfmet50, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  crmbb_pfmet50, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "Lepton p_{T} [GeV]"),
-                  crmbb_pfmet50, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "Leading b-jet p_{T} [GeV]"),
-                  crmbb_pfmet50, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "Subleading b-jet p_{T} [GeV]"),
-                  crmbb_pfmet50, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  crmbb_pfmet50, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{bb} [GeV]"),
-		  crmbb_pfmet50, sample_list, all_plot_types);
 
   //Signal region
  /* pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
