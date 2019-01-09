@@ -30,12 +30,12 @@ NamedFunc HasMedLooseCSV("HasMedLooseCSV",[](const Baby &b) -> NamedFunc::Scalar
 
 NamedFunc WHLeptons("WHLeptons",[](const Baby &b) -> NamedFunc::ScalarType{
     int nwhleptons=0;
-    if (abs(b.lep1_pdgid())==11&&b.leps_pt()->at(0)>=30&&b.lep1_relIso()*b.leps_pt()->at(0)<=5) nwhleptons++;
-    if (abs(b.lep1_pdgid())==13&&b.leps_pt()->at(0)>=25&&b.lep1_relIso()*b.leps_pt()->at(0)<=5&&abs(b.leps_eta()->at(0))<=2.1) nwhleptons++;
+    if (abs(b.lep1_pdgid())==11&&b.leps_pt()->at(0)>30&&b.lep1_relIso()*b.leps_pt()->at(0)<5) nwhleptons++;
+    if (abs(b.lep1_pdgid())==13&&b.leps_pt()->at(0)>25&&b.lep1_relIso()*b.leps_pt()->at(0)<5&&abs(b.leps_eta()->at(0))<2.1) nwhleptons++;
     
     if (b.leps_pt()->size()==2){
-      if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>=30&&b.lep2_relIso()*b.leps_pt()->at(1)<=5) nwhleptons++;
-      if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>=25&&b.lep2_relIso()*b.leps_pt()->at(1)<=5&&abs(b.leps_eta()->at(1))<=2.1) nwhleptons++;
+      if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>30&&b.lep2_relIso()*b.leps_pt()->at(1)<5) nwhleptons++;
+      if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>25&&b.lep2_relIso()*b.leps_pt()->at(1)<5&&abs(b.leps_eta()->at(1))<2.1) nwhleptons++;
     }
    
     return nwhleptons;
