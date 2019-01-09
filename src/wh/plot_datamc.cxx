@@ -124,13 +124,11 @@ int main(){
 
 
 //"ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"
-  NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons;
-  NamedFunc cr2l_1lep = "!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons;
-  NamedFunc cr2l_2lep = "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons;
-  NamedFunc cr2l = "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2&&PassTrackVeto&&PassTauVeto))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons;
+  NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons==1;
+  NamedFunc cr2l_1lep = "!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
+  NamedFunc cr2l_2lep = "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
+  NamedFunc cr2l = "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2&&PassTrackVeto&&PassTauVeto))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
   NamedFunc signalRegion = "mbb>90&&mbb<150&&mct>170&&mt_met_lep>150";
-
-  NamedFunc preselectionTest = "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV;
 
 
   PlotMaker pm;
@@ -205,19 +203,6 @@ int main(){
                   cr2l_2lep, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
                   cr2l_2lep, sample_list, all_plot_types);
-
-  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  preselectionTest, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  preselectionTest, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "Lepton p_{T} [GeV]"),
-                  preselectionTest, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "Leading b-jet p_{T} [GeV]"),
-                  preselectionTest, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "Subleading b-jet p_{T} [GeV]"),
-                  preselectionTest, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  preselectionTest, sample_list, all_plot_types);
 
   
   //Signal region
