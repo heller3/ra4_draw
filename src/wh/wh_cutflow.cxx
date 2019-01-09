@@ -43,6 +43,19 @@ NamedFunc HasMedLooseCSV("HasMedLooseCSV",[](const Baby &b) -> NamedFunc::Scalar
     else return 0;
   });
 
+NamedFunc WHLeptons("WHLeptons",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nwhleptons=0;
+    if (abs(b.lep1_pdgid())==11&&b.leps_pt()->at(0)>=30&&b.lep1_relIso()*b.leps_pt()->at(0)<=5) nwhleptons++;
+    if (abs(b.lep1_pdgid())==13&&b.leps_pt()->at(0)>=25&&b.lep1_relIso()*b.leps_pt()->at(0)<=5&&abs(b.leps_eta()->at(0))<=2.1) nwhleptons++;
+    
+    if (b.leps_pt()->size()==2){
+      if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>=30&&b.lep2_relIso()*b.leps_pt()->at(1)<=5) nwhleptons++;
+      if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>=25&&b.lep2_relIso()*b.leps_pt()->at(1)<=5&&abs(b.leps_eta()->at(1))<=2.1) nwhleptons++;
+    }
+   
+    return nwhleptons;
+  });
+
 int main(){
   gErrorIgnoreLevel = 6000;
   
@@ -118,82 +131,82 @@ int main(){
 
 
   Table & cutflow = pm.Push<Table>("cutflow", vector<TableRow>{
-      TableRow("1 good lep,","ngoodleps>=1"),
-      TableRow("2nd lep veto","ngoodleps==1"),
-      TableRow("Pass track veto", "ngoodleps==1&&PassTrackVeto"),
-      TableRow("Pass tau veto", "ngoodleps==1&&PassTrackVeto&&PassTauVeto"),
-      TableRow("==2jets", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"),
-      TableRow("one loose, one med", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.),
-      TableRow("==2btags", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.),
-      TableRow("M$_{\\rm b\\bar{b}}$ window", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.),
-      TableRow("M$_{\\rm CT}>170$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.),
-      TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.),
-      TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.),
-      TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.)
+      TableRow("1 good lep,",WHLeptons>=1),
+      TableRow("2nd lep veto",WHLeptons==1),
+      TableRow("Pass track veto", WHLeptons==1&&"PassTrackVeto"),
+      TableRow("Pass tau veto", WHLeptons==1&&"PassTrackVeto&&PassTauVeto"),
+      TableRow("==2jets", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2"),
+      TableRow("one loose, one med", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.),
+      TableRow("==2btags", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.),
+      TableRow("M$_{\\rm b\\bar{b}}$ window", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.),
+      TableRow("M$_{\\rm CT}>170$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.),
+      TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.),
+      TableRow("M$_{\\rm T}>150$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.),
+      TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.)
 
 
         }, sample_list,false);
 
   Table & cutflow_no_weight = pm.Push<Table>("cutflow_raw", vector<TableRow>{
-      TableRow("1 good lep,","ngoodleps>=1",0,0,"1"),
-      TableRow("2nd lep veto","ngoodleps==1",0,0,"1"),
-      TableRow("Pass track veto", "ngoodleps==1&&PassTrackVeto",0,0,"1"),
-      TableRow("Pass tau veto", "ngoodleps==1&&PassTrackVeto&&PassTauVeto",0,0,"1"),
-      TableRow("==2jets", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"1"),
-      TableRow("one loose, one med", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.,0,0,"1"),
-      TableRow("==2btags", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.,0,0,"1"),
-      TableRow("M$_{\\rm b\\bar{b}}$ window", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.,0,0,"1"),
-      TableRow("M$_{\\rm CT}>$ 170 GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.,0,0,"1"),
-      TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.,0,0,"1"),
-      TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"1"),
-      TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"1")
+      TableRow("1 good lep,",WHLeptons>=1,0,0,"1"),
+      TableRow("2nd lep veto",WHLeptons==1,0,0,"1"),
+      TableRow("Pass track veto", WHLeptons==1&&"PassTrackVeto",0,0,"1"),
+      TableRow("Pass tau veto", WHLeptons==1&&"PassTrackVeto&&PassTauVeto",0,0,"1"),
+      TableRow("==2jets", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"1"),
+      TableRow("one loose, one med", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.,0,0,"1"),
+      TableRow("==2btags", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.,0,0,"1"),
+      TableRow("M$_{\\rm b\\bar{b}}$ window", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.,0,0,"1"),
+      TableRow("M$_{\\rm CT}>$ 170 GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.,0,0,"1"),
+      TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.,0,0,"1"),
+      TableRow("M$_{\\rm T}>150$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"1"),
+      TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", WHLeptons==1&&"PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"1")
 
         }, sample_list,false);
 
   Table & cutflow_no_btag_sf = pm.Push<Table>("cutflow_no_btag_sf", vector<TableRow>{
-      TableRow("1 good lep","ngoodleps>=1",0,0,"w_noBtagSF"),
-      TableRow("2nd lep veto","ngoodleps==1&&nvetoleps==1",0,0,"w_noBtagSF"),
-      TableRow("Pass track veto", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto",0,0,"w_noBtagSF"),
-      TableRow("Pass tau veto", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto",0,0,"w_noBtagSF"),
-      TableRow("==2jets", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"w_noBtagSF"),
-      TableRow("one loose, one med btag", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-     // TableRow("==2btags", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("M$_{\\rm b\\bar{b}}$ window", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("M$_{\\rm CT}>$ 170 GeV", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("$125<$E$_{\\rm T}^{\\rm miss}<200$ GeV", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&pfmet<200&&mt_met_lep>150"&& HasMedLooseCSV>0.,1,0,"w_noBtagSF"),
-      TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", "ngoodleps==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF")
+      TableRow("1 good lep",WHLeptons>=1,0,0,"w_noBtagSF"),
+      TableRow("2nd lep veto",WHLeptons==1&&"nvetoleps==1",0,0,"w_noBtagSF"),
+      TableRow("Pass track veto", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto",0,0,"w_noBtagSF"),
+      TableRow("Pass tau veto", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto",0,0,"w_noBtagSF"),
+      TableRow("==2jets", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"w_noBtagSF"),
+      TableRow("one loose, one med btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2" && HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+     // TableRow("==2btags", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("M$_{\\rm b\\bar{b}}$ window", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("M$_{\\rm CT}>$ 170 GeV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("E$_{\\rm T}^{\\rm miss}>125$ GeV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("M$_{\\rm T}>150$ GeV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("$125<$E$_{\\rm T}^{\\rm miss}<200$ GeV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&pfmet<200&&mt_met_lep>150"&& HasMedLooseCSV>0.,1,0,"w_noBtagSF"),
+      TableRow("E$_{\\rm T}^{\\rm miss}>200$ GeV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>200&&mt_met_lep>150"&& HasMedLooseCSV>0.,0,0,"w_noBtagSF")
 
         }, sample_list,false);
 
 
 //   Table & cutflow = pm.Push<Table>("cutflow", vector<TableRow>{
-//       TableRow("1 good lep, 2 jets, $E_{\\rm T}^{\\rm miss}>100$ GeV","ngoodleps==1&&nvetoleps==0&&ngoodjets>=2&&pfmet>100"),
+//       TableRow("1 good lep, 2 jets, $E_{\\rm T}^{\\rm miss}>100$ GeV",WHLeptons==1&&"nvetoleps==0&&ngoodjets>=2&&pfmet>100"),
       
-//       TableRow("Pass track veto", "ngoodleps==1&&nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto"),
-//       TableRow("Pass tau veto", "ngoodleps==1&&nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto"),
-//       TableRow("==2jets", "ngoodleps==1&&nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"),
-//       TableRow("==2btags", "ngoodleps==1&&nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2"),
-//       TableRow("M$_{\\rm b#bar{b}}$ window", "ngoodleps==1&&nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150"),
-//       TableRow("M$_{\\rm CT}$", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170"),
-//       TableRow("$E_{\\rm T}^{\\rm miss}>125$ GeV", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"),
-//       TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150")
+//       TableRow("Pass track veto", WHLeptons==1&&"nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto"),
+//       TableRow("Pass tau veto", WHLeptons==1&&"nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto"),
+//       TableRow("==2jets", WHLeptons==1&&"nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2"),
+//       TableRow("==2btags", WHLeptons==1&&"nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2"),
+//       TableRow("M$_{\\rm b#bar{b}}$ window", WHLeptons==1&&"nvetoleps==0&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150"),
+//       TableRow("M$_{\\rm CT}$", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170"),
+//       TableRow("$E_{\\rm T}^{\\rm miss}>125$ GeV", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125"),
+//       TableRow("M$_{\\rm T}>150$ GeV", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150")
 
 
 //         }, sample_list);
 
 // Table & cutflow_no_weight = pm.Push<Table>("cutflow_raw", vector<TableRow>{
-//       TableRow("1 good lep, 2 jets, $E_{\\rm T}^{\\rm miss}>100$ GeV","ngoodleps==1&&ngoodjets>=2&&pfmet>100",0,0,"1"),
+//       TableRow("1 good lep, 2 jets, $E_{\\rm T}^{\\rm miss}>100$ GeV",WHLeptons==1&&"ngoodjets>=2&&pfmet>100",0,0,"1"),
       
-//       TableRow("Pass track veto", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto",0,0,"1"),
-//       TableRow("Pass tau veto", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto",0,0,"1"),
-//       TableRow("==2jets", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"1"),
-//       TableRow("==2btags", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2",0,0,"1"),
-//       TableRow("M$_{\\rm b#bar{b}}$ window", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150",0,0,"1"),
-//       TableRow("M$_{\\rm CT}$", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170",0,0,"1"),
-//       TableRow("$E_{\\rm T}^{\\rm miss}>125$ GeV", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125",0,0,"1"),
-//       TableRow("M$_{\\rm T}>150$ GeV", "ngoodleps==1&&ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150",0,0,"1")
+//       TableRow("Pass track veto", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto",0,0,"1"),
+//       TableRow("Pass tau veto", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto",0,0,"1"),
+//       TableRow("==2jets", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2",0,0,"1"),
+//       TableRow("==2btags", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2",0,0,"1"),
+//       TableRow("M$_{\\rm b#bar{b}}$ window", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150",0,0,"1"),
+//       TableRow("M$_{\\rm CT}$", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170",0,0,"1"),
+//       TableRow("$E_{\\rm T}^{\\rm miss}>125$ GeV", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125",0,0,"1"),
+//       TableRow("M$_{\\rm T}>150$ GeV", WHLeptons==1&&"ngoodjets>=2&&pfmet>100&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150",0,0,"1")
 
 
 //         }, sample_list);
