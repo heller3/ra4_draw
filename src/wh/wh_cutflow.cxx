@@ -23,38 +23,16 @@
 #include "core/hist2d.hpp"
 #include "core/utilities.hpp"
 #include "core/functions.hpp"
+#include "core/wh_functions.hpp"
 
 using namespace std;
 using namespace PlotOptTypes;
+using namespace WH_Functions;
 
 namespace{
   bool single_thread = false;
 }
 
-
-NamedFunc HasMedLooseCSV("HasMedLooseCSV",[](const Baby &b) -> NamedFunc::ScalarType{
-    int nloose=0;
-    int nmedium=0;
-    for (unsigned i(0); i<b.ak4pfjets_CSV()->size(); i++){
-      if (b.ak4pfjets_CSV()->at(i) > 0.5426) nloose++;
-      if (b.ak4pfjets_CSV()->at(i) > 0.8484) nmedium++;
-    }
-    if(nloose>=2 && nmedium>=1) return 1;
-    else return 0;
-  });
-
-NamedFunc WHLeptons("WHLeptons",[](const Baby &b) -> NamedFunc::ScalarType{
-    int nwhleptons=0;
-    if (abs(b.lep1_pdgid())==11&&b.leps_pt()->at(0)>=30&&b.lep1_relIso()*b.leps_pt()->at(0)<=5) nwhleptons++;
-    if (abs(b.lep1_pdgid())==13&&b.leps_pt()->at(0)>=25&&b.lep1_relIso()*b.leps_pt()->at(0)<=5&&abs(b.leps_eta()->at(0))<=2.1) nwhleptons++;
-    
-    if (b.leps_pt()->size()==2){
-      if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>=30&&b.lep2_relIso()*b.leps_pt()->at(1)<=5) nwhleptons++;
-      if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>=25&&b.lep2_relIso()*b.leps_pt()->at(1)<=5&&abs(b.leps_eta()->at(1))<=2.1) nwhleptons++;
-    }
-   
-    return nwhleptons;
-  });
 
 int main(){
   gErrorIgnoreLevel = 6000;
