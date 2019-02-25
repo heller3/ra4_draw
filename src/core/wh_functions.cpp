@@ -20,6 +20,59 @@ namespace WH_Functions{
       else return 0;
     });
 
+  const NamedFunc HasMedMedDeepCSV("HasMedMedDeepCSV",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeepmedium=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.6324) ndeepmedium++;
+      }
+      if(ndeepmedium>=2) return 1;
+      else return 0;
+    });
+
+    const NamedFunc HasLooseLooseDeepCSV("HasLooseLooseDeepCSV",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeeploose=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.2219) ndeeploose++;
+      }
+      if(ndeeploose>=2) return 1;
+      else return 0;
+    });
+
+    const NamedFunc HasMedLooseDeepCSV("HasMedLooseDeepCSV",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeeploose=0;
+      int ndeepmedium=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.2219) ndeeploose++;
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.6324) ndeepmedium++;
+      }
+      if(ndeeploose>=2 && ndeepmedium>=1) return 1;
+      else return 0;
+    });
+
+  const NamedFunc nDeepMedBTagged("nDeepMedBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.6324) njets++;
+      }
+      return njets;
+    });
+
+  const NamedFunc nDeepLooseBTagged("nDeepLooseBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.2219) njets++;
+      }
+      return njets;
+    });
+
+  const NamedFunc bJetPt("bJetPt",[](const Baby &b) -> NamedFunc::VectorType{
+      vector<double> bjetpt;
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+	if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) bjetpt.push_back(b.ak4pfjets_pt()->at(i));
+      }
+      return bjetpt;
+    });
+  
   const NamedFunc HasNoBs("HasNoBs",[](const Baby &b) -> NamedFunc::ScalarType{
       int nbjets=0;
       for (unsigned i(0); i<b.ak4pfjets_CSV()->size(); i++){

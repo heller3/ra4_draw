@@ -61,10 +61,11 @@ int main(){
 
 
   vector<shared_ptr<Process> > sample_list = {data, tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets, single_t, ttv, diboson};
+  vector<shared_ptr<Process> > short_sample_list = {tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
-    .Bottom(BottomType::ratio)
+    //.Bottom(BottomType::ratio)
     .YAxis(YAxisType::log)
     .Stack(StackType::data_norm);
   PlotOpt lin_lumi = log_lumi().YAxis(YAxisType::linear);
@@ -81,10 +82,17 @@ int main(){
 
 //"ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"
   NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons==1;
+  NamedFunc preselectionNoBTagging = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
+  NamedFunc preselectionNoB3Jet = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
   //NamedFunc cr2l_1lep = "!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
   //NamedFunc cr2l_2lep = "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
   NamedFunc cr2l = "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
-  NamedFunc signalRegion = "mbb>90&&mbb<150&&mct>170&&mt_met_lep>150";
+  NamedFunc signalRegion = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>150&&mt_met_lep>150"&& WHLeptons==1;
+  NamedFunc signalRegionNoMct = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1;
+  NamedFunc signalRegionMedMedDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedMedDeepCSV;
+  NamedFunc signalRegionMedLooseDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV;
+  NamedFunc signalRegionLooseLooseDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasLooseLooseDeepCSV;
+  NamedFunc noCuts = true;
 
 
   PlotMaker pm;
@@ -136,7 +144,69 @@ int main(){
 		  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep","m_{T} [GeV]"),
 		  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
+
+
+  pm.Push<Hist1D>(Axis(10, 0, 1, "ak4pfjets_deepCSV","deepCSV"),
+		  noCuts, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(10, 0, 1, "ak4pfjets_deepCSV","deepCSV"),
+		  preselectionNoBTagging, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(10, 0, 1, "ak4pfjets_deepCSV","deepCSV"),
+		  signalRegion, short_sample_list, all_plot_types);
+
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepMedBTagged, "N_{medium jets}"),
+		  noCuts, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
+		  noCuts, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepMedBTagged, "N_{medium jets}"),
+		  preselectionNoBTagging, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
+		  preselectionNoBTagging, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepMedBTagged, "N_{medium jets}"),
+		  preselectionNoB3Jet, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
+		  preselectionNoB3Jet, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepMedBTagged, "N_{medium jets}"),
+		  signalRegion, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
+		  signalRegion, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepMedBTagged, "N_{medium jets}"),
+		  signalRegionNoMct, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
+		  signalRegionNoMct, short_sample_list, all_plot_types);
+
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  signalRegionMedMedDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  signalRegionMedLooseDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  signalRegionLooseLooseDeepCSV, sample_list, all_plot_types);
   
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150"&&HasMedMedDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150"&&HasMedLooseDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150"&&HasLooseLooseDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  signalRegion&&HasMedMedDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  signalRegion&&HasMedLooseDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  signalRegion&&HasLooseLooseDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mct>150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "p_{T}"),
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mct>150&&mt_met_lep>150"&& WHLeptons==1&&HasLooseLooseDeepCSV, short_sample_list, all_plot_types);
+		  
+  //use these for efficiency plot
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "b jet p_{T}"),
+		  noCuts, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "b jet p_{T}"),
+		  HasMedMedDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "b jet p_{T}"),
+		  HasMedLooseDeepCSV, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., bJetPt, "b jet p_{T}"),
+		  HasLooseLooseDeepCSV, short_sample_list, all_plot_types);
   
   /*pm.Push<Hist1D>(Axis(7, 0, 7, "ngoodjets", "N_{jets}"),
     "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV, sample_list, all_plot_types);*/

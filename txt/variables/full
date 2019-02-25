@@ -14,9 +14,11 @@ float mass_lsp
 float weight
 float w_noBtagSF
 std::vector<float> ak4pfjets_CSV
+std::vector<float> ak4pfjets_deepCSV
 std::vector<float> ak4pfjets_pt
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
+std::vector<int> ak4pfjets_parton_flavor
 int lep1_pdgid
 int lep2_pdgid
 float lep1_relIso
