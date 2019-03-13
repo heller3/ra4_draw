@@ -272,7 +272,7 @@ void Table::PrintHeader(ofstream &file, double luminosity) const{
   }
   
   for(size_t i = 0; i < signals_.size(); ++i){
-    if(do_zbi_) file << " | rrr"; // ***EDITED LINE CHANGED rr --> rrr***
+    if(do_zbi_) file << " | rr"; // ***EDITED LINE CHANGED rr --> rrr***
     else file << " | r";
   }
 
