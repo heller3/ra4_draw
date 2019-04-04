@@ -4,6 +4,8 @@ float mt_met_lep
 float pfmet
 int ngoodjets
 int ngoodbtags
+int nloosebtags
+
 float ak4_HT
 bool PassTrackVeto
 bool PassTauVeto
@@ -13,6 +15,9 @@ float mass_stop
 float mass_lsp
 float weight
 float w_noBtagSF
+float w_BtagSF_medmed
+float w_BtagSF_medloose
+float w_BtagSF_WH
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_deepCSV
 std::vector<float> ak4pfjets_pt
@@ -38,6 +43,11 @@ std::vector<int> isoTracks_pdgId;
 #std::vector<bool> isoTracks_isVetoTrack_v2;
 #std::vector<bool> isoTracks_isVetoTrack_v3;
 
+
+###gen info
+std::vector<float> gen_pt
+std::vector<int> gen_motherid
+std::vector<int> gen_id
 
 ### taus ###
 
