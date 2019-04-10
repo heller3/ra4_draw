@@ -25,9 +25,9 @@ int main(){
 
   double lumi = 35.9;
 
-  string data_dir = "/home/users/rheller/wh_babies/babies_2019_01_08/";
-  string mc_dir = "/home/users/rheller/wh_babies/babies_2019_01_07/";
-  string signal_dir = "/home/users/rheller/wh_babies/babies_2019_01_09/";
+  string data_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_04_03/";
+  string mc_dir = "/home/users/rheller/wh_babies/babies_v30_9_2019_04_03/";
+  string signal_dir = "/home/users/rheller/wh_babies/babies_signal_2019_04_03/";
   
   Palette colors("txt/colors.txt", "default");
 
@@ -36,8 +36,10 @@ int main(){
     {mc_dir+"*TTJets_1lep*ext1*.root"});
   auto tt2l = Process::MakeShared<Baby_full>("t#bar{t} (2l)", Process::Type::background, colors("tt_2l"),
     {mc_dir+"*TTJets_2lep*ext1*.root"});
-  auto wjets = Process::MakeShared<Baby_full>("W+jets", Process::Type::background, colors("wjets"),
-    {mc_dir+"*W*JetsToLNu*.root"});
+  auto wjets_low_nu = Process::MakeShared<Baby_full>("W+jets, nu pT < 200", Process::Type::background, colors("qcd"),
+    {mc_dir+"*slim_W*JetsToLNu_s16v3*.root"},NHighPtNu==0.);
+  auto wjets_high_nu = Process::MakeShared<Baby_full>("W+jets, nu pT >= 200", Process::Type::background, colors("wjets"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"});
   auto single_t = Process::MakeShared<Baby_full>("Single t", Process::Type::background, colors("single_t"),
     {mc_dir+"*_ST_*.root"});
   auto ttv = Process::MakeShared<Baby_full>("t#bar{t}V", Process::Type::background, colors("ttv"),
@@ -60,8 +62,8 @@ int main(){
     {signal_dir+"*SMS-TChiWH_WToLNu_HToBB_TuneCUETP8M1_13TeV-madgraphMLM-pythia8*.root"},"mass_stop==250&&mass_lsp==1");
 
 
-  vector<shared_ptr<Process> > sample_list = {data, tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets, single_t, ttv, diboson};
-  vector<shared_ptr<Process> > short_sample_list = {tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets};
+  vector<shared_ptr<Process> > sample_list = {data, tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets_low_nu, wjets_high_nu, single_t, ttv, diboson};
+  vector<shared_ptr<Process> > short_sample_list = {tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets_low_nu, wjets_high_nu};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
@@ -144,6 +146,27 @@ int main(){
 		  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep","m_{T} [GeV]"),
 		  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
+
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+
+  
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>100&&pfmet<200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+
+
+    pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>100&&pfmet<200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
 
 
   pm.Push<Hist1D>(Axis(10, 0, 1, "ak4pfjets_deepCSV","deepCSV"),

@@ -9,6 +9,14 @@ using namespace std;
 
 namespace WH_Functions{
 
+  const NamedFunc NHighPtNu("NHighPtNu",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nnu=0;
+        for (unsigned i(0); i<b.gen_pt()->size(); i++){
+        if (abs(b.gen_motherid()->at(i))==24 && ( abs(b.gen_id()->at(i)) == 12 || abs(b.gen_id()->at(i)) == 14 || abs(b.gen_id()->at(i)) == 16) && b.gen_pt()->at(i) > 200 ) nnu++;
+      }
+      return nnu;
+    });
+
   const NamedFunc HasMedLooseCSV("HasMedLooseCSV",[](const Baby &b) -> NamedFunc::ScalarType{
       int nloose=0;
       int nmedium=0;
@@ -46,6 +54,15 @@ namespace WH_Functions{
 	if (b.ak4pfjets_deepCSV()->at(i) > 0.6324) ndeepmedium++;
       }
       if(ndeeploose>=2 && ndeepmedium>=1) return 1;
+      else return 0;
+    });
+
+  const NamedFunc HasLooseNoMedDeepCSV("HasLooseNoMedDeepCSV",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeeploose=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if ((b.ak4pfjets_deepCSV()->at(i) > 0.2219)&&(b.ak4pfjets_deepCSV()->at(i) < 0.6324)) ndeeploose++;
+      }
+      if(ndeeploose>=2) return 1;
       else return 0;
     });
 

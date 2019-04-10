@@ -18,13 +18,13 @@
 using namespace std;
 using namespace PlotOptTypes;
 using namespace WH_Functions;
-const NamedFunc NHighPtNu("NHighPtNu",[](const Baby &b) -> NamedFunc::ScalarType{
+/*const NamedFunc NHighPtNu("NHighPtNu",[](const Baby &b) -> NamedFunc::ScalarType{
       int nnu=0;
         for (unsigned i(0); i<b.gen_pt()->size(); i++){
         if (abs(b.gen_motherid()->at(i))==24 && ( abs(b.gen_id()->at(i)) == 12 || abs(b.gen_id()->at(i)) == 14 || abs(b.gen_id()->at(i)) == 16) && b.gen_pt()->at(i) > 200 ) nnu++;
       }
       return nnu;
-    });
+      });*/
 
 
 int main(){
