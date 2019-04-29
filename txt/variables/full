@@ -1,5 +1,6 @@
 int ngoodleps
 int nvetoleps
+int evt
 float mt_met_lep
 float pfmet
 int ngoodjets
@@ -13,10 +14,15 @@ float mass_stop
 float mass_lsp
 float weight
 float w_noBtagSF
+int njets
 std::vector<float> ak4pfjets_CSV
+std::vector<float> ak4pfjets_deepCSV
 std::vector<float> ak4pfjets_pt
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
+std::vector<float> dphi_ak4pfjet_met
+std::vector<float> ak4pfjets_m
+std::vector<int> ak4pfjets_hadron_flavor
 int lep1_pdgid
 int lep2_pdgid
 float lep1_relIso
@@ -26,6 +32,18 @@ int HLT_SingleMu
 bool pass
 bool goodrun
 bool duplicate
+
+### generator info ###
+std::vector<int> gen_id
+std::vector<int> gen_idx
+std::vector<float> gen_pt
+std::vector<float> gen_eta
+std::vector<float> gen_phi
+std::vector<float> gen_m
+std::vector<int> gen_motherid
+std::vector<int> gen_motheridx
+std::vector<int> gen_gmotherid
+std::vector<int> gen_gmotheridx
 
 ### isolated tracks ###
 std::vector<int> isoTracks_charge;
