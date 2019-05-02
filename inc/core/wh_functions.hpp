@@ -6,7 +6,6 @@
 #include "core/named_func.hpp"
  
 namespace WH_Functions{
-<<<<<<< HEAD
 
   // Miscilaneous
   extern const NamedFunc HasMedLooseCSV;
