@@ -60,10 +60,16 @@ int main(){
     tchiwh_225_75->SetLineStyle(2);
   auto tchiwh_250_1 = Process::MakeShared<Baby_full>("TChiWH(250,1)", Process::Type::signal, colors("t1tttt"),
     {signal_dir+"*SMS-TChiWH_WToLNu_HToBB_TuneCUETP8M1_13TeV-madgraphMLM-pythia8*.root"},"mass_stop==250&&mass_lsp==1");
+  auto tchiwh_700_1 = Process::MakeShared<Baby_full>("TChiWH(700,1)", Process::Type::signal, colors("t1tttt"),
+    {signal_dir+"*SMS-TChiWH_WToLNu_HToBB_TuneCUETP8M1_13TeV-madgraphMLM-pythia8*.root"},"mass_stop==700&&mass_lsp==1");
 
 
   vector<shared_ptr<Process> > sample_list = {data, tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets_low_nu, wjets_high_nu, single_t, ttv, diboson};
   vector<shared_ptr<Process> > short_sample_list = {tchiwh_250_1, tchiwh_225_75, tt1l, tt2l, wjets_low_nu, wjets_high_nu};
+  vector<shared_ptr<Process> > highmass_sample_list = {data, tchiwh_225_75,tchiwh_700_1, tt1l, tt2l, wjets_low_nu, wjets_high_nu, single_t, ttv, diboson};
+  vector<shared_ptr<Process> > highmass_nolowpt_sample_list = {tchiwh_225_75,tchiwh_700_1, tt1l, tt2l, wjets_high_nu};
+  vector<shared_ptr<Process> > highmass_nolowpt_data_sample_list = {data,tchiwh_225_75,tchiwh_700_1, tt1l, tt2l, wjets_high_nu};
+  vector<shared_ptr<Process> > highmass_short_sample_list = {tchiwh_225_75, tchiwh_700_1, tt1l, tt2l, wjets_high_nu, wjets_low_nu};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
@@ -72,7 +78,7 @@ int main(){
     .Stack(StackType::data_norm);
   PlotOpt lin_lumi = log_lumi().YAxis(YAxisType::linear);
   PlotOpt log_shapes = log_lumi().Stack(StackType::shapes)
-    .Bottom(BottomType::off)
+    .Bottom(BottomType::ratio)
     .ShowBackgroundError(false);
   PlotOpt lin_shapes = log_shapes().YAxis(YAxisType::linear);
   PlotOpt log_lumi_info = log_lumi().Title(TitleType::info);
@@ -88,11 +94,11 @@ int main(){
   NamedFunc preselectionNoB3Jet = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
   //NamedFunc cr2l_1lep = "!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
   //NamedFunc cr2l_2lep = "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
-  NamedFunc cr2l = "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
-  NamedFunc signalRegion = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>150&&mt_met_lep>150"&& WHLeptons==1;
+  NamedFunc cr2l = "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseDeepCSV && WHLeptons==1;
+  NamedFunc signalRegion = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV&&WHLeptons==1;
   NamedFunc signalRegionNoMct = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1;
   NamedFunc signalRegionMedMedDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedMedDeepCSV;
-  NamedFunc signalRegionMedLooseDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV;
+  NamedFunc signalRegionMedLooseDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150&&mct>200"&& WHLeptons==1&&HasMedLooseDeepCSV;
   NamedFunc signalRegionLooseLooseDeepCSV = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasLooseLooseDeepCSV;
   NamedFunc noCuts = true;
 
@@ -148,25 +154,28 @@ int main(){
 		  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV&& WHLeptons==1, highmass_nolowpt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+      signalRegion, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
+  
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&(mbb<90||mbb>150)&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&(mbb<90||mbb>150)&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
 
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
   
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>100&&pfmet<200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-		  "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
-
-
-    pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>100&&pfmet<200&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
-  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-		  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&mbb>90&&mbb<150&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, sample_list, all_plot_types);
+		  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
 
 
   pm.Push<Hist1D>(Axis(10, 0, 1, "ak4pfjets_deepCSV","deepCSV"),
@@ -196,6 +205,10 @@ int main(){
 		  signalRegionNoMct, short_sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
 		  signalRegionNoMct, short_sample_list, all_plot_types);
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepMedBTagged, "N_{medium jets}"),
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH");
+  pm.Push<Hist1D>(Axis(5, 0, 5, nDeepLooseBTagged, "N_{loose jets}"),
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
 		  signalRegionMedMedDeepCSV, sample_list, all_plot_types);
@@ -234,38 +247,40 @@ int main(){
   /*pm.Push<Hist1D>(Axis(7, 0, 7, "ngoodjets", "N_{jets}"),
     "ngoodleps==1&&PassTrackVeto&&PassTauVeto&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV, sample_list, all_plot_types);*/
 
+  //Dilep Control Region
+
   pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "leading b jet p_{T} [GeV]"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "subleading b jet p_{T} [GeV]"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-                  cr2l, sample_list, all_plot_types);
+      cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "els_pt", "Electron p_{T}"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mus_pt", "Muon p_{T}"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "ak4pfjets_pt", "Jet p_{T}"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(12, -3, 3, "els_eta", "Electron #eta"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(12, -3, 3, "mus_eta", "Muon #eta"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(12, -3, 3, "ak4pfjets_eta", "Jet #eta"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(16, -4, 4, "els_phi", "Electron #phi"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(16, -4, 4, "mus_phi", "Muon #phi"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   pm.Push<Hist1D>(Axis(16, -4, 4, "ak4pfjets_phi", "Jet #phi"),
-		  cr2l, sample_list, all_plot_types);
+		  cr2l, highmass_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("cr2l_weight");
   //pm.Push<Hist1D>(Axis(3, 0, 3, WHLeptons,"1 good lep"), "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2&&PassTrackVeto&&PassTauVeto))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons>=1, sample_list, all_plot_types);
   //pm.Push<Hist1D>(Axis(3, 0, 3, WHLeptons,"2nd lep veto"), "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(2, 0, 2, "PassTrackVeto","Track Veto"),
@@ -273,15 +288,42 @@ int main(){
   pm.Push<Hist1D>(Axis(2, 0, 2, "PassTauVeto","Tau Veto"),
 		  "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(10, 0, 10, "ngoodjets","nGoodJets"),
-		  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
+		  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&pfmet>125&&mt_met_lep>150" && HasMedLooseDeepCSV && WHLeptons==1, sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH");
   pm.Push<Hist1D>(Axis(2, 0, 2, HasMedLooseCSV,"MedLooseCSV"),
 		 "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && WHLeptons==1, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet","E_{T}^{miss} [GeV]"),
-		  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
+		  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&mt_met_lep>150" && HasMedLooseDeepCSV && WHLeptons==1, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep","m_{T} [GeV]"),
-		  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125" && HasMedLooseCSV && WHLeptons==1, sample_list, all_plot_types);
+		  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125" && HasMedLooseDeepCSV && WHLeptons==1, sample_list, all_plot_types);
 
   
+  //Lepton pT study
+  pm.Push<Hist1D>(Axis(20, 0, 100., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_noRemovals");
+  pm.Push<Hist1D>(Axis(20, 0, 100., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_noMCT");
+  pm.Push<Hist1D>(Axis(20,0,100.,"leps_pt[0]","Lepton p_{T}[GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_noMBB");
+  pm.Push<Hist1D>(Axis(20,0,100.,"leps_pt[0]","Lepton p_{T}[GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>200&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_noMT");
+
+  pm.Push<Hist1D>(Axis(20, 0, 100., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_MET_g125_noRemovals");
+  pm.Push<Hist1D>(Axis(20, 0, 100., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_METg125_noMCT");
+  pm.Push<Hist1D>(Axis(20,0,100.,"leps_pt[0]","Lepton p_{T}[GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_METg125_noMBB");
+  pm.Push<Hist1D>(Axis(20,0,100.,"leps_pt[0]","Lepton p_{T}[GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mbb>90&&mbb<150&&mct>200&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_METg125_noMT");
+
+  pm.Push<Hist1D>(Axis(20, 0, 100., "leps_pt[0]", "Lepton p_{T} [GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mbb>90&&mbb<150&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_METg300_noMCT");
+  pm.Push<Hist1D>(Axis(20,0,100.,"leps_pt[0]","Lepton p_{T}[GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mct>200&&mt_met_lep>150&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_METg300_noMBB");
+  pm.Push<Hist1D>(Axis(20,0,100.,"leps_pt[0]","Lepton p_{T}[GeV]"),
+      "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mbb>90&&mbb<150&&mct>200&&nvetoleps==1"&&HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("lepStudy_METg300_noMT");
+  //End Lepton pT study
+
   /*pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),
                   cr2l_1lep, sample_list, all_plot_types);
   pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "leading b jet p_{T} [GeV]"),

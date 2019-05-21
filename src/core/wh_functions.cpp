@@ -37,6 +37,15 @@ namespace WH_Functions{
       else return 0;
     });
 
+  const NamedFunc HasExactMedMedDeepCSV("HasExactMedMedDeepCSV",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeepmedium=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+	if (b.ak4pfjets_deepCSV()->at(i) > 0.6324) ndeepmedium++;
+      }
+      if(ndeepmedium==2) return 1;
+      else return 0;
+    });
+
     const NamedFunc HasLooseLooseDeepCSV("HasLooseLooseDeepCSV",[](const Baby &b) -> NamedFunc::ScalarType{
       int ndeeploose=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){

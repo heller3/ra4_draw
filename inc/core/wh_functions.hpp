@@ -9,6 +9,7 @@ namespace WH_Functions{
   extern const NamedFunc NHighPtNu;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc HasMedMedDeepCSV;
+  extern const NamedFunc HasExactMedMedDeepCSV;
   extern const NamedFunc HasLooseLooseDeepCSV;
   extern const NamedFunc HasMedLooseDeepCSV;
   extern const NamedFunc HasLooseNoMedDeepCSV;

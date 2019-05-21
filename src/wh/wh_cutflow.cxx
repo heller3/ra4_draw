@@ -57,9 +57,9 @@ int main(){
     {mc_dir+"*TTJets_1lep*ext1*.root"});
   auto tt2l = Process::MakeShared<Baby_full>("t#bar{t} (2l)", Process::Type::background, colors("tt_2l"),
     {mc_dir+"*TTJets_2lep*ext1*.root"});
-  auto wjets_low_nu = Process::MakeShared<Baby_full>("W+jets, nu pT < 200", Process::Type::background, colors("qcd"),
+  auto wjets_low_nu = Process::MakeShared<Baby_full>("W+jets, nu pT $<$ 200", Process::Type::background, colors("qcd"),
     {mc_dir+"*slim_W*JetsToLNu_s16v3*.root"},NHighPtNu==0.);
-  auto wjets_high_nu = Process::MakeShared<Baby_full>("W+jets, nu pT >= 200", Process::Type::background, colors("wjets"),
+  auto wjets_high_nu = Process::MakeShared<Baby_full>("W+jets, nu pT $>=$ 200", Process::Type::background, colors("wjets"),
     {mc_dir+"*slim_W*Jets_NuPt200*.root"});
   auto single_t = Process::MakeShared<Baby_full>("Single t", Process::Type::background, colors("single_t"),
     {mc_dir+"*_ST_*.root"});
@@ -177,11 +177,11 @@ int main(){
         }, short_sample_list,true);
 
   Table & cutflow_deepBTagger_signalRegion = pm.Push<Table>("cutflow_deepBTagger_signalRegion", vector<TableRow>{
-      TableRow("one loose, one med btag, CSV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("2 loose btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasLooseLooseDeepCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("2 loose btag, no med", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasLooseNoMedDeepCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("one loose, one med btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("2 med btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>170&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasMedMedDeepCSV>0.,0,0,"w_noBtagSF")
+      TableRow("one loose, one med btag, CSV", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("2 loose btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasLooseLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("2 loose btag, no med", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasLooseNoMedDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("one loose, one med btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("2 med btag", WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>=90&&mbb<=150" && HasMedMedDeepCSV>0.,0,0,"w_noBtagSF")
 	
         }, short_sample_list,true);
 
@@ -208,15 +208,15 @@ int main(){
       }, short_sample_list,true);
 
   Table & cutflow_METmctOpt_3jet = pm.Push<Table>("cutflow_METmctOpt_3jet", vector<TableRow>{
-      TableRow("MET$>$125, mct$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$125, mct$>$225",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>225&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$125, mct$>$250",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>250&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$125, mct$>$275",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>275&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$200, mct$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$200, mct$>$225",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>225&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$200, mct$>$250",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>250&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$200, mct$>$275",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>275&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF"),
-      TableRow("MET$>$225, mct$>$225",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>225&&mct>225&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF")
+      TableRow("MET$>$125, mct$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$125, mct$>$225",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>225&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$125, mct$>$250",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>250&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$125, mct$>$275",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mct>275&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$200, mct$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$200, mct$>$225",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>225&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$200, mct$>$250",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>250&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$200, mct$>$275",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>275&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH"),
+      TableRow("MET$>$225, mct$>$225",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>225&&mct>225&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseCSV>0.,0,0,"w_noBtagSF*w_BtagSF_WH")
 	
       }, short_sample_list,true);
 
@@ -230,7 +230,23 @@ int main(){
       TableRow("MET$>$300, mct$>$250",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mct>250&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
       TableRow("MET$>$300, mct$>$275",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&mct>275&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF")
 	
-      }, short_sample_list,true);  
+      }, short_sample_list,true);
+
+  Table & cutflow_METscan_newBabies = pm.Push<Table>("cutflow_METscan_newBabies", vector<TableRow>{
+      TableRow("200$>$MET$>$125",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("300$>$MET$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("400$>$MET$>$300",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("MET$>$400",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,1,"w_noBtagSF"),
+      TableRow("200$>$MET$>$125",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasExactMedMedDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("300$>$MET$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasExactMedMedDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("400$>$MET$>$300",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasExactMedMedDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("MET$>$400",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasExactMedMedDeepCSV>0.,0,1,"w_noBtagSF"),
+      TableRow("200$>$MET$>$125",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("300$>$MET$>$200",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("400$>$MET$>$300",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF"),
+      TableRow("MET$>$400",WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV>0.,0,0,"w_noBtagSF")
+	
+	}, short_sample_list,true);
 
 
 //   Table & cutflow = pm.Push<Table>("cutflow", vector<TableRow>{
@@ -304,6 +320,11 @@ int main(){
   }
 
   vector<GammaParams> yields_METmctOpt_2jet_HighMET = cutflow_METmctOpt_2jet_HighMET.BackgroundYield(lumi);
+  for(const auto &yield: yields_METmctOpt_2jet){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_METscan_newBabies = cutflow_METscan_newBabies.BackgroundYield(lumi);
   for(const auto &yield: yields_METmctOpt_2jet){
     cout << yield << endl;
   }
