@@ -24,7 +24,7 @@ Hist2D::SingleHist2D::SingleHist2D(const Hist2D &figure,
                                    const std::shared_ptr<Process> &process,
                                    const TH2D &hist_template):
   FigureComponent(figure, process),
-  clusterizer_(hist_template, 10000),
+  clusterizer_(hist_template, -1),
   proc_and_hist_cut_(figure.cut_ && process->cut_),
   cut_vector_(),
   wgt_vector_(),
