@@ -28,6 +28,17 @@ int main(){
   string data_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_04_03/";
   string mc_dir = "/home/users/rheller/wh_babies/babies_v30_9_2019_04_03/";
   string signal_dir = "/home/users/rheller/wh_babies/babies_signal_2019_04_03/";
+
+  string basic_cuts =            "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2";
+  string basic_cuts_mct =        "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200";
+  string basic_cuts_mct_mt =     "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150";
+  string basic_cuts_mct_mbb =    "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150";
+  string basic_cuts_mt_mbb =     "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>150&&mbb>90&&mbb<150";
+  string basic_cuts_mt =         "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>150";
+  string basic_cuts_mct_mt_mbb = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150";
+  string dilep_basic_cuts =      "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2";
+  string dilep_mct_mt_mbb =      "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150";
+  string dilep_mt =              "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&mt_met_lep>150";
   
   Palette colors("txt/colors.txt", "default");
 
@@ -46,6 +57,8 @@ int main(){
     {mc_dir+"*_TTWJets*.root", mc_dir+"*_TTZ*.root"});
   auto diboson = Process::MakeShared<Baby_full>("Diboson", Process::Type::background, colors("other"),
     {mc_dir+"*WW*.root", mc_dir+"*WZ*.root",mc_dir+"*ZZ*.root"});
+  auto other = Process::MakeShared<Baby_full>("Other", Process::Type::background, colors("dy"),
+    {mc_dir+"*_TTWJets*.root", mc_dir+"*_TTZ*.root", mc_dir+"*WW*.root", mc_dir+"*WZ*.root",mc_dir+"*ZZ*.root"});
 
     // {mc_dir+"*DYJetsToLL*.root", mc_dir+"*QCD_HT*0_Tune*.root", mc_dir+"*QCD_HT*Inf_Tune*.root",
     //     mc_dir+"*_ZJet*.root", mc_dir+"*_ttHTobb_M125_*.root",
@@ -53,7 +66,50 @@ int main(){
     //     mc_dir+"*_WH_HToBB*.root", mc_dir+"*_ZH_HToBB*.root", 
     //     mc_dir+"*_WWTo*.root", mc_dir+"*_WZ*.root",
     //     mc_dir+"_ZZ_*.root"}, "stitch_met");
+  auto signal_tt1l = Process::MakeShared<Baby_full>("t#bar{t} (1l) (no mT cut)", Process::Type::background, colors("tt_1l"),
+    {mc_dir+"*TTJets_1lep*ext1*.root"},basic_cuts&&WHLeptons==1&&HasMedLooseDeepCSV);
 
+  auto signal_tt2l = Process::MakeShared<Baby_full>("signal t#bar{t} (2l)", Process::Type::background, colors("t1tttt"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},basic_cuts&&WHLeptons==1&&HasMedLooseDeepCSV);
+  auto one_b_tt2l = Process::MakeShared<Baby_full>("1b t#bar{t} (2l)", Process::Type::background, colors("ttv"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},basic_cuts&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1);
+  auto dilep_tt2l = Process::MakeShared<Baby_full>("dilep t#bar{t} (2l), (MET>200)", Process::Type::background, colors("tt_1l"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},dilep_basic_cuts&&WHLeptons==1&&HasMedLooseDeepCSV);
+
+  auto signal_wjets_high_nu = Process::MakeShared<Baby_full>("signal W+jets, nu pT >= 200", Process::Type::background, colors("dy"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"},basic_cuts&&WHLeptons==1&&HasMedLooseDeepCSV);
+  auto no_b_wjets_high_nu = Process::MakeShared<Baby_full>("0b W+jets, nu pT >= 200", Process::Type::background, colors("tt_2l"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"},basic_cuts&&WHLeptons==1&&nDeepMedBTagged==0.);
+  auto one_b_wjets_high_nu = Process::MakeShared<Baby_full>("1b W+jets, nu pT >= 200", Process::Type::background, colors("ttv"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"},basic_cuts&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1);
+
+  auto signal_medmed_tt1l = Process::MakeShared<Baby_full>("t#bar{t} (1l) (no mT cut)", Process::Type::background, colors("tt_1l"),
+    {mc_dir+"*TTJets_1lep*ext1*.root"},basic_cuts&&WHLeptons==1&&HasMedMedDeepCSV);
+
+  auto signal_medmed_tt2l = Process::MakeShared<Baby_full>("signal t#bar{t} (2l) (no mT cut)", Process::Type::background, colors("t1tttt"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},basic_cuts&&WHLeptons==1&&HasMedMedDeepCSV);
+  auto dilep_medmed_tt2l = Process::MakeShared<Baby_full>("dilep t#bar{t} (2l), (MET>200)", Process::Type::background, colors("tt_1l"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},dilep_basic_cuts&&WHLeptons==1&&HasMedMedDeepCSV);
+
+  auto signal_medmed_wjets_high_nu = Process::MakeShared<Baby_full>("signal W+jets, nu pT >= 200", Process::Type::background, colors("dy"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"},basic_cuts&&WHLeptons==1&&HasMedMedDeepCSV);
+
+  auto signal_mt_tt2l = Process::MakeShared<Baby_full>("signal t#bar{t} (2l)", Process::Type::background, colors("qcd"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},basic_cuts_mt&&WHLeptons==1&&HasMedLooseDeepCSV);
+  auto one_b_mt_tt2l = Process::MakeShared<Baby_full>("1b t#bar{t} (2l)", Process::Type::background, colors("ttv"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},basic_cuts_mt&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1);
+  auto dilep_mt_tt2l = Process::MakeShared<Baby_full>("dilep t#bar{t} (2l), (MET>200)", Process::Type::background, colors("tt_1l"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},dilep_mt&&WHLeptons==1&&HasMedLooseDeepCSV);
+
+  auto signal_mt_medmed_tt2l = Process::MakeShared<Baby_full>("signal t#bar{t} (2l)", Process::Type::background, colors("qcd"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},basic_cuts_mt&&WHLeptons==1&&HasMedMedDeepCSV);
+  auto dilep_mt_medmed_tt2l = Process::MakeShared<Baby_full>("dilep t#bar{t} (2l), (MET>200)", Process::Type::background, colors("tt_1l"),
+    {mc_dir+"*TTJets_2lep*ext1*.root"},dilep_mt&&WHLeptons==1&&HasMedMedDeepCSV);
+
+  auto signal_mt_wjets_high_nu = Process::MakeShared<Baby_full>("signal W+jets, nu pT >= 200", Process::Type::background, colors("dy"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"},basic_cuts_mt&&WHLeptons==1&&HasMedLooseDeepCSV);
+  auto signal_mt_medmed_wjets_high_nu = Process::MakeShared<Baby_full>("signal W+jets, nu pT >= 200", Process::Type::background, colors("dy"),
+    {mc_dir+"*slim_W*Jets_NuPt200*.root"},basic_cuts_mt&&WHLeptons==1&&HasMedMedDeepCSV);
 
   auto tchiwh_225_75 = Process::MakeShared<Baby_full>("TChiWH(225,75)", Process::Type::signal, colors("t1tttt"),
     {signal_dir+"*SMS-TChiWH_WToLNu_HToBB_TuneCUETP8M1_13TeV-madgraphMLM-pythia8*.root"},"mass_stop==225&&mass_lsp==75");
@@ -70,10 +126,24 @@ int main(){
   vector<shared_ptr<Process> > highmass_nolowpt_sample_list = {tchiwh_225_75,tchiwh_700_1, tt1l, tt2l, wjets_high_nu};
   vector<shared_ptr<Process> > highmass_nolowpt_data_sample_list = {data,tchiwh_225_75,tchiwh_700_1, tt1l, tt2l, wjets_high_nu};
   vector<shared_ptr<Process> > highmass_short_sample_list = {tchiwh_225_75, tchiwh_700_1, tt1l, tt2l, wjets_high_nu, wjets_low_nu};
+  vector<shared_ptr<Process> > background_opt_sample_list = {wjets_high_nu, wjets_low_nu, tt2l, tt1l, single_t, other};
+  vector<shared_ptr<Process> > tt2l_sample_list = {signal_tt2l,one_b_tt2l,dilep_tt2l};
+  vector<shared_ptr<Process> > wjets_sample_list = {signal_wjets_high_nu,no_b_wjets_high_nu,one_b_wjets_high_nu};
+  vector<shared_ptr<Process> > tt2l_medmed_sample_list = {signal_medmed_tt2l,one_b_tt2l,dilep_medmed_tt2l};
+  vector<shared_ptr<Process> > wjets_medmed_sample_list = {signal_medmed_wjets_high_nu,no_b_wjets_high_nu,one_b_wjets_high_nu};
+  vector<shared_ptr<Process> > tt2l_mTstudy_sample_list = {signal_mt_tt2l,signal_tt1l,one_b_mt_tt2l,dilep_mt_tt2l};
+  vector<shared_ptr<Process> > tt2l_medmed_mTstudy_sample_list = {signal_mt_medmed_tt2l,signal_medmed_tt1l,one_b_mt_tt2l,dilep_mt_medmed_tt2l};
+
+  vector<vector<shared_ptr<Process> > > sample_vector = {tt2l_sample_list,wjets_sample_list,tt2l_medmed_sample_list,wjets_medmed_sample_list};
+  vector<string> sample_tags_vector = {"tt2l","wjets","tt2l_medmed","wjets_medmed"};
+  vector<string> weight_vector = {"w_noBtagSF * w_BtagSF_WH","w_noBtagSF * w_BtagSF_WH","w_noBtagSF * w_BtagSF_medmed","w_noBtagSF * w_BtagSF_medmed"};
+  vector<vector<shared_ptr<Process> > > mTstudy_sample_vector = {tt2l_mTstudy_sample_list,tt2l_medmed_mTstudy_sample_list};
+  vector<string> mTstudy_sample_tags_vector ={"tt2l","tt2l_medmed"};
+  vector<string> mTstudy_weight_vector = {"w_noBtagSF * w_BtagSF_WH","w_noBtagSF * w_BtagSF_medmed"};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
-    //.Bottom(BottomType::ratio)
+    .Bottom(BottomType::ratio)
     .YAxis(YAxisType::log)
     .Stack(StackType::data_norm);
   PlotOpt lin_lumi = log_lumi().YAxis(YAxisType::linear);
@@ -83,16 +153,16 @@ int main(){
   PlotOpt lin_shapes = log_shapes().YAxis(YAxisType::linear);
   PlotOpt log_lumi_info = log_lumi().Title(TitleType::info);
   PlotOpt lin_lumi_info = lin_lumi().Title(TitleType::info);
-  PlotOpt log_shapes_info = log_shapes().Title(TitleType::info);
+  PlotOpt log_shapes_info = log_shapes().Title(TitleType::info)
+    .Bottom(BottomType::ratio);
   PlotOpt lin_shapes_info = lin_shapes().Title(TitleType::info);
-  vector<PlotOpt> all_plot_types = {log_lumi_info, lin_lumi_info,lin_shapes_info};
-
+  vector<PlotOpt> all_plot_types = {log_lumi_info, lin_lumi_info,lin_shapes_info,log_shapes_info};
 
 //"ngoodleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>150"
-  NamedFunc preselection =           "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV;
+  NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && WHLeptons==1 && HasMedLooseDeepCSV;
   NamedFunc preselectionNoBTagging = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
-  NamedFunc preselectionNoB3Jet =    "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
-  NamedFunc preselection_highmT =    "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV;
+  NamedFunc preselectionNoB3Jet = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
+  NamedFunc preselection_highmT = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && WHLeptons==1 && HasMedLooseDeepCSV;
   //NamedFunc cr2l_1lep = "!PassTrackVeto&&!PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
   //NamedFunc cr2l_2lep = "nvetoleps==2&&ngoodjets==2&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;
   NamedFunc cr2l =                   "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV;
@@ -182,7 +252,6 @@ int main(){
       "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
 		  "PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150"&& WHLeptons==1&&HasMedLooseDeepCSV, highmass_nolowpt_data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("Signal_Weight");
-
 
   pm.Push<Hist1D>(Axis(10, 0, 1, "ak4pfjets_deepCSV","deepCSV"),
 		  noCuts, short_sample_list, all_plot_types);
@@ -332,85 +401,149 @@ int main(){
 
   //Distribution Plots for Potential CRs
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150"&& WHLeptons==1 && HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_preselection_highmT");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  signalRegion, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&mt_met_lep>150"&&HasMedLooseDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  signalRegion, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mbb>90&&mbb<150"&&HasMedLooseDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  signalRegion, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&&HasMedLooseDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              signalRegion, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150"&&HasMedLooseDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_signalRegion_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  mbbside, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&(mbb<90||mbb>150)"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  mbbside, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&(mbb<90||mbb>150)"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  mbbside, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mt_met_lep>150&&(mbb<90||mbb>150)"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              mbbside, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_mbbside_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  no_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&nDeepMedBTagged==0., background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  no_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mbb>90&&mbb<150"&&WHLeptons==1&&nDeepMedBTagged==0., background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  no_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&nDeepMedBTagged==0., background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              no_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150"&&WHLeptons==1&&nDeepMedBTagged==0., background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_no_b_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  one_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  one_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mbb>90&&mbb<150"&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  one_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              one_b, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150"&&WHLeptons==1&&nDeepMedBTagged==1&&nDeepLooseBTagged==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_one_b_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  cr2l, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
+                  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  cr2l, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
+                  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mct>200&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  cr2l, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
+                  "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              cr2l, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
+		              "((!PassTrackVeto&&!PassTauVeto)||(nvetoleps==2))&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_dilep_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  lowMT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>50&&mt_met_lep<150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  lowMT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  lowMT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mt_met_lep>50&&mt_met_lep<150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              lowMT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>50&&mt_met_lep<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMT_");
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-                  lowMCT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct<200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
-                  lowMCT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct<200&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
-                  lowMCT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mt_met_lep>150&&mbb>90&&mbb<150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
-		              lowMCT, highmass_short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct<200&&mt_met_lep>150"&&WHLeptons==1&&HasMedLooseDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_WH").Tag("compositionStudy_lowMCT_");
+    
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>50"&& WHLeptons==1 && HasMedMedDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_preselection_medmed_");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125"&& WHLeptons==1 && HasMedMedDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_preselection_medmed_");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedMedDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_preselection_medmed_");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1 && HasMedMedDeepCSV, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_preselection_medmed_");
+
+  pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&mt_met_lep>150"&&HasMedMedDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_signalRegion_medmed_");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mbb>90&&mbb<150"&&HasMedMedDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_signalRegion_medmed_");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                  "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150"&&HasMedMedDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_signalRegion_medmed_");
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+		              "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&mct>200&&mt_met_lep>150"&&HasMedMedDeepCSV&&WHLeptons==1, background_opt_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("compositionStudy_signalRegion_medmed_");
+
+  for(unsigned i(0); i<sample_vector.size(); i++){
+    pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                    "mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., "mt_met_lep", "m_{T} [GeV]"),
+                    "pfmet>200&&mct>200&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                    "pfmet>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+		                "pfmet>200&&mct>200&&mt_met_lep>150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., LeadingBJetPt, "p_{T} [GeV]"),
+		                "pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., SubLeadingBJetPt, "p_{T} [GeV]"),
+		                "pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., SubSubLeadingJetPt, "p_{T} [GeV]"),
+		                "pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+  }
+
+  for(unsigned i(0); i<sample_vector.size(); i++){
+    pm.Push<Hist1D>(Axis(5, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                    "mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("Coarse_compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(4, 0, 600., "mt_met_lep", "m_{T} [GeV]"),
+                    "pfmet>200&&mct>200&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("Coarse_compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(3, 0, 600., "mct", "M_{CT} [GeV]"),
+                    "pfmet>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("Coarse_compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(8, 30, 510., "mbb", "M_{b#bar{b}}"),
+		                "pfmet>200&&mct>200&&mt_met_lep>150", sample_vector[i], all_plot_types).Weight(weight_vector[i]).Tag("Coarse_compositionStudy_Distributions_background_"+sample_tags_vector[i]);
+  }
+
+  for(unsigned i(0); i<mTstudy_sample_vector.size(); i++){
+    pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                    "mct>200&&mbb>90&&mbb<150", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+                    "pfmet>200&&mbb>90&&mbb<150", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{b#bar{b}}"),
+		                "pfmet>200&&mct>200", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
+  }
+
+  for(unsigned i(0); i<mTstudy_sample_vector.size(); i++){
+    pm.Push<Hist1D>(Axis(5, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+                    "mct>200&&mbb>90&&mbb<150", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("Coarse_mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(3, 0, 600., "mct", "M_{CT} [GeV]"),
+                    "pfmet>200&&mbb>90&&mbb<150", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("Coarse_mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
+    pm.Push<Hist1D>(Axis(8, 30, 510., "mbb", "M_{b#bar{b}}"),
+		                "pfmet>200&&mct>200", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("Coarse_mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
+  }
 
   /*pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),
                   cr2l_1lep, sample_list, all_plot_types);

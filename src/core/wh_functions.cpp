@@ -128,6 +128,14 @@ namespace WH_Functions{
       return nwhleptons;
     });
 
+  const NamedFunc nRealBs("nRealBs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) nbquarks++;
+      }
+      return nbquarks;
+    });
+
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Basic Jet Pt

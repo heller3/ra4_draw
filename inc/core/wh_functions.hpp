@@ -23,6 +23,7 @@ namespace WH_Functions{
   extern const NamedFunc WHLeptons;
   extern const NamedFunc NBJets;
   extern const NamedFunc NHighPtNu;
+  extern const NamedFunc nRealBs;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
