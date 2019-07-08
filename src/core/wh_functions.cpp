@@ -16,6 +16,21 @@ namespace WH_Functions{
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Miscilaneous
 
+  const NamedFunc nEventsGluonSplit("nEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nevent = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
+            nevent++;
+          }//Close if statement for opposite b, same mother index, pt cut
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b with gluon mother
+    }//Close for loop over all particles in event
+    return nevent;
+
+    });
 
   const NamedFunc NHighPtNu("NHighPtNu",[](const Baby &b) -> NamedFunc::ScalarType{
       int nnu=0;
@@ -132,10 +147,291 @@ namespace WH_Functions{
       int nbquarks=0;
       for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
         if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) nbquarks++;
+        cout << b.ak4pfjets_parton_flavor()->at(i) << endl;
       }
       return nbquarks;
     });
 
+  const NamedFunc sortedJetsPt_Leading("sortedJetsPt_Leading",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float>* v = b.ak4pfjets_pt();
+
+    sort(v->begin(), v->end(), greater<int>());
+
+    return v->at(0);
+  });
+
+  const NamedFunc sortedJetsPt_subLeading("sortedJetsPt_subLeading",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float>* v = b.ak4pfjets_pt();
+
+    sort(v->begin(), v->end(), greater<int>());
+
+    return v->at(1);
+  });
+
+  const NamedFunc sortedJetsCSV_Leading("sortedJetsCSV_Leading",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector< pair <float,float> > v;
+    for(unsigned i(0);i<b.ak4pfjets_deepCSV()->size();i++){
+      v.push_back(make_pair(b.ak4pfjets_deepCSV()->at(i),b.ak4pfjets_pt()->at(i)));
+    }
+
+    sort(v.begin(),v.end());
+
+    int n = v.size();
+
+    return v[n-1].second;
+  });
+
+  const NamedFunc sortedJetsCSV_subLeading("sortedJetsCSV_subLeading",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector< pair <float,float> > v;
+    for(unsigned i(0);i<b.ak4pfjets_deepCSV()->size();i++){
+      v.push_back(make_pair(b.ak4pfjets_deepCSV()->at(i),b.ak4pfjets_pt()->at(i)));
+    }
+
+    sort(v.begin(),v.end());
+
+    int n = v.size();
+
+    return v[n-2].second;
+  });
+
+  const NamedFunc sortedJetsCSV_deltaR("sortedJetsCSV_deltaR",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<pair <float,float> > v_etaPhi;
+    vector<pair <float,pair<float,float> > > v_ptEtaPhi;
+    vector<pair <float, pair<float, pair <float,float> > > > v_csvPtEtaPhi;
+
+    for(unsigned i(0);i<b.ak4pfjets_deepCSV()->size();i++){
+      v_etaPhi.push_back(make_pair(b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i)));
+      v_ptEtaPhi.push_back(make_pair(b.ak4pfjets_pt()->at(i),v_etaPhi[i]));
+      v_csvPtEtaPhi.push_back(make_pair(b.ak4pfjets_deepCSV()->at(i),v_ptEtaPhi[i]));
+    }
+    sort(v_csvPtEtaPhi.begin(), v_csvPtEtaPhi.end());
+
+    int n = v_csvPtEtaPhi.size();
+    
+    float deltaR_leading = deltaR(v_csvPtEtaPhi[n-1].second.second.first,v_csvPtEtaPhi[n-1].second.second.second,v_csvPtEtaPhi[n-2].second.second.first,v_csvPtEtaPhi[n-2].second.second.second);
+
+    return deltaR_leading;
+  });
+
+  const NamedFunc nGenBs("nGenBs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+  const NamedFunc nGenBsFromGluons("nGenBsFromGluons",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5&&abs(b.gen_motherid()->at(i))==21) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+  const NamedFunc nGenBs_ptG15("nGenBs_ptG15",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>15) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+  const NamedFunc nGenBsFromGluons_ptG15("nGenBsFromGluons_ptG15",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5&&abs(b.gen_motherid()->at(i))==21&&b.gen_pt()->at(i)>15) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+  const NamedFunc nGenBs_ptG30("nGenBs_ptG30",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>30) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+  const NamedFunc nGenBsFromGluons_ptG30("nGenBsFromGluons_ptG30",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5&&abs(b.gen_motherid()->at(i))==21&&b.gen_pt()->at(i)>30) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+  const NamedFunc genBpT("genBpT",[](const Baby &b) -> NamedFunc::VectorType{
+      vector <double> bquarkpT;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5){
+          bquarkpT.push_back (b.gen_pt()->at(i));
+        }
+      }
+      return bquarkpT;
+    });
+  
+  const NamedFunc genB_leadingpT("genB_leadingpT",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector< pair <float,float> > v;
+    for(unsigned i(0);i<b.gen_id()->size();i++){
+      if(abs(b.gen_id()->at(i))==5){
+        v.push_back(make_pair(b.gen_pt()->at(i),b.gen_id()->at(i)));
+      }
+    }
+
+    sort(v.begin(),v.end());
+
+    int n = v.size();
+
+    float bquarkpT = v[n-1].first;
+
+    return bquarkpT;
+  });
+
+  const NamedFunc genB_subleadingpT("genB_subleadingpT",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector< pair <float,float> > v;
+    for(unsigned i(0);i<b.gen_id()->size();i++){
+      if(abs(b.gen_id()->at(i))==5){
+        v.push_back(make_pair(b.gen_pt()->at(i),b.gen_id()->at(i)));
+      }
+    }
+
+    sort(v.begin(),v.end());
+
+    int n = v.size();
+
+    float bquarkpT = v[n-2].first;
+
+    return bquarkpT;
+  });
+
+  const NamedFunc bDeltaRGluonSplit("bDeltaRGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
+    float delR = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
+            delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
+          }//Close if statement for opposite b, same mother index, pt cut
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b with gluon mother
+    }//Close for loop over all particles in event
+    return delR;
+
+    });
+
+  const NamedFunc bDeltaR("bDeltaR",[](const Baby &b) -> NamedFunc::ScalarType{
+    float delR = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)){
+            delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
+          }//Close if statement for opposite b
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return delR;
+
+    });
+
+  const NamedFunc bMother("bMother",[](const Baby &b) -> NamedFunc::VectorType{
+    vector <double> mother_id;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5){
+        mother_id.push_back (b.gen_motherid()->at(i));
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return mother_id;
+
+    });
+
+  const NamedFunc bMother_pt15("bMother_pt15",[](const Baby &b) -> NamedFunc::VectorType{
+    vector <double> mother_id;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>15){
+        mother_id.push_back (b.gen_motherid()->at(i));
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return mother_id;
+
+    });
+
+  const NamedFunc bMother_pt30("bMother_pt30",[](const Baby &b) -> NamedFunc::VectorType{
+    vector <double> mother_id;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>30){
+        mother_id.push_back (b.gen_motherid()->at(i));
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return mother_id;
+
+    });
+
+  const NamedFunc bDeltaPhi("bDeltaPhi",[](const Baby &b) -> NamedFunc::ScalarType{
+      float delphi=0;
+      vector < pair < float,float > > v_csvPhi;
+      
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==5){
+          v_csvPhi.push_back(make_pair(b.ak4pfjets_deepCSV()->at(i),b.ak4pfjets_phi()->at(i)));
+        }
+      }
+
+      sort(v_csvPhi.begin(),v_csvPhi.end());
+
+      int n = v_csvPhi.size();
+
+      if(n>=2){
+        delphi = deltaPhi(v_csvPhi[n-1].second,v_csvPhi[n-2].second);
+        return delphi;
+      }else return 0;
+
+    });
+
+  const NamedFunc bmetMinDeltaPhi("bmetMinDeltaPhi",[](const Baby &b) -> NamedFunc::ScalarType{
+      float delphi=10;
+      
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==5&&delphi>b.dphi_ak4pfjet_met()->at(i)){
+          delphi = b.dphi_ak4pfjet_met()->at(i);
+        }
+      }
+
+      return delphi;
+
+    });
+
+  const NamedFunc nHeavy("nHeavy",[](const Baby &b) -> NamedFunc::ScalarType{
+      float njets=0;
+      
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==5||abs(b.ak4pfjets_parton_flavor()->at(i))==4){
+          njets++;
+        }
+      }
+
+      return njets;
+
+    });
+
+  const NamedFunc nLight("nLight",[](const Baby &b) -> NamedFunc::ScalarType{
+      float njets=0;
+      
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==1||abs(b.ak4pfjets_parton_flavor()->at(i))==2||abs(b.ak4pfjets_parton_flavor()->at(i))==3){
+          njets++;
+        }
+      }
+
+      return njets;
+
+    });
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Basic Jet Pt

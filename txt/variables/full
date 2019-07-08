@@ -11,6 +11,7 @@ float ak4_HT
 bool PassTrackVeto
 bool PassTauVeto
 float mbb
+float ptbb
 float mct
 float mass_stop
 float mass_lsp

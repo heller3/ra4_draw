@@ -24,6 +24,30 @@ namespace WH_Functions{
   extern const NamedFunc NBJets;
   extern const NamedFunc NHighPtNu;
   extern const NamedFunc nRealBs;
+  extern const NamedFunc sortedJetsPt_Leading;
+  extern const NamedFunc sortedJetsPt_subLeading;
+  extern const NamedFunc sortedJetsCSV_Leading;
+  extern const NamedFunc sortedJetsCSV_subLeading;
+  extern const NamedFunc sortedJetsCSV_deltaR;
+  extern const NamedFunc nEventsGluonSplit;
+  extern const NamedFunc nGenBs;
+  extern const NamedFunc nGenBsFromGluons;
+  extern const NamedFunc nGenBs_ptG15;
+  extern const NamedFunc nGenBsFromGluons_ptG15;
+  extern const NamedFunc nGenBs_ptG30;
+  extern const NamedFunc nGenBsFromGluons_ptG30;
+  extern const NamedFunc genBpT;
+  extern const NamedFunc bDeltaRGluonSplit;
+  extern const NamedFunc bDeltaR;
+  extern const NamedFunc bMother;
+  extern const NamedFunc bMother_pt15;
+  extern const NamedFunc bMother_pt30;
+  extern const NamedFunc genB_leadingpT;
+  extern const NamedFunc genB_subleadingpT;
+  extern const NamedFunc bDeltaPhi;
+  extern const NamedFunc bmetMinDeltaPhi;
+  extern const NamedFunc nHeavy;
+  extern const NamedFunc nLight;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
