@@ -558,7 +558,7 @@ int main(){
 		                "pfmet>200&&mct>200", mTstudy_sample_vector[i], all_plot_types).Weight(mTstudy_weight_vector[i]).Tag("Coarse_mTcompositionStudy_Distributions_background_"+mTstudy_sample_tags_vector[i]);
   }
 
-    pm.Push<Hist1D>(Axis(8, 30, 510., bDeltaPhi, "Test"),
+    pm.Push<Hist1D>(Axis(8, 30, 510., gluBTagged, "Test"),
 		                "pfmet>200&&mct>200", sample_list, all_plot_types).Tag("TEST");
 
   /*pm.Push<Hist1D>(Axis(25, 0, 500., "leps_pt[0]", "lep p_{T} [GeV]"),

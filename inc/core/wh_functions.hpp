@@ -48,6 +48,10 @@ namespace WH_Functions{
   extern const NamedFunc bmetMinDeltaPhi;
   extern const NamedFunc nHeavy;
   extern const NamedFunc nLight;
+  extern const NamedFunc gluBTagged;
+  extern const NamedFunc nModEventsGluonSplit;
+  extern const NamedFunc leadingBMother_pt20;
+  extern const NamedFunc subleadingBMother_pt20;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;

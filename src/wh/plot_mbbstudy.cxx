@@ -134,13 +134,17 @@ int main(){
   pm.Push<Hist1D>(Axis(13, 0, 390., genB_subleadingpT, "p_{T} of subleading gen-level b"),
             "pfmet>200&&mct>200&&mt_met_lep>150"&&nGenBs>0., short_gluon_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_genB_subleadingpT_NO_MBB_CUT_");
   pm.Push<Hist1D>(Axis(6, 0, 3., bDeltaR, "dR of bb"),
-            "pfmet>200&&mct>200&&mt_met_lep>150", short_gluon_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bDeltaR_NO_MBB_CUT_");
-  pm.Push<Hist1D>(Axis(30, -5, 25., bMother, "pdgID of b's Mother"),
+            "pfmet>200&&mct>200&&mt_met_lep>150"&&bDeltaR>0., short_gluon_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bDeltaR_NO_MBB_CUT_");
+  pm.Push<Hist1D>(Axis(40, -5, 35., bMother, "pdgID of b's Mother"),
             "pfmet>200&&mct>200&&mt_met_lep>150", short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bMother_NO_MBB_CUT_");
-  pm.Push<Hist1D>(Axis(30, -5, 25., bMother_pt15, "pdgID of b's Mother"),
+  pm.Push<Hist1D>(Axis(40, -5, 35., bMother_pt15, "pdgID of b's Mother"),
             "pfmet>200&&mct>200&&mt_met_lep>150", short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bMother_NO_MBB_CUT_");
-  pm.Push<Hist1D>(Axis(30, -5, 25., bMother_pt30, "pdgID of b's Mother"),
+  pm.Push<Hist1D>(Axis(40, -5, 35., bMother_pt30, "pdgID of b's Mother"),
             "pfmet>200&&mct>200&&mt_met_lep>150", short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bMother_NO_MBB_CUT_");
+  pm.Push<Hist1D>(Axis(40, -5, 35., leadingBMother_pt20, "pdgID of leading b's Mother"),
+            "pfmet>200&&mct>200&&mt_met_lep>150"&&leadingBMother_pt20!=0., short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bMother_NO_MBB_CUT_");
+  pm.Push<Hist1D>(Axis(40, -5, 35., subleadingBMother_pt20, "pdgID of subleading b's Mother"),
+            "pfmet>200&&mct>200&&mt_met_lep>150"&&subleadingBMother_pt20!=0., short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_bMother_NO_MBB_CUT_");
   pm.Push<Hist1D>(Axis(20, 0, 4., bmetMinDeltaPhi, "min dPhi (b,MET)"),
             "pfmet>200&&mct>200&&mt_met_lep>150"&&bmetMinDeltaPhi<10., short_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("Coarse_compositionStudy_Distributions_background_wjets_medmed_mindPhi_NO_MBB_CUT_");
   pm.Push<Hist1D>(Axis(20, 0, 4., bmetMinDeltaPhi, "min dPhi (b,MET)"),

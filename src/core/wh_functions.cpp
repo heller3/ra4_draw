@@ -32,6 +32,18 @@ namespace WH_Functions{
 
     });
 
+  const NamedFunc nModEventsGluonSplit("nModEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nevent = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21&&b.gen_pt()->at(i)>20){
+        nevent++;
+      }//Close if statement that find b with gluon mother
+    }//Close for loop over all particles in event
+    return nevent;
+
+    });
+
   const NamedFunc NHighPtNu("NHighPtNu",[](const Baby &b) -> NamedFunc::ScalarType{
       int nnu=0;
         for (unsigned i(0); i<b.gen_pt()->size(); i++){
@@ -342,7 +354,11 @@ namespace WH_Functions{
 
     for(unsigned i(0); i<b.gen_id()->size(); i++){
       if(abs(b.gen_id()->at(i))==5){
-        mother_id.push_back (b.gen_motherid()->at(i));
+        if(abs(b.gen_motherid()->at(i))==2212){
+          mother_id.push_back (30);
+        }else{
+          mother_id.push_back (b.gen_motherid()->at(i));
+        }//Close if/else statement for redefining proton
       }//Close if statement that find b
     }//Close for loop over all particles in event
     return mother_id;
@@ -354,7 +370,11 @@ namespace WH_Functions{
 
     for(unsigned i(0); i<b.gen_id()->size(); i++){
       if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>15){
-        mother_id.push_back (b.gen_motherid()->at(i));
+        if(abs(b.gen_motherid()->at(i))==2212){
+          mother_id.push_back (30);
+        }else{
+          mother_id.push_back (b.gen_motherid()->at(i));
+        }//Close if/else statement for redefining proton
       }//Close if statement that find b
     }//Close for loop over all particles in event
     return mother_id;
@@ -366,12 +386,58 @@ namespace WH_Functions{
 
     for(unsigned i(0); i<b.gen_id()->size(); i++){
       if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>30){
-        mother_id.push_back (b.gen_motherid()->at(i));
+        if(abs(b.gen_motherid()->at(i))==2212){
+          mother_id.push_back (30);
+        }else{
+          mother_id.push_back (b.gen_motherid()->at(i));
+        }//Close if/else statement for redefining proton
       }//Close if statement that find b
     }//Close for loop over all particles in event
     return mother_id;
 
     });
+
+  const NamedFunc leadingBMother_pt20("leadingBMother_pt20",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector< pair <float,float> > v;
+    for(unsigned i(0);i<b.gen_id()->size();i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>20){
+        v.push_back(make_pair(b.gen_pt()->at(i),b.gen_motherid()->at(i)));
+      }
+    }
+
+    sort(v.begin(),v.end());
+
+    int n = v.size();
+
+    float bmom = 0.;
+    
+    if(n!=0){
+      bmom = v[n-1].second;
+    }
+
+    return bmom;
+  });
+
+  const NamedFunc subleadingBMother_pt20("subleadingBMother_pt20",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector< pair <float,float> > v;
+    for(unsigned i(0);i<b.gen_id()->size();i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>20){
+        v.push_back(make_pair(b.gen_pt()->at(i),b.gen_motherid()->at(i)));
+      }
+    }
+
+    sort(v.begin(),v.end());
+
+    int n = v.size();
+
+    float bmom = 0.;
+    
+    if(n!=0){
+      bmom = v[n-2].second;
+    }
+
+    return bmom;
+  });
 
   const NamedFunc bDeltaPhi("bDeltaPhi",[](const Baby &b) -> NamedFunc::ScalarType{
       float delphi=0;
@@ -430,6 +496,56 @@ namespace WH_Functions{
       }
 
       return njets;
+
+    });
+
+  const NamedFunc gluBTagged("gluBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector <pair <float, float> > gen_bs;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
+            gen_bs.push_back(make_pair(b.gen_eta()->at(i),b.gen_phi()->at(i)));
+            gen_bs.push_back(make_pair(b.gen_eta()->at(j),b.gen_phi()->at(j)));
+          }//Close if statement for opposite b
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+
+    float ntagged = 0;
+    float delR = -1;
+    float mindelR = 10;
+    float dcsv = -1;
+
+    int idx1 = 0;
+    int idx2 = 0;
+
+    if (gen_bs.size()==0){
+      ntagged = -1;
+    }else{
+      for(unsigned i(0);i<2;i++){
+        for(unsigned j(0);j<b.ak4pfjets_eta()->size();j++){
+          delR = deltaR(gen_bs[i].first,gen_bs[i].second,b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j));
+          if(delR < mindelR){
+            mindelR = delR;
+            dcsv = b.ak4pfjets_deepCSV()->at(j);
+            if(i==0){
+              idx1=j;
+            }else{
+              idx2=j;
+            }
+          }//Close if statement for smallest dR
+        }//Close for loop over reco objects
+        if(dcsv > 0.6324) ntagged++;
+      }//Close for loop over gen objects
+
+      if(idx1==idx2){
+        ntagged = ntagged-1;
+      }
+    }
+
+    return ntagged;
 
     });
 
