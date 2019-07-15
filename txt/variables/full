@@ -26,6 +26,8 @@ float w_BtagSF_WH
 
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_deepCSV
+std::vector<float> ak4pfjets_deepCSVc
+std::vector<float> ak4pfjets_deepCSVl
 std::vector<float> ak4pfjets_pt
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
