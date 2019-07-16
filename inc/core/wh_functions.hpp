@@ -18,6 +18,10 @@ namespace WH_Functions{
   extern const NamedFunc HasLooseNoMedDeepCSV;
   extern const NamedFunc nDeepMedBTagged;
   extern const NamedFunc nDeepLooseBTagged;
+  extern const NamedFunc nDeepMedCTagged;
+  extern const NamedFunc nDeepMedCvBTagged;
+  extern const NamedFunc nDeepTightCTagged;
+  extern const NamedFunc nDeepTightCvBTagged;
   extern const NamedFunc bJetPt;
   extern const NamedFunc HasNoBs;
   extern const NamedFunc WHLeptons;
@@ -57,6 +61,8 @@ namespace WH_Functions{
   extern const NamedFunc LeadingJetPt;
   extern const NamedFunc SubLeadingJetPt;
   extern const NamedFunc SubSubLeadingJetPt;
+  extern const NamedFunc deltaRLeadingJets;
+  extern const NamedFunc deltaPhiLeadingJets;
 
   // Funcs to look at number of 3rd jets which are actually B's
   extern const NamedFunc LeadingNonBJetPt;
@@ -84,7 +90,12 @@ namespace WH_Functions{
   extern const NamedFunc genISRrecoISRdPhi;
   extern const NamedFunc genISRrecoISRDeltaPt;
   extern const NamedFunc truthOrigin3rdJet;
-  
+ 
+  extern const NamedFunc bDeltaR;
+  extern const NamedFunc bbmass;
+  extern const NamedFunc nGenBs_ptG15;
+  extern const NamedFunc nGenBs_ptG30;
+
 }
 
 #endif

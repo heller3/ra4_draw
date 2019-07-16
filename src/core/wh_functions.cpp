@@ -130,6 +130,36 @@ namespace WH_Functions{
       return njets;
     });
 
+  const NamedFunc nDeepMedCTagged("nDeepMedCTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
+        if (b.ak4pfjets_deepCSVc()->at(i)/(b.ak4pfjets_deepCSVc()->at(i)+b.ak4pfjets_deepCSVl()->at(i)) > 0.155) njets++;
+      }
+      return njets;
+    });
+  const NamedFunc nDeepTightCTagged("nDeepTightCTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
+        if (b.ak4pfjets_deepCSVc()->at(i)/(b.ak4pfjets_deepCSVc()->at(i)+b.ak4pfjets_deepCSVl()->at(i)) > 0.59) njets++;
+      }
+      return njets;
+    });
+
+  const NamedFunc nDeepMedCvBTagged("nDeepMedCvBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
+        if (b.ak4pfjets_deepCSVc()->at(i)/(b.ak4pfjets_deepCSVc()->at(i)+b.ak4pfjets_deepCSV()->at(i)) > 0.14) njets++;
+      }
+      return njets;
+    });
+  const NamedFunc nDeepTightCvBTagged("nDeepTightCvBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
+        if (b.ak4pfjets_deepCSVc()->at(i)/(b.ak4pfjets_deepCSVc()->at(i)+b.ak4pfjets_deepCSV()->at(i)) > 0.05) njets++;
+      }
+      return njets;
+    });
+
   const NamedFunc bJetPt("bJetPt",[](const Baby &b) -> NamedFunc::VectorType{
       vector<double> bjetpt;
       for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
@@ -233,6 +263,67 @@ namespace WH_Functions{
 
     return deltaR_leading;
   });
+
+
+  const NamedFunc deltaRLeadingJets("deltaRLeadingJets",[](const Baby &b) -> NamedFunc::ScalarType{
+  
+    float maxpt=0; int maxindex=-1;
+    float secondmaxpt=0; int secondindex=-1;
+    for (unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      if (b.ak4pfjets_pt()->at(i) > secondmaxpt && b.ak4pfjets_pt()->at(i)<=maxpt){
+        secondmaxpt = b.ak4pfjets_pt()->at(i);
+        secondindex=i;
+      }
+      else if (b.ak4pfjets_pt()->at(i) > maxpt){
+        secondmaxpt=maxpt;
+        secondindex=maxindex;
+        maxpt = b.ak4pfjets_pt()->at(i);
+        maxindex=i;
+      }
+    }
+    return deltaR(b.ak4pfjets_eta()->at(maxindex),b.ak4pfjets_phi()->at(maxindex),b.ak4pfjets_eta()->at(secondindex),b.ak4pfjets_phi()->at(secondindex));
+  });
+
+    const NamedFunc deltaPhiLeadingJets("deltaPhiLeadingJets",[](const Baby &b) -> NamedFunc::ScalarType{
+
+    float maxpt=0; int maxindex=-1;
+    float secondmaxpt=0; int secondindex=-1;
+    for (unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      if (b.ak4pfjets_pt()->at(i) > secondmaxpt && b.ak4pfjets_pt()->at(i)<=maxpt){
+        secondmaxpt = b.ak4pfjets_pt()->at(i);
+        secondindex=i;
+      }
+      else if (b.ak4pfjets_pt()->at(i) > maxpt){
+        secondmaxpt=maxpt;
+        secondindex=maxindex;
+        maxpt = b.ak4pfjets_pt()->at(i);
+        maxindex=i;
+      }
+    }
+    return deltaPhi(b.ak4pfjets_phi()->at(maxindex),b.ak4pfjets_phi()->at(secondindex));
+  });
+
+  const NamedFunc bbmass("bbmass",[](const Baby &b) -> NamedFunc::ScalarType{
+    float mass = -1;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)){
+            //delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
+            TLorentzVector v1,v2,sum;
+            v1.SetPtEtaPhiM(b.gen_pt()->at(i),b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_m()->at(i));
+            v2.SetPtEtaPhiM(b.gen_pt()->at(j),b.gen_eta()->at(j),b.gen_phi()->at(j),b.gen_m()->at(j));
+            sum=v1+v2;
+            mass = sum.M();
+          }//Close if statement for opposite b
+        }//Close for loop over second half of particles in event
+        if (mass>-1) break;
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return mass;
+
+    });
 
   const NamedFunc nGenBs("nGenBs",[](const Baby &b) -> NamedFunc::ScalarType{
       int nbquarks=0;
