@@ -34,12 +34,21 @@ namespace WH_Functions{
 
   const NamedFunc nModEventsGluonSplit("nModEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
     int nevent = 0;
+    int ngenb = 0;
 
     for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5){
+        ngenb++;
+      }
       if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21&&b.gen_pt()->at(i)>20){
         nevent++;
       }//Close if statement that find b with gluon mother
     }//Close for loop over all particles in event
+
+    if(ngenb==0){
+      nevent = -1;
+    }
+
     return nevent;
 
     });
@@ -399,7 +408,12 @@ namespace WH_Functions{
 
   const NamedFunc leadingBMother_pt20("leadingBMother_pt20",[](const Baby &b) -> NamedFunc::ScalarType{
     vector< pair <float,float> > v;
+    int ngenb = 0;
+
     for(unsigned i(0);i<b.gen_id()->size();i++){
+      if(abs(b.gen_id()->at(i))==5){
+        ngenb++;
+      }
       if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>20){
         v.push_back(make_pair(b.gen_pt()->at(i),b.gen_motherid()->at(i)));
       }
@@ -415,12 +429,21 @@ namespace WH_Functions{
       bmom = v[n-1].second;
     }
 
+    if(ngenb==0.){
+      bmom = 19;
+    }
+
     return bmom;
   });
 
   const NamedFunc subleadingBMother_pt20("subleadingBMother_pt20",[](const Baby &b) -> NamedFunc::ScalarType{
     vector< pair <float,float> > v;
+    int ngenb = 0;
+
     for(unsigned i(0);i<b.gen_id()->size();i++){
+      if(abs(b.gen_id()->at(i))==5){
+        ngenb++;
+      }
       if(abs(b.gen_id()->at(i))==5&&b.gen_pt()->at(i)>20){
         v.push_back(make_pair(b.gen_pt()->at(i),b.gen_motherid()->at(i)));
       }
@@ -432,8 +455,12 @@ namespace WH_Functions{
 
     float bmom = 0.;
     
-    if(n!=0){
+    if(n>=2){
       bmom = v[n-2].second;
+    }
+
+    if(ngenb==0.){
+      bmom = 19;
     }
 
     return bmom;
