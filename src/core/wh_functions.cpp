@@ -145,6 +145,14 @@ namespace WH_Functions{
       return njets;
     });
 
+  const NamedFunc nDeepTightCvBTagged("nDeepTightCvBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
+        if (b.ak4pfjets_deepCSVc()->at(i)/(b.ak4pfjets_deepCSVc()->at(i)+b.ak4pfjets_deepCSV()->at(i)) > 0.19) njets++;
+      }
+      return njets;
+    });
+
   const NamedFunc nDeepMedCvBTagged("nDeepMedCvBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
       int njets=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
@@ -152,7 +160,7 @@ namespace WH_Functions{
       }
       return njets;
     });
-  const NamedFunc nDeepTightCvBTagged("nDeepTightCvBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
+  const NamedFunc nDeepLooseCvBTagged("nDeepLooseCvBTagged",[](const Baby &b) -> NamedFunc::ScalarType{
       int njets=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSVc()->size(); i++){
         if (b.ak4pfjets_deepCSVc()->at(i)/(b.ak4pfjets_deepCSVc()->at(i)+b.ak4pfjets_deepCSV()->at(i)) > 0.05) njets++;
@@ -198,7 +206,6 @@ namespace WH_Functions{
       int nbquarks=0;
       for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
         if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) nbquarks++;
-        cout << b.ak4pfjets_parton_flavor()->at(i) << endl;
       }
       return nbquarks;
     });
@@ -666,6 +673,17 @@ namespace WH_Functions{
     return ntagged;
 
     });
+
+  const NamedFunc outsideHiggsWindow("outsideHiggsWindow",[](const Baby &b) -> NamedFunc::ScalarType{
+
+    int outsideWindow = 0.;
+
+    if(b.mbb()<90||b.mbb()>150){
+      outsideWindow=1.;
+    }
+
+    return outsideWindow;
+  });
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Basic Jet Pt

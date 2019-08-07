@@ -18,6 +18,7 @@ namespace WH_Functions{
   extern const NamedFunc HasLooseNoMedDeepCSV;
   extern const NamedFunc nDeepMedBTagged;
   extern const NamedFunc nDeepLooseBTagged;
+  extern const NamedFunc nDeepLooseCvBTagged;
   extern const NamedFunc nDeepMedCTagged;
   extern const NamedFunc nDeepMedCvBTagged;
   extern const NamedFunc nDeepTightCTagged;
@@ -56,6 +57,7 @@ namespace WH_Functions{
   extern const NamedFunc nModEventsGluonSplit;
   extern const NamedFunc leadingBMother_pt20;
   extern const NamedFunc subleadingBMother_pt20;
+  extern const NamedFunc outsideHiggsWindow;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
