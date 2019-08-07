@@ -3,6 +3,7 @@ int nvetoleps
 int evt
 float mt_met_lep
 float pfmet
+float genmet
 int ngoodjets
 int ngoodbtags
 int nloosebtags

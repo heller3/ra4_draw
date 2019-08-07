@@ -157,11 +157,11 @@ int main(){
   
   NamedFunc no_cuts = true;
   NamedFunc min_cuts = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3" && HasMedLooseCSV && WHLeptons==1;
-  NamedFunc min_cuts_2medb = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3" && HasMedMedCSV && WHLeptons==1;
+  NamedFunc min_cuts_2medb = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3 && ngoodbtags==2" && WHLeptons==1;
   NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && HasMedLooseCSV && WHLeptons==1;
   NamedFunc preselection_nojetcuts = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&pfmet>125&&mt_met_lep>50" &&  HasMedLooseCSV && WHLeptons==1;// && HasISRCandidate;
   NamedFunc preselection_multijets = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&mt_met_lep>50&&pfmet>125" && HasMedLooseCSV && WHLeptons==1;
-  NamedFunc preselection_multijets_2medb = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&mt_met_lep>50&&pfmet>125" && HasMedMedCSV && WHLeptons==1;
+  NamedFunc preselection_multijets_2medb = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&mt_met_lep>50&&pfmet>125 && ngoodbtags==2"  && WHLeptons==1;
   NamedFunc cr_base = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>170&&pfmet>125&&mt_met_lep>150" && WHLeptons==1;
   NamedFunc cr0b = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mbb>90&&mbb<150&&mct>170&&pfmet>125&&mt_met_lep>50" && NBJets==0. && WHLeptons==1;
   NamedFunc crmbb = "PassTrackVeto&&PassTauVeto&&ngoodjets==2&&!(mbb>90&&mbb<150)&&pfmet>125&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1;

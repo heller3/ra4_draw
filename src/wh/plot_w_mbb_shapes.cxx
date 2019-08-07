@@ -28,6 +28,8 @@ int main(){
   string data_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_04_03/";
   string mc_dir = "/home/users/rheller/wh_babies/babies_v30_9_2019_04_03/";
   string signal_dir = "/home/users/rheller/wh_babies/babies_signal_2019_04_03/";
+  string z_dir = "/home/users/rheller/wh_babies/babies_v30_9_2019_04_03/";
+
 
   string basic_cuts =            "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2";
 

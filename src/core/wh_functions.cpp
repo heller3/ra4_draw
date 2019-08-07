@@ -61,6 +61,14 @@ namespace WH_Functions{
       return nnu;
       });
 
+  const NamedFunc zpt("zpt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float z_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 23) z_pt = b.gen_pt()->at(i);
+    }
+    return z_pt;
+    });
+
    /*
    * returns 1 if there are two b jets with at least one Medium and one Loose score
    * returns 0 otherwise
