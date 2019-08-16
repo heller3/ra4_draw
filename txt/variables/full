@@ -3,9 +3,12 @@ int nvetoleps
 int evt
 float mt_met_lep
 float pfmet
+float genmet
 int ngoodjets
 int ngoodbtags
 int nloosebtags
+
+int nvtxs
 
 float ak4_HT
 bool PassTrackVeto
@@ -16,6 +19,7 @@ float mct
 float mass_stop
 float mass_lsp
 float weight
+float w_pu
 float w_noBtagSF
 
 int njets
@@ -43,9 +47,12 @@ float lep1_relIso
 float lep2_relIso
 int HLT_SingleEl
 int HLT_SingleMu
+int HLT_MET_MHT
+int HLT_MET
 bool pass
 bool goodrun
 bool duplicate
+bool stitch
 
 ### generator info ###
 std::vector<int> gen_id

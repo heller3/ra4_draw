@@ -61,6 +61,23 @@ namespace WH_Functions{
       return nnu;
       });
 
+  const NamedFunc HighNuPt("HighNuPt",[](const Baby &b) -> NamedFunc::ScalarType{
+      float max_nupt=0;
+        for (unsigned i(0); i<b.gen_pt()->size(); i++){
+         if (abs(b.gen_motherid()->at(i))==24 && ( abs(b.gen_id()->at(i)) == 12 || abs(b.gen_id()->at(i)) == 14 || abs(b.gen_id()->at(i)) == 16) &&  b.gen_pt()->at(i) > max_nupt) max_nupt = b.gen_pt()->at(i);
+      }
+      return max_nupt;
+      });
+
+
+  const NamedFunc zpt("zpt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float z_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 23) z_pt = b.gen_pt()->at(i);
+    }
+    return z_pt;
+    });
+
    /*
    * returns 1 if there are two b jets with at least one Medium and one Loose score
    * returns 0 otherwise

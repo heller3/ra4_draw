@@ -10,6 +10,8 @@ namespace WH_Functions{
   // Miscilaneous
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc NHighPtNu;
+  extern const NamedFunc HighNuPt;
+  extern const NamedFunc zpt;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc HasMedMedDeepCSV;
   extern const NamedFunc HasExactMedMedDeepCSV;
@@ -27,7 +29,6 @@ namespace WH_Functions{
   extern const NamedFunc HasNoBs;
   extern const NamedFunc WHLeptons;
   extern const NamedFunc NBJets;
-  extern const NamedFunc NHighPtNu;
   extern const NamedFunc nRealBs;
   extern const NamedFunc sortedJetsPt_Leading;
   extern const NamedFunc sortedJetsPt_subLeading;
