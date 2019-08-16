@@ -206,7 +206,7 @@ int main(){
 
  	PlotMaker pm;
 
-   /*pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{Miss} [GeV]"),
+   pm.Push<Hist1D>(Axis(25, 0, 500., "pfmet", "E_{T}^{Miss} [GeV]"),
         basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_purityCheck_MET_");
    pm.Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
         basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mt_met_lep>150&&mbb>90&&mbb<150", sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_purityCheck_MCT_");
@@ -228,11 +228,11 @@ int main(){
         "mt_met_lep>150&&pfmet>200", sample_vector[i], all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_MBB_nminus2_"+sample_label[i]);
     pm.Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{bb} [GeV]"),
         "mt_met_lep>150&&pfmet>200", sample_vector[i], all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_MBB_nminus2_forIndara_"+sample_label[i]);
-  }*/
+  }
 
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{bb} [GeV]"),
       basic_cuts&&WHLeptons==1&&"mct>200&&mt_met_lep>150&&pfmet>200"&&outsideHiggsWindow==1.&&nDeepMedBTagged<2.&&nDeepTightCvBTagged==2., data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_MBB_data_2tightc_");
-  /*pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{bb} [GeV]"),
+  pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{bb} [GeV]"),
       basic_cuts&&WHLeptons==1&&"mct>200&&mt_met_lep>150&&pfmet>200"&&outsideHiggsWindow==1.&&nDeepMedBTagged<2.&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2., data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_MBB_data_ctightmed_cvbmed_");
   pm.Push<Hist1D>(Axis(25, 0, 500., "mbb", "M_{bb} [GeV]"),
       basic_cuts&&WHLeptons==1&&"mct>200&&mt_met_lep>150&&pfmet>200"&&outsideHiggsWindow==1.&&nDeepMedBTagged<2.&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2., data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_MBB_data_2tightc_cvbmed_");
@@ -287,7 +287,7 @@ int main(){
   pm.Push<Hist1D>(Axis(5, 0, 5., nDeepMedCvBTagged, "nMedCvB Tags"),
       nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&basic_cuts&&WHLeptons==1.&&"mct>200&&pfmet>200&&mt_met_lep>150", data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_nMedCvB_tightmedCvL_");
   pm.Push<Hist1D>(Axis(5, 0, 5., nDeepMedCvBTagged, "nMedCvB Tags"),
-      nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&basic_cuts&&WHLeptons==1&&"pfmet>200&&mct>200&&mt_met_lep>150", data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_nMedCvB_tightCvL_");*/
+      nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&basic_cuts&&WHLeptons==1&&"pfmet>200&&mct>200&&mt_met_lep>150", data_sample_list, all_plot_types).Weight("w_noBtagSF * w_BtagSF_medmed").Tag("charmCR_nMedCvB_tightCvL_");
 
   pm.MakePlots(lumi);
 
