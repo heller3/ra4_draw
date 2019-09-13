@@ -18,13 +18,6 @@
 using namespace std;
 using namespace PlotOptTypes;
 using namespace WH_Functions;
-/*const NamedFunc NHighPtNu("NHighPtNu",[](const Baby &b) -> NamedFunc::ScalarType{
-      int nnu=0;
-        for (unsigned i(0); i<b.gen_pt()->size(); i++){
-        if (abs(b.gen_motherid()->at(i))==24 && ( abs(b.gen_id()->at(i)) == 12 || abs(b.gen_id()->at(i)) == 14 || abs(b.gen_id()->at(i)) == 16) && b.gen_pt()->at(i) > 200 ) nnu++;
-      }
-      return nnu;
-    });*/
 
 
 int main(){
@@ -34,9 +27,12 @@ int main(){
   double lumi2017 = 41.6;
   double lumi2018 = 59.7;
 
+  string data2017_dir = "/hadoop/cms/store/user/sicheng/stopbabies/merged/data_v30_7/";
+  string data2018_dir = "/hadoop/cms/store/user/sicheng/stopbabies/merged/data_v30_7/";
+
   string data2016_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_08_13/";
-  string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/";
-  string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/";
+  /*string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/";
+  string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/";*/
 
   string mc2016_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/s16v3/";
   string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_08_13/s16v3/";
@@ -55,10 +51,13 @@ int main(){
   //Data
   auto data2016 = Process::MakeShared<Baby_full>("2016 Data", Process::Type::data, colors("data"),{data2016_dir+"*data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1)");
   auto data2016_met = Process::MakeShared<Baby_full>("2016 Data, with MET triggers", Process::Type::data, colors("data"),{data2016_dir+"*data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto data2016_metOnly = Process::MakeShared<Baby_full>("2016 Data, only MET triggers", Process::Type::data, colors("data"),{data2016_dir+"*data_2016*met*.root"},"pass&&HLT_MET_MHT==1");
   auto data2017 = Process::MakeShared<Baby_full>("2017 Data", Process::Type::data, colors("data"),{data2017_dir+"*data_2017*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1)");
   auto data2017_met = Process::MakeShared<Baby_full>("2017 Data, with MET triggers", Process::Type::data, colors("data"),{data2017_dir+"*data_2017*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto data2017_metOnly = Process::MakeShared<Baby_full>("2017 Data, only MET triggers", Process::Type::data, colors("data"),{data2017_dir+"*data_2017*met*.root"},"pass&&HLT_MET_MHT==1");
   auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"*data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1)");
   auto data2018_met = Process::MakeShared<Baby_full>("2018 Data, with MET triggers", Process::Type::data, colors("data"),{data2018_dir+"*data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto data2018_metOnly = Process::MakeShared<Baby_full>("2018 Data, only MET triggers", Process::Type::data, colors("data"),{data2018_dir+"*data_2018*met*.root"},"pass&&HLT_MET_MHT==1");
 
   //ttbar
   auto tt1l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016", Process::Type::background, colors("tt_1l"),
@@ -121,9 +120,11 @@ int main(){
   vector<shared_ptr<Process> > sample_list_2017 = {data2017_met,wjets_2017,tt2l_2017,tt1l_2017,single_t_2017,diboson_2017,ttV_2017};
   // vector<shared_ptr<Process> > sample_list_2017_met = {data2017_met,wjets_2017,tt2l_2017,tt1l_2017,single_t_2017,diboson_2017,ttV_2017};
   vector<shared_ptr<Process> > sample_list_2017_alt = {data2017_met,wjets_2017_inclu,tt2l_2017_inclu,tt1l_2017_inclu,single_t_2017,diboson_2017,ttV_2017};
-
   vector<shared_ptr<Process> > sample_list_2018 = {data2018_met,wjets_2018,tt2l_2018,tt1l_2018,single_t_2018,diboson_2018,ttV_2018};
 
+  vector<shared_ptr<Process> > sample_list_metTrig_2016 = {data2016_metOnly,wjets_2016,tt2l_2016,tt1l_2016,single_t_2016,diboson_2016,ttV_2016};
+  vector<shared_ptr<Process> > sample_list_metTrig_2017 = {data2017_metOnly,wjets_2017,tt2l_2017,tt1l_2017,single_t_2017,diboson_2017,ttV_2017};
+  vector<shared_ptr<Process> > sample_list_metTrig_2018 = {data2018_metOnly,wjets_2018,tt2l_2018,tt1l_2018,single_t_2018,diboson_2018,ttV_2018};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
@@ -147,6 +148,9 @@ int main(){
   PlotMaker * pm2016 = new PlotMaker();
   PlotMaker * pm2017 = new PlotMaker();
   PlotMaker * pm2018 = new PlotMaker();
+  PlotMaker * pm2016_metTrig = new PlotMaker();
+  PlotMaker * pm2017_metTrig = new PlotMaker();
+  PlotMaker * pm2018_metTrig = new PlotMaker();
 
   //Preselection
   NamedFunc preselection = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==2" && WHLeptons==1;
@@ -167,9 +171,9 @@ int main(){
 
   vector<NamedFunc> sels = {preselection,ttbar_sel,wjets_sel,ttbar_1l_sel,ttbar_2l_sel}; 
   vector<NamedFunc> sels_full_eff = {preselection_full_eff,ttbar_sel_full_eff,wjets_sel_full_eff,ttbar_1l_sel_full_eff,ttbar_2l_sel_full_eff}; 
-  vector<PlotMaker *> pms = {pm2016,pm2017,pm2018};
-  vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2016,sample_list_2017,sample_list_2018};
-  vector<string> years = {"y2016","y2017","y2018"};
+  vector<PlotMaker *> pms = {pm2016,pm2017,pm2018,pm2016_metTrig,pm2017_metTrig,pm2018_metTrig};
+  vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2016,sample_list_2017,sample_list_2018,sample_list_metTrig_2016,sample_list_metTrig_2017,sample_list_metTrig_2018};
+  vector<string> years = {"y2016","y2017","y2018","y2016_metTrig_","y2017_metTrig_","y2018_metTrig_"};
   vector<string> weights = {"weight","weight * w_pu"};
 
   for(uint isel=0;isel<sels.size();isel++){
@@ -183,58 +187,34 @@ int main(){
         pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., "pfmet", "E_{T}^{miss} [GeV]"),
           sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
+        pms[iyear]->Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(25, 0, 500., "mct", "M_{CT} [GeV]"),
+          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]); 
+
+        pms[iyear]->Push<Hist1D>(Axis(18, 50, 500., "mt_met_lep", "M_{T} [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(18, 50, 500., "mt_met_lep", "M_{T} [GeV]"),
+          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]); 
+
         pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         pms[iyear]->Push<Hist1D>(Axis(15, 50, 350., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
           sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
-
-        pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
-
-        pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
-
-
-        // if(iyear==0) {
-        //   pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-        //     sels[isel], sample_list_2016_met, all_plot_types).Weight(weights[iweight]).Tag("met2016");
-
-        //   pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-        //     sels[isel], sample_list_2016_met, all_plot_types).Weight(weights[iweight]).Tag("met2016");  
-
-        //   pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-        //     sels[isel], sample_list_2016_met, all_plot_types).Weight(weights[iweight]).Tag("met2016");  
-
-        // }  
-        if(iyear==1) {
-
-          pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-            sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");
-
-          pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-            sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
-
-          pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");
-
-          pms[iyear]->Push<Hist1D>(Axis(15, 50, 350., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
-
-          pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-            sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
-
-          pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
-        }  
-      }
-    }
-  }
+      } //loop over weights
+    } //loop over years
+  } //loop over selections
 
   pm2016->MakePlots(lumi2016);
   pm2017->MakePlots(lumi2017);
  cout<<lumi2016<<lumi2017<<lumi2018<<endl;
   pm2018->MakePlots(lumi2018);
+  pm2016_metTrig->MakePlots(lumi2016);
+  pm2017_metTrig->MakePlots(lumi2017);
+  pm2018_metTrig->MakePlots(lumi2018);
 
 }

@@ -177,56 +177,46 @@ int main(){
       for(uint iweight=0;iweight<weights.size();iweight++){
 
 
-        pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+        pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., mht, "m_HT [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
-        pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+        pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., mht, "m_HT [GeV]"),
           sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
-        pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
+        /*pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         pms[iyear]->Push<Hist1D>(Axis(15, 50, 350., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);*/
 
 
         pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+          sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);
 
 
-        // if(iyear==0) {
-        //   pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-        //     sels[isel], sample_list_2016_met, all_plot_types).Weight(weights[iweight]).Tag("met2016");
 
-        //   pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-        //     sels[isel], sample_list_2016_met, all_plot_types).Weight(weights[iweight]).Tag("met2016");  
-
-        //   pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-        //     sels[isel], sample_list_2016_met, all_plot_types).Weight(weights[iweight]).Tag("met2016");  
-
-        // }  
         if(iyear==1) {
 
-          pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+          pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., mht, "m_HT [GeV]"),
             sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");
 
-          pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-            sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
+          /*pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
+            sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");*/
 
-          pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+          pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., mht, "m_HT [GeV]"),
             sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");
 
-          pms[iyear]->Push<Hist1D>(Axis(15, 50, 350., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
+          /*pms[iyear]->Push<Hist1D>(Axis(15, 50, 350., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
+            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017")*/ 
 
           pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
             sels[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
 
           pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");  
+            sels_full_eff[isel], sample_list_2017_alt, all_plot_types).Weight(weights[iweight]).Tag("incl2017");
         }  
       }
     }
