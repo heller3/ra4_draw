@@ -7,7 +7,7 @@
  
 namespace WH_Functions{
 
-  // Miscilaneous
+  // Miscellaneous 
   extern const NamedFunc yearWeight;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc NHighPtNu;
@@ -63,6 +63,8 @@ namespace WH_Functions{
   extern const NamedFunc subleadingBMother_pt20;
   extern const NamedFunc outsideHiggsWindow;
   extern const NamedFunc passTriggers;
+  extern const NamedFunc mht;
+
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
