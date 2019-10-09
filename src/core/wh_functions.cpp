@@ -14,7 +14,19 @@ using namespace std;
 namespace WH_Functions{
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // Miscilaneous
+  // Miscellaneous
+
+  
+  const NamedFunc yearWeight("yearWeight",[](const Baby &b) -> NamedFunc::ScalarType{
+    float weight=0;
+    float totalLumi = 35.9+41.6+59.7;
+    
+    if(b.year()==2016) weight = 35.9 / totalLumi;
+    else if(b.year()==2017)  weight = 41.6 / totalLumi;
+    else if(b.year()==2018)  weight = 59.7 / totalLumi;
+
+    return weight;
+    });
 
   const NamedFunc nEventsGluonSplit("nEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
     int nevent = 0;
@@ -77,6 +89,15 @@ namespace WH_Functions{
     }
     return z_pt;
     });
+
+  const NamedFunc wpt("wpt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float w_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 24) w_pt = b.gen_pt()->at(i);
+    }
+    return w_pt;
+    });
+
 
    /*
    * returns 1 if there are two b jets with at least one Medium and one Loose score
@@ -695,12 +716,24 @@ namespace WH_Functions{
 
     int outsideWindow = 0.;
 
-    if(b.mbb()<90||b.mbb()>150){
+    if(b.mbb()<90||b.mbb()>150||b.weight()!=1.){
       outsideWindow=1.;
     }
 
     return outsideWindow;
   });
+
+  const NamedFunc passTriggers("passTriggers",[](const Baby &b) -> NamedFunc::ScalarType{
+
+    int pass = 0.;
+
+    if(  b.HLT_SingleEl()==1||b.HLT_SingleMu()==1||b.HLT_MET_MHT()==1){
+      pass=1.;
+    }
+
+    return pass;
+  });
+
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Basic Jet Pt
