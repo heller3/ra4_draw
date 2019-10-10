@@ -73,7 +73,7 @@ int main(){
     {mc2017_dir+"*TTJets_2lep_f17v2*.root"});
 
   auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),
-    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root"});
+    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root"},"stitch");
   auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),
     {mc2018_dir+"*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet+"*TTJets_2lep_*met80*.root"},"stitch");
 
@@ -179,8 +179,8 @@ int main(){
   vector<PlotMaker *> pms = {pm2016,pm2017,pm2018,pm};
   vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2016,sample_list_2017,sample_list_2018,sample_list};
   vector<string> years = {"y2016","y2017","y2018","yLegacy"};
-  vector<NamedFunc> weights = {/*"weight",*/"weight * w_pu" * yearWeight};
-  //vector<NamedFunc> legacyWeights = {/*"weight"*yearWeight,*/"weight * w_pu" * yearWeight};
+  vector<NamedFunc> weights = {"weight","weight * w_pu"};
+  vector<NamedFunc> legacyWeights = {"weight"*yearWeight,"weight * w_pu" * yearWeight};
 
    vector<string> metbins = {"1","pfmet>200"};
   for(uint isel=0;isel<sels.size();isel++){
@@ -188,15 +188,9 @@ int main(){
        for(uint imet=0;imet<metbins.size();imet++){
         for(uint iweight=0;iweight<weights.size();iweight++){
         
-
+        if(iyear<3){
         pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
           sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
-
-        // pms[iyear]->Push<Hist1D>(Axis(30, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
-        //   sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
-
-        // pms[iyear]->Push<Hist1D>(Axis(35, 0, 70., "nvtxs", "Number of primary vertices"),
-        //   sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         pms[iyear]->Push<Hist1D>(Axis(10, 0, 300., "mbb", "m_{bb} [GeV]"),
           sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
@@ -206,23 +200,37 @@ int main(){
 
         pms[iyear]->Push<Hist1D>(Axis(10, 0, 400., "mt_met_lep", "m_{T} [GeV]"),
           sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+      }
+      else{
+        pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+          sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(legacyWeights[iweight]).Tag(years[iyear]);  
 
-        if(isel>0)continue;
+        pms[iyear]->Push<Hist1D>(Axis(10, 0, 300., "mbb", "m_{bb} [GeV]"),
+          sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(legacyWeights[iweight]).Tag(years[iyear]);  
+
         pms[iyear]->Push<Hist1D>(Axis(10, 0, 400., "mct", "m_{CT} [GeV]"),
-          "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>90&&mt_met_lep<140&&ngoodbtags==2" && WHLeptons==1 && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+          sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(legacyWeights[iweight]).Tag(years[iyear]);  
 
         pms[iyear]->Push<Hist1D>(Axis(10, 0, 400., "mt_met_lep", "m_{T} [GeV]"),
-          "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&ngoodbtags==2&&mct>150&&mct<200" && WHLeptons==1 && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+          sels[isel] && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(legacyWeights[iweight]).Tag(years[iyear]);  
+
+      }
+        // if(isel>0)continue;
+        // pms[iyear]->Push<Hist1D>(Axis(10, 0, 400., "mct", "m_{CT} [GeV]"),
+        //   "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>90&&mt_met_lep<140&&ngoodbtags==2" && WHLeptons==1 && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        // pms[iyear]->Push<Hist1D>(Axis(10, 0, 400., "mt_met_lep", "m_{T} [GeV]"),
+        //   "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&ngoodbtags==2&&mct>150&&mct<200" && WHLeptons==1 && metbins[imet], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         }
       }
     }
   }
 
-  // pm2016->MakePlots(lumi2016);
-  // pm2017->MakePlots(lumi2017);
+   pm2016->MakePlots(lumi2016);
+   pm2017->MakePlots(lumi2017);
  cout<<lumi2016<<lumi2017<<lumi2018<<endl;
-  // pm2018->MakePlots(lumi2018);
+   pm2018->MakePlots(lumi2018);
   pm->MakePlots(lumi2016+lumi2017+lumi2018);
 
 }

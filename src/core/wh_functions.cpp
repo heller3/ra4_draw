@@ -18,13 +18,16 @@ namespace WH_Functions{
 
   
   const NamedFunc yearWeight("yearWeight",[](const Baby &b) -> NamedFunc::ScalarType{
-    float weight=0;
-    float totalLumi = 35.9+41.6+59.7;
     
-    if(b.year()==2016) weight = 35.9 / totalLumi;
-    else if(b.year()==2017)  weight = 41.6 / totalLumi;
-    else if(b.year()==2018)  weight = 59.7 / totalLumi;
-
+    float weight=0;
+    if(b.genmet()==-9999) weight =1.;//DATA
+    else{
+      float totalLumi = 35.9+41.6+59.7;
+    
+      if(b.year()==2016) weight = 35.9 / totalLumi;
+      else if(b.year()==2017)  weight = 41.6 / totalLumi;
+     else if(b.year()==2018)  weight = 59.7 / totalLumi;
+    }
     return weight;
     });
 
