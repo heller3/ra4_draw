@@ -178,9 +178,11 @@ int main(){
   NamedFunc ttbar_1l_sel_full_eff = "leps_pt[0]>50&&pfmet>250&&pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&ngoodbtags>=1" && WHLeptons==1;
 
   NamedFunc wjets_sel = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0" && WHLeptons==1;
+  NamedFunc wjets_sel_tightRelIso = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && lep1_relIso<0.02" && WHLeptons==1;
   NamedFunc wjets_sel_npv = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && nvtxs<40" && WHLeptons==1;
   NamedFunc wjets_sel_mbb = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && mbb>90 && mbb<150" && WHLeptons==1;
   NamedFunc wjets_sel_mbb_mct = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && mbb>90 && mbb<150 && mct>170" && WHLeptons==1;
+  NamedFunc wjets_sel_medMT = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150 && ngoodbtags==0" && WHLeptons==1;
   NamedFunc wjets_sel_highMT = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>250 && ngoodbtags==0" && WHLeptons==1;
   NamedFunc wjets_sel_1b = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==1" && WHLeptons==1;
   NamedFunc wjets_sel_tight = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && lep1_MiniIso<0.04 && leps_eta[0]<1.5 && leps_eta[0]>-1.5" && WHLeptons==1;
@@ -203,12 +205,12 @@ int main(){
   //vector<NamedFunc> sels = {preselection,ttbar_sel,wjets_sel,ttbar_1l_sel,ttbar_2l_sel,highMTlowMCT,lowMThighMCT,preselectionEle,preselectionMu}; 
   //vector<NamedFunc> sels = {wjets_sel_full_eff,wjets_sel_met_eff}; 
   //vector<NamedFunc> sels = {wjets_sel_met_eff,wjets_sel,wjets_sel_stop_lowmet}; 
-  vector<NamedFunc> sels = {wjets_sel_met_eff}; 
+  vector<NamedFunc> sels = {wjets_sel}; 
   vector<NamedFunc> sels_full_eff = {preselection_full_eff,ttbar_sel_full_eff,wjets_sel_full_eff,ttbar_1l_sel_full_eff,ttbar_2l_sel_full_eff,highMTlowMCT_full_eff,lowMThighMCT_full_eff}; 
   //vector<PlotMaker *> pms = {pm2016,pm2017,pm2018};
   vector<PlotMaker *> pms = {pm2017};
   //vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2016,sample_list_2017,sample_list_2018};
-  vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2017_met_only};//,sample_list_2017_met,sample_list_2018_met};
+  vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2017_met};//,sample_list_2017_met,sample_list_2018_met};
   //vector<string> years = {"y2016","y2017","y2018"};
   vector<string> years = {"y2017"};
   //vector<string> weights = {"weight","weight * w_pu"};
@@ -221,6 +223,18 @@ int main(){
 
 
         pms[iyear]->Push<Hist1D>(Axis(15, 125, 500., "pfmet", "E_{T}^{miss} [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 500., mht, "H_{T}^{miss} [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(20, -3.2, 3.2, mht_phi, "#phi(H_{T}^{miss})"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., W_pt_lep_met, "p_{T}(W cand) [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., mt_lep_mht, "M_{T}(l,H_{T}^{miss}) [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         //pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., "pfmet", "E_{T}^{miss} [GeV]"),

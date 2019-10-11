@@ -702,6 +702,124 @@ namespace WH_Functions{
     return outsideWindow;
   });
 
+  const NamedFunc mht("mht",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mht_var = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    mht_var = sqrt((x*x)+(y*y));
+
+    return mht_var;
+
+    });
+
+  const NamedFunc mht_phi("mht_phi",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mht_var = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    mht_var = atan2(x, y);
+
+    return mht_var;
+
+    });
+
+  const NamedFunc W_pt_lep_met("W_pt_lep_met",[](const Baby &b) -> NamedFunc::ScalarType{
+    double W_pt_var = 0;
+
+    TLorentzVector lep;
+    TLorentzVector met;
+    TLorentzVector W_cand;
+
+    double var_mht_pt = 0;
+    double var_mht_phi = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    var_mht_phi = atan2(x, y);
+    var_mht_pt = sqrt((x*x)+(y*y));
+
+    lep.SetPtEtaPhiM(b.leps_pt()->at(0), b.leps_eta()->at(0), b.leps_phi()->at(0), 0.);
+    met.SetPtEtaPhiM(var_mht_pt, 0., var_mht_phi, 0.); //b.genmet_phi()
+
+    W_cand = lep + met;
+
+    W_pt_var = W_cand.Pt();
+    return W_pt_var;
+
+    });
+
+  const NamedFunc mt_lep_mht("mt_lep_mht",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mt_var = 0;
+
+    double var_mht_pt = 0;
+    double var_mht_phi = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    var_mht_phi = atan2(x, y);
+    var_mht_pt = sqrt((x*x)+(y*y));
+
+    mt_var = sqrt(2*b.leps_pt()->at(0)*var_mht_pt * (1-(cos(b.leps_phi()->at(0)-var_mht_phi))));
+    return mt_var;
+
+    });
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Basic Jet Pt
 

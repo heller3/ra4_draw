@@ -59,6 +59,10 @@ namespace WH_Functions{
   extern const NamedFunc leadingBMother_pt20;
   extern const NamedFunc subleadingBMother_pt20;
   extern const NamedFunc outsideHiggsWindow;
+  extern const NamedFunc mht;
+  extern const NamedFunc mht_phi;
+  extern const NamedFunc W_pt_lep_met;
+  extern const NamedFunc mt_lep_mht;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
