@@ -160,12 +160,17 @@ int main(){
  auto tchiwh2018_700_1 = Process::MakeShared<Baby_full>("2018 TChiWH(700,1)", Process::Type::signal, colors("t1tttt"),
   {signal_dir2018+"*TChiWH*.root"},"mass_stop==700&&mass_lsp==1");
 
+//  //List of processes
+//  vector<shared_ptr<Process> > sample_list = {wjets,tt2l,tt1l,single_t,diboson,ttV,tchiwh_all_700_1,tchiwh_all_350_100,tchiwh_all_225_75};
+//  vector<shared_ptr<Process> > sample_list_2016 = {wjets_2016,tt2l_2016,tt1l_2016,single_t_2016,diboson_2016,ttV_2016,tchiwh2016_700_1,tchiwh2016_350_100,tchiwh2016_225_75};
+//  vector<shared_ptr<Process> > sample_list_2017 = {wjets_2017,tt2l_2017,tt1l_2017,single_t_2017,diboson_2017,ttV_2017,tchiwh2017_700_1,tchiwh2017_350_100,tchiwh2017_225_75};
+//  vector<shared_ptr<Process> > sample_list_2018 = {wjets_2018,tt2l_2018,tt1l_2018,single_t_2018,diboson_2018,ttV_2018,tchiwh2018_700_1,tchiwh2018_350_100,tchiwh2018_225_75};
+//
   //List of processes
-   vector<shared_ptr<Process> > sample_list = {wjets,tt2l,tt1l,single_t,diboson,ttV,tchiwh_all_700_1,tchiwh_all_350_100,tchiwh_all_225_75};
-  vector<shared_ptr<Process> > sample_list_2016 = {wjets_2016,tt2l_2016,tt1l_2016,single_t_2016,diboson_2016,ttV_2016,tchiwh2016_700_1,tchiwh2016_350_100,tchiwh2016_225_75};
-  vector<shared_ptr<Process> > sample_list_2017 = {wjets_2017,tt2l_2017,tt1l_2017,single_t_2017,diboson_2017,ttV_2017,tchiwh2017_700_1,tchiwh2017_350_100,tchiwh2017_225_75};
-  vector<shared_ptr<Process> > sample_list_2018 = {wjets_2018,tt2l_2018,tt1l_2018,single_t_2018,diboson_2018,ttV_2018,tchiwh2018_700_1,tchiwh2018_350_100,tchiwh2018_225_75};
-
+  vector<shared_ptr<Process> > sample_list = {tchiwh_all_700_1,tchiwh_all_350_100,tchiwh_all_225_75};
+  vector<shared_ptr<Process> > sample_list_2016 = {tchiwh2016_700_1,tchiwh2016_350_100,tchiwh2016_225_75};
+  vector<shared_ptr<Process> > sample_list_2017 = {tchiwh2017_700_1,tchiwh2017_350_100,tchiwh2017_225_75};
+  vector<shared_ptr<Process> > sample_list_2018 = {tchiwh2018_700_1,tchiwh2018_350_100,tchiwh2018_225_75};
  
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)

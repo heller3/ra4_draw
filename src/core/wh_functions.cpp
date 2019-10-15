@@ -793,6 +793,23 @@ namespace WH_Functions{
     TLorentzVector met;
     TLorentzVector W_cand;
 
+    lep.SetPtEtaPhiM(b.leps_pt()->at(0), b.leps_eta()->at(0), b.leps_phi()->at(0), 0.);
+    met.SetPtEtaPhiM(b.pfmet(), 0., b.pfmet_phi(), 0.); //b.genmet_phi()
+
+    W_cand = lep + met;
+
+    W_pt_var = W_cand.Pt();
+    return W_pt_var;
+
+    });
+
+  const NamedFunc W_pt_lep_mht("W_pt_lep_mht",[](const Baby &b) -> NamedFunc::ScalarType{
+    double W_pt_var = 0;
+
+    TLorentzVector lep;
+    TLorentzVector met;
+    TLorentzVector W_cand;
+
     double var_mht_pt = 0;
     double var_mht_phi = 0;
     double x = 0;
@@ -851,6 +868,14 @@ namespace WH_Functions{
     var_mht_pt = sqrt((x*x)+(y*y));
 
     mt_var = sqrt(2*b.leps_pt()->at(0)*var_mht_pt * (1-(cos(b.leps_phi()->at(0)-var_mht_phi))));
+    return mt_var;
+
+    });
+
+  const NamedFunc mt_lep_met_rec("mt_lep_met_rec",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mt_var = 0;
+
+    mt_var = sqrt(2*b.leps_pt()->at(0)*b.pfmet() * (1-(cos(b.leps_phi()->at(0)-b.pfmet_phi()))));
     return mt_var;
 
     });

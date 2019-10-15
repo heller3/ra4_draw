@@ -66,7 +66,9 @@ namespace WH_Functions{
   extern const NamedFunc mht;
   extern const NamedFunc mht_phi;
   extern const NamedFunc W_pt_lep_met;
+  extern const NamedFunc W_pt_lep_mht;
   extern const NamedFunc mt_lep_mht;
+  extern const NamedFunc mt_lep_met_rec;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;

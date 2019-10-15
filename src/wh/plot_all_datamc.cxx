@@ -34,23 +34,23 @@ int main(){
   double lumi2017 = 41.6;
   double lumi2018 = 59.7;
 
-  string data2016_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_08_13/";
-  string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/";
-  string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/";
+  string data2016_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
+  string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
+  string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
 
-  string mc2016_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/s16v3/";
-  string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_08_13/s16v3/";
+  string mc2016_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/s16v3/";
+  string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/s16v3/";
 
-  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/f17v2/";
-  string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_08_13/f17v2/";
-  string wjets2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_14/f17v2/";
+  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/f17v2/";
+  string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/f17v2/";
 
+  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/a18v1/";
+  string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_07/a18v1/";
 
-  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_13/a18v1/";
-  string wjets2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_08_14/a18v1/";
-
-  
-
+  //string signal_dir = "/home/users/rheller/wh_babies/babies_signal_2019_04_03/";
+  //string signal_dir2016 = "/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2019_10_07/";
+  //string signal_dir2017 = "/home/users/rheller/wh_babies/babies_signal_f17v2_v32_0_2019_10_07/";
+  //string signal_dir2018 = "/home/users/rheller/wh_babies/babies_signal_a18v1_v32_0_2019_10_07/";
 
   Palette colors("txt/colors.txt", "default");
 
@@ -87,16 +87,16 @@ int main(){
     {mc2017_dir+"*TTJets_2lep_f17v2*.root"});
 
   auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),
-    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*"});
+    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*", mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root"},"stitch");
   auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),
-    {mc2018_dir+"*TTJets_2lep_a18v1*.root"});
+    {mc2018_dir+"*TTJets_2lep_a18v1*.root", mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root"},"stitch");
 
   //WJets
   auto wjets_2016 = Process::MakeShared<Baby_full>("W+jets 2016", Process::Type::background, colors("wjets"), {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"*W*Jets_NuPt200_s16v*.root"},"stitch");
-  auto wjets_2017 = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {wjets2017_dir+"*slim_W*JetsToLNu_f17v2*",wjets2017_dir+"*W*Jets_NuPt200_f17v2*.root"},"stitch");
-  auto wjets_2017_inclu = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {wjets2017_dir+"*slim_W*JetsToLNu_f17v2*"});
-  auto wjets_2018 = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {wjets2018_dir+"*slim_W*JetsToLNu_a18v1*",wjets2018_dir+"*W*Jets_NuPt200_a18v1*.root"},"stitch");
-  auto wjets_2018_inclu = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {wjets2018_dir+"*slim_W*JetsToLNu_a18v1*"});
+  auto wjets_2017 = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"*W*Jets_NuPt200_f17v2*.root"},"stitch");
+  auto wjets_2017_inclu = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {mc2017_dir+"*slim_W*JetsToLNu_f17v2*"});
+  auto wjets_2018 = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {mc2018_dir+"*slim_W*JetsToLNu_a18v1*",mc2018_dir+"*W*Jets_NuPt200_a18v1*.root"},"stitch");
+  auto wjets_2018_inclu = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {mc2018_dir+"*slim_W*JetsToLNu_a18v1*"});
 
 
   //Single top
@@ -183,6 +183,7 @@ int main(){
   NamedFunc wjets_sel_mbb = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && mbb>90 && mbb<150" && WHLeptons==1;
   NamedFunc wjets_sel_mbb_mct = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && mbb>90 && mbb<150 && mct>170" && WHLeptons==1;
   NamedFunc wjets_sel_medMT = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150 && ngoodbtags==0" && WHLeptons==1;
+  NamedFunc wjets_sel_medMT_mct = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150 && mct>200 && ngoodbtags==0" && WHLeptons==1;
   NamedFunc wjets_sel_highMT = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>250 && ngoodbtags==0" && WHLeptons==1;
   NamedFunc wjets_sel_1b = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==1" && WHLeptons==1;
   NamedFunc wjets_sel_tight = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && lep1_MiniIso<0.04 && leps_eta[0]<1.5 && leps_eta[0]>-1.5" && WHLeptons==1;
@@ -205,7 +206,7 @@ int main(){
   //vector<NamedFunc> sels = {preselection,ttbar_sel,wjets_sel,ttbar_1l_sel,ttbar_2l_sel,highMTlowMCT,lowMThighMCT,preselectionEle,preselectionMu}; 
   //vector<NamedFunc> sels = {wjets_sel_full_eff,wjets_sel_met_eff}; 
   //vector<NamedFunc> sels = {wjets_sel_met_eff,wjets_sel,wjets_sel_stop_lowmet}; 
-  vector<NamedFunc> sels = {wjets_sel}; 
+  vector<NamedFunc> sels = {wjets_sel_medMT_mct}; 
   vector<NamedFunc> sels_full_eff = {preselection_full_eff,ttbar_sel_full_eff,wjets_sel_full_eff,ttbar_1l_sel_full_eff,ttbar_2l_sel_full_eff,highMTlowMCT_full_eff,lowMThighMCT_full_eff}; 
   //vector<PlotMaker *> pms = {pm2016,pm2017,pm2018};
   vector<PlotMaker *> pms = {pm2017};
@@ -231,10 +232,19 @@ int main(){
         pms[iyear]->Push<Hist1D>(Axis(20, -3.2, 3.2, mht_phi, "#phi(H_{T}^{miss})"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
+        pms[iyear]->Push<Hist1D>(Axis(20, -3.2, 3.2, "pfmet_phi", "#phi(E_{T}^{miss})"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
         pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., W_pt_lep_met, "p_{T}(W cand) [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
-        pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., mt_lep_mht, "M_{T}(l,H_{T}^{miss}) [GeV]"),
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., W_pt_lep_mht, "p_{T}(W cand using MHT) [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 500., mt_lep_mht, "M_{T}(l,H_{T}^{miss}) [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
+
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 500., mt_lep_met_rec, "M_{T}(l,E_{T}^{miss} recalculated) [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         //pms[iyear]->Push<Hist1D>(Axis(10, 250, 500., "pfmet", "E_{T}^{miss} [GeV]"),
@@ -352,7 +362,7 @@ int main(){
         //  sels_full_eff[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         //mbb
-        pms[iyear]->Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{b#bar{b}} [GeV]"),
+        pms[iyear]->Push<Hist1D>(Axis(10, 0, 300., "mbb", "M_{b#bar{b}} [GeV]"),
           sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]);  
 
         //pms[iyear]->Push<Hist1D>(Axis(50, 0, 500., "mbb", "M_{b#bar{b}} [GeV]"),
