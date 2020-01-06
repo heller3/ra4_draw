@@ -17,6 +17,10 @@ namespace WH_Functions{
   // Miscellaneous
 
   
+  const NamedFunc failTauVetos("failTauVetos",[](const Baby &b) -> NamedFunc::ScalarType{
+    if(!b.PassTauVeto() || !b.PassTauVeto()) return 1.;
+    else return 0.;
+    });
   const NamedFunc yearWeight("yearWeight",[](const Baby &b) -> NamedFunc::ScalarType{
     
     float weight=0;
@@ -30,6 +34,73 @@ namespace WH_Functions{
     }
     return weight;
     });
+
+  //Temporary hack
+  const NamedFunc ST_up("ST_up",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nTop = 0; 
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i)) == 6) nTop++;
+      }
+      if(nTop==1) return 1.5;
+      else return 1.;
+  });
+  const NamedFunc ST_off("ST_off",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nTop = 0; 
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i)) == 6) nTop++;
+      }
+      if(nTop==1) return 0.;
+      else return 1.;
+  });
+  const NamedFunc ST_down("ST_down",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nTop = 0; 
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i)) == 6) nTop++;
+      }
+      if(nTop==1) return 0.5;
+      else return 1.;
+  });
+  const NamedFunc fake_up("fake_up",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeepfakes=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+      }
+      if(ndeepfakes>0) return 1.5;
+      else return 1.;
+  });
+
+  const NamedFunc fake_down("fake_down",[](const Baby &b) -> NamedFunc::ScalarType{
+      int ndeepfakes=0;
+      for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+      }
+      if(ndeepfakes>0) return 0.5;
+      else return 1.;
+  });
+
+    const NamedFunc ttbar_genmet_fix("ttbar_genmet_fix",[](const Baby &b) -> NamedFunc::ScalarType{
+      //genmet 200=1
+      //genmet 540=1.4
+      if(b.year()==2016 || b.genmet() <125) return 1.;
+
+      else{
+        float ratio_to_2016 = ((1.4-1)/(540-200)) * (b.genmet()-200) + 1.;
+        if(b.genmet() > 540) ratio_to_2016=1.4;
+        return 1./ratio_to_2016;
+      }
+  });
+      const NamedFunc ttbar_genmet_antifix("ttbar_genmet_antifix",[](const Baby &b) -> NamedFunc::ScalarType{
+    //genmet 200=1
+    //genmet 540=1.4
+    if(b.year()==2016 || b.genmet() <125) return 1.;
+
+    else{
+      float ratio_to_2016 = ((1.4-1)/(540-200)) * (b.genmet()-200) + 1.;
+      if(b.genmet() > 540) ratio_to_2016=1.4;
+      return ratio_to_2016;
+    }
+});
+
 
   const NamedFunc nEventsGluonSplit("nEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
     int nevent = 0;
@@ -99,6 +170,45 @@ namespace WH_Functions{
       if ( abs(b.gen_id()->at(i)) == 24) w_pt = b.gen_pt()->at(i);
     }
     return w_pt;
+    });
+
+    const NamedFunc LeadingToppT("LeadingToppT",[](const Baby &b) -> NamedFunc::ScalarType{
+    float top_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 6 && b.gen_pt()->at(i) > top_pt ) top_pt = b.gen_pt()->at(i);
+    }
+    return top_pt;
+    });
+
+
+    const NamedFunc LeadingWpT("LeadingWpT",[](const Baby &b) -> NamedFunc::ScalarType{
+    float w_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 24 && b.gen_pt()->at(i) > w_pt ) w_pt = b.gen_pt()->at(i);
+    }
+    return w_pt;
+    });
+
+    const NamedFunc SubLeadingWpT("SubLeadingWpT",[](const Baby &b) -> NamedFunc::ScalarType{
+    float w_pt0=0;
+    float w_pt1=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 24 && b.gen_pt()->at(i) > w_pt0 ) {w_pt1= w_pt0;  w_pt0= b.gen_pt()->at(i);}
+      else if ( abs(b.gen_id()->at(i)) == 24 && b.gen_pt()->at(i) > w_pt1 ) {w_pt1= b.gen_pt()->at(i);}
+    }
+    return w_pt1;
+    });
+
+
+    const NamedFunc HasHadronicTau("HasHadronicTau",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTau=0;
+    int nLepFromTau=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+       if ( abs(b.gen_id()->at(i)) == 15 && abs(b.gen_motherid()->at(i)) == 24) nTau++;
+       if ( (abs(b.gen_id()->at(i)) == 13 || abs(b.gen_id()->at(i)) == 11 ) && abs(b.gen_motherid()->at(i)) == 15) nLepFromTau++;
+    }
+    if(nTau - nLepFromTau > 0) return 1.;
+    else return 0.;
     });
 
 
@@ -208,6 +318,22 @@ namespace WH_Functions{
       }
       return njets;
     });
+
+  const NamedFunc nAK8jets("nAK8jets",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak8pfjets_pt()->size(); i++){
+        njets++;
+      }
+      return njets;
+    });
+  const NamedFunc nHiggsTag("nHiggsTag",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njets=0;
+      for(unsigned i(0); i<b.ak8pfjets_pt()->size(); i++){
+        if(b.ak8pfjets_deepdisc_hbb()->at(i)>0.8)njets++;
+      }
+      return njets;
+    });
+
 
   const NamedFunc bJetPt("bJetPt",[](const Baby &b) -> NamedFunc::VectorType{
       vector<double> bjetpt;
@@ -865,6 +991,27 @@ namespace WH_Functions{
         }
       }
       return maxpt;
+    });
+
+   const NamedFunc max_ak8pfjets_deepdisc_hbb("max_ak8pfjets_deepdisc_hbb",[](const Baby &b) -> NamedFunc::ScalarType{
+      float max_disc= -0.05;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        if (b.ak8pfjets_deepdisc_hbb()->at(i) > max_disc){
+           max_disc = b.ak8pfjets_deepdisc_hbb()->at(i);
+        }
+      }
+      return max_disc;
+    });
+
+   const NamedFunc PassThirdJetHighpTVeto("PassThirdJetHighpTVeto",[](const Baby &b) -> NamedFunc::ScalarType{
+      float maxpt=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_pt()->at(i) > maxpt && b.ak4pfjets_deepCSV()->at(i) < 0.6321){
+           maxpt = b.ak4pfjets_pt()->at(i);
+        }
+      }
+      if(b.ak4pfjets_deepCSV()->size() <3 || maxpt<100) return true;
+      else return false;
     });
 
   const NamedFunc LeadingFakeNonBJetPt_med("LeadingFakeNonBJetPt_med",[](const Baby &b) -> NamedFunc::ScalarType{
