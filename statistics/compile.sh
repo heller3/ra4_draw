@@ -2,6 +2,15 @@
 
 exit_code=0;
 
+if [ ! -e run ]
+then
+    mkdir run
+fi
+if [ ! -e bin ]
+then
+    mkdir bin
+fi
+
 if [ $# -ne 0 ] && [ "$1" == "clean" ]
 then
     rm -rf run/*.exe bin/*.o bin/*.a bin/*.d *.exe *.out
