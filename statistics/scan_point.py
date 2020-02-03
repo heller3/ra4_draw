@@ -31,8 +31,10 @@ if __name__ == "__main__":
     # tmp_exe_filename = "run_combine_%i_%i.sh" % (mchi,mlsp)
     # tmp_exe = open(tmp_exe_filename,"w")
 
+    ###expected###
    # combine_cmd = ["combine", "-M AsymptoticLimits", "%s/%s"% (base_dir,wspace_name), "--noFitAsimov", "-n Pre"]
-    combine_cmd = "combine -M AsymptoticLimits %s/%s --noFitAsimov -n Pre -t -1" % (base_dir,wspace_name)
+    # combine_cmd = "combine -M AsymptoticLimits %s/%s --noFitAsimov -n Pre -t -1" % (base_dir,wspace_name)
+    combine_cmd = "combine -M AsymptoticLimits %s/%s --name Pre" % (base_dir,wspace_name)
     print combine_cmd
     #print os.getcwd()
     #os.system(combine_cmd)
@@ -44,6 +46,21 @@ if __name__ == "__main__":
     exp_p1 = float(output.split("Expected 84.0%: r <")[1].split("\n")[0])
     exp_m1 = float(output.split("Expected 16.0%: r <")[1].split("\n")[0])
     print "Expected is",exp,exp_p1,exp_m1
+
+    # ###observed###
+    # combine_cmd = "combine -M AsymptoticLimits %s/%s --name obs" % (base_dir,wspace_name)
+    # print combine_cmd
+    # #print os.getcwd()
+    # #os.system(combine_cmd)
+    # stream = os.popen(combine_cmd)
+    # output=stream.read()
+    # print output
+
+    # obs = float(output.split("Expected 50.0%: r <")[1].split("\n")[0])
+    # ### hack for now, this is not correct variation for observed limit.
+    # obs_p1 = float(output.split("Expected 84.0%: r <")[1].split("\n")[0])
+    # obs_m1 = float(output.split("Expected 16.0%: r <")[1].split("\n")[0])
+    # print obs
 
     os.chdir(initial_dir)
     #print "rm -rf %s"%temp_dir

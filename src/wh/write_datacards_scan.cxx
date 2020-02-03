@@ -40,6 +40,7 @@ namespace{
   float lumi=137.;
   bool discovery_mode=false;
   bool boosted =true;
+  bool original_analysis=false;
   enum Bkgs {bkg, top, w, other};
 
 }
@@ -61,6 +62,8 @@ int main(){
   // Cuts in baseline speed up the yield finding
   string baseline         = "";
   NamedFunc baselinef     = "pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=3 &&pfmet>125&&mt_met_lep>150 && ngoodbtags==2 && nWHLeptons>=1";
+  if (original_analysis) baselinef     = "pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=2 &&pfmet>125&&mt_met_lep>150 && ngoodbtags>=1 && nloosebtags==2 && nWHLeptons>=1";
+  
   TString single_lep      = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&nWHLeptons==1";
   TString dilep           = "nvetoleps==2";
 
@@ -134,7 +137,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-       // if(mchi!=750) continue;
+        if(mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -154,13 +157,19 @@ int main(){
 
   TString analysis_tag = "nominal";
   if(boosted) analysis_tag = "boosted";
+  if(original_analysis) analysis_tag="original";
 
 
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
-	vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"};	
-  if(metbins.size()>3) analysis_tag+="_4metbins";
+  vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; analysis_tag+="_4metbins";
+  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; //analysis_tag+="2bin_boostedtest";
+  // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<450","pfmet>450"}; analysis_tag+="_4metbins_450";
+ // if(original_analysis) vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200"}; 
+	//vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>350"};	analysis_tag+="_met350";
+  // if(metbins.size()>3) analysis_tag+="_4metbins_450";
 	vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<100.};
+  if (original_analysis) njetbins = {"ngoodjets==2"};
 	vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
 
 	vector<string> metnames={"lowmet","medmet","highmet","vhighmet"};
@@ -177,7 +186,9 @@ int main(){
     // nsels = 2*weights.size();
 
     TString signal_region = single_lep+"&&mct>200&&mbb>90&&mbb<150";
-    TString mct_control_region = single_lep+"&&mct>150&&mct<=200&&mbb>90&&mbb<150";
+    TString mct_control_region = single_lep+"&&mct>150&&mct<=200&&mbb>90&&mbb<150";    
+    if(original_analysis) { signal_region = single_lep+"&&mct>170&&mbb>90&&mbb<150";
+                             mct_control_region = single_lep+"&&mct>120&&mct<=170&&mbb>90&&mbb<150";}
 
     TString signal_region_boost = single_lep+"&&mct>200&&mbb>90&&mbb<150";
     TString mct_control_region_boost = single_lep+"&&mct<=200&&mbb>90&&mbb<150";
@@ -197,7 +208,7 @@ int main(){
     //numerator is always top only; W predicted separately.
     indices.push_back(vector<vector<int> >({{proc_options[bkg],2*i,-1},{proc_options[top],2*i+1,1}}));
   }
-
+  cout<<"Boosted met bin size "<<boosted_metbins.size()<<endl;
   PlotMaker pm;
   vector<NamedFunc> allcuts;
   vector<NamedFunc> allcuts_sig;
@@ -214,8 +225,9 @@ int main(){
 			string bin_name="";
 
 			if(boosted){
-				if(ideepAK8==0)  totcut = njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && signal_region;
-				else totcut = njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && signal_region_boost;
+				if(ideepAK8==0) totcut = njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && signal_region;
+				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins[inj] && boosted_metbins[imet] && deepAK8bins[ideepAK8] && signal_region_boost;
+        else if (ideepAK8>0 && imet>=boosted_metbins.size()) continue; // stop adding boosted case after all boosted_metbins have been added.
         bin_name = njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8];
 				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
 			}
@@ -237,8 +249,9 @@ int main(){
 			
 			if(boosted){
 				if(ideepAK8==0) totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region;
-				else totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_boost;
-				bin_names.push_back("CR_lowmct_"+njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
+				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins[inj] && boosted_metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_boost;
+				else if (ideepAK8>0 && imet>=boosted_metbins.size()) continue;
+        bin_names.push_back("CR_lowmct_"+njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
 			}
 			else{
 				totcut= njetbins[inj] && metbins[imet] && mct_control_region;
@@ -434,7 +447,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     for (size_t ibin(0); ibin<nbins; ibin+=2){
     	fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[bkg][ibin+1].Yield())<<setw(wdist)<<" ";
     	for(size_t j(0);j<1+(nbg+1)*(ibin/2);j++) fcard<<left<<setw(wbin)<<"-";
-    	fcard<<left<<setw(wbin)<<Form("%.2f",mct_transfer_factors[ibin/2][0]);
+    	fcard<<left<<setw(wbin)<<Form("%.3f",mct_transfer_factors[ibin/2][0]);
     	for(size_t j(0);j<(nbg+1)*nbins/2 - (2+(nbg+1)*(ibin/2));j++) fcard<<left<<setw(wbin)<<"-";
     }
     //Uncorrelated BG systematics

@@ -282,8 +282,8 @@ int main(int argc, char *argv[]){
 
   // Makes a plot for each vector in plotcuts
   vector<oneplot> plotcuts({{"ngoodjets", "pfmet>200", {"ngoodjets==2", "ngoodjets==3"&&LeadingNonBJetPt_med<100.}},
-  {"pfmet", "ngoodjets==2", {"pfmet>125 && pfmet<=200","pfmet>200 && pfmet<=300","pfmet>300"}},
-	{"pfmet", "ngoodjets==3"&&LeadingNonBJetPt_med<100., {"pfmet>125 && pfmet<=200","pfmet>200 && pfmet<=300","pfmet>300"}}});
+  {"pfmet", "ngoodjets==2", {"pfmet>125 && pfmet<=200","pfmet>200 && pfmet<=300","pfmet>300&&pfmet<=400","pfmet>400"}},
+	{"pfmet", "ngoodjets==3"&&LeadingNonBJetPt_med<100., {"pfmet>125 && pfmet<=200","pfmet>200 && pfmet<=300","pfmet>300&&pfmet<=400","pfmet>400"}}});
 
   vector<NamedFunc> weights; size_t nsels; vector<TString> numerators,denominators;
   vector<TString> leglabels;
