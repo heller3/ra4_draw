@@ -43,10 +43,11 @@ int main(){
 
   string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_08_09/s16v3/";
 
+
+  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_09/a18v1/";
+  string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_07/a18v1/";
+
   Palette colors("txt/colors.txt", "default");
-
-
-  auto data2016 = Process::MakeShared<Baby_full>("2016 Data, new", Process::Type::data, colors("data"),{data2016_dir+"*data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1)");
 
  
   auto tt1l_2016_inclu = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016, inclusive", Process::Type::data, colors("data"),
@@ -78,8 +79,27 @@ int main(){
   auto wjets_2016_met_stitch = Process::MakeShared<Baby_full>("W+Jets 2016, nu pT > 200", Process::Type::background, colors("dy"),
     {mc2016_dir+"*slim_W*Jets_NuPt200_s16v*.root"},"stitch");  
 
+  auto tt1l_2018_inclu = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018, inclusive", Process::Type::data, colors("data"),
+    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*"});
 
-  vector<vector<shared_ptr<Process> >> sample_list_list ={{tt1l_2016_inclu,tt1l_2016_inclu_stitch,tt1l_2016_met_stitch},{tt2l_2016_inclu,tt2l_2016_inclu_stitch,tt2l_2016_met_stitch},{wjets_2016_inclu,wjets_2016_inclu_stitch,wjets_2016_met_stitch}}; 
+  auto tt1l_2018_inclu_stitch = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018, inclusive,stiched", Process::Type::background, colors("tt_1l"),
+    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*"},"stitch");
+
+  auto tt1l_2018_met_stitch = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018, gen met > 150", Process::Type::background, colors("wjets"),
+    {mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root"},"stitch");
+
+
+  auto tt2l_2018_inclu = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018, inclusive", Process::Type::data, colors("data"),
+    {mc2018_dir+"*TTJets_2lep_a18v1*.root"});
+
+  auto tt2l_2018_inclu_stitch = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018, inclusive, stiched", Process::Type::background, colors("tt_2l"),
+    {mc2018_dir+"*TTJets_2lep_a18v1*.root"},"stitch");
+
+  auto tt2l_2018_met_stitch = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018, gen met > 80", Process::Type::background, colors("wjets"),
+    {mc2018_dir_ttmet+"*TTJets_2lep_met80*.root"},"stitch");
+
+
+  vector<vector<shared_ptr<Process> >> sample_list_list ={{tt1l_2018_inclu,tt1l_2018_inclu_stitch,tt1l_2018_met_stitch},{tt2l_2018_inclu,tt2l_2018_inclu_stitch,tt2l_2018_met_stitch},{tt1l_2016_inclu,tt1l_2016_inclu_stitch,tt1l_2016_met_stitch},{tt2l_2016_inclu,tt2l_2016_inclu_stitch,tt2l_2016_met_stitch},{wjets_2016_inclu,wjets_2016_inclu_stitch,wjets_2016_met_stitch}}; 
   vector<string> tag_list = {"tt1l","tt2l","wjets"};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
@@ -109,6 +129,7 @@ int main(){
   vector<NamedFunc> sels = {preselection,sig}; 
 
   for(uint i=0;i<sample_list_list.size();i++){
+    if(i>0) continue;
  
     pm.Push<Hist1D>(Axis(25, 300, 800., "pfmet", "E_{T}^{miss} [GeV]"),
         preselection && "pfmet>300", sample_list_list[i], all_plot_types).Tag(tag_list[i]);  
