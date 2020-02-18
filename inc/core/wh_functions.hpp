@@ -7,11 +7,28 @@
  
 namespace WH_Functions{
 
-  // Miscilaneous
+  // Miscellaneous 
+  extern const NamedFunc ST_up;
+  extern const NamedFunc ST_off;
+  extern const NamedFunc ST_down;
+  extern const NamedFunc fake_up;
+  extern const NamedFunc fake_down;
+  extern const NamedFunc ttbar_genmet_fix;
+  extern const NamedFunc ttbar_genmet_antifix;
+  extern const NamedFunc failTauVetos;
+  extern const NamedFunc yearWeight;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc NHighPtNu;
   extern const NamedFunc HighNuPt;
   extern const NamedFunc zpt;
+  extern const NamedFunc wpt;
+  extern const NamedFunc LeadingToppT;
+  extern const NamedFunc LeadingWpT;
+  extern const NamedFunc SubLeadingWpT;
+  extern const NamedFunc HasHadronicTau;
+  extern const NamedFunc PassThirdJetHighpTVeto;
+
+  //extern const NamedFunc wpt_reco;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc HasMedMedDeepCSV;
   extern const NamedFunc HasExactMedMedDeepCSV;
@@ -25,6 +42,9 @@ namespace WH_Functions{
   extern const NamedFunc nDeepMedCvBTagged;
   extern const NamedFunc nDeepTightCTagged;
   extern const NamedFunc nDeepTightCvBTagged;
+  extern const NamedFunc nAK8jets;
+  extern const NamedFunc nHiggsTag;
+  extern const NamedFunc max_ak8pfjets_deepdisc_hbb;
   extern const NamedFunc bJetPt;
   extern const NamedFunc HasNoBs;
   extern const NamedFunc WHLeptons;
@@ -59,6 +79,7 @@ namespace WH_Functions{
   extern const NamedFunc leadingBMother_pt20;
   extern const NamedFunc subleadingBMother_pt20;
   extern const NamedFunc outsideHiggsWindow;
+  extern const NamedFunc passTriggers;
   extern const NamedFunc mht;
 
   // Basic Jet Pt

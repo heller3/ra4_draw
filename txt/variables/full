@@ -1,13 +1,15 @@
 int ngoodleps
 int nvetoleps
 int evt
+int year
 float mt_met_lep
 float pfmet
+float pfmet_phi
 float genmet
 int ngoodjets
 int ngoodbtags
 int nloosebtags
-
+int nWHLeptons
 int nvtxs
 
 float ak4_HT
@@ -19,6 +21,7 @@ float mct
 float mass_stop
 float mass_lsp
 float weight
+float w_lumi
 float w_pu
 float w_noBtagSF
 
@@ -40,6 +43,11 @@ std::vector<float> dphi_ak4pfjet_met
 std::vector<float> ak4pfjets_m
 std::vector<int> ak4pfjets_hadron_flavor
 std::vector<int> ak4pfjets_parton_flavor
+
+std::vector<float> ak8pfjets_pt
+std::vector<float> ak8pfjets_deepdisc_hbb
+std::vector<float> ak8pfjets_deepdisc_top
+std::vector<float> ak8pfjets_m
 
 int lep1_pdgid
 int lep2_pdgid
