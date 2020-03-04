@@ -10,10 +10,22 @@ namespace WH_Functions{
   // Miscellaneous 
   extern const NamedFunc yearWeight;
   extern const NamedFunc HasMedLooseCSV;
+  extern const NamedFunc HasBoostedHiggs;
+  extern const NamedFunc HasReallyBoostedHiggs;
+  extern const NamedFunc HasLooseBoostedHiggs;
+  extern const NamedFunc nBoostedFatJet;
+  extern const NamedFunc nFatJet250;
+  extern const NamedFunc nBInFatJet;
+  extern const NamedFunc nLooseHiggsTags;
+  extern const NamedFunc nVLooseHiggsTags;
+  extern const NamedFunc nJetsGood;
   extern const NamedFunc NHighPtNu;
   extern const NamedFunc HighNuPt;
   extern const NamedFunc zpt;
   extern const NamedFunc wpt;
+  extern const NamedFunc wpt_lnu;
+  extern const NamedFunc higgs_pt;
+  extern const NamedFunc bDeltaRHiggs;
   //extern const NamedFunc wpt_reco;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc HasMedMedDeepCSV;
@@ -33,6 +45,8 @@ namespace WH_Functions{
   extern const NamedFunc WHLeptons;
   extern const NamedFunc NBJets;
   extern const NamedFunc nRealBs;
+  extern const NamedFunc FatJet_HighestHScore;
+  extern const NamedFunc FatJet_ClosestMSD;
   extern const NamedFunc sortedJetsPt_Leading;
   extern const NamedFunc sortedJetsPt_subLeading;
   extern const NamedFunc sortedJetsCSV_Leading;
@@ -69,6 +83,8 @@ namespace WH_Functions{
   extern const NamedFunc W_pt_lep_mht;
   extern const NamedFunc mt_lep_mht;
   extern const NamedFunc mt_lep_met_rec;
+  extern const NamedFunc dilepton_mass;
+  extern const NamedFunc dilepton_pt;
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;

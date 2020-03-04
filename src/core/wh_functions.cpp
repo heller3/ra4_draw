@@ -94,13 +94,124 @@ namespace WH_Functions{
     });
 
   const NamedFunc wpt("wpt",[](const Baby &b) -> NamedFunc::ScalarType{
-    float w_pt=0;
+    float w_pt=-1;
       for (unsigned i(0); i<b.gen_pt()->size(); i++){
       if ( abs(b.gen_id()->at(i)) == 24) w_pt = b.gen_pt()->at(i);
     }
     return w_pt;
     });
 
+  
+  const NamedFunc wpt_lnu("wpt_lnu",[](const Baby &b) -> NamedFunc::ScalarType{
+    // this only works like this because the gen collection is so pruned. otherwise a more careful check of the lepton/neutrino history would be necessary
+    float w_pt=-1;
+    TLorentzVector n1;
+    TLorentzVector l1;
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 11 ||  abs(b.gen_id()->at(i)) == 13 || abs(b.gen_id()->at(i)) == 15 ){
+        l1.SetPtEtaPhiM(b.gen_pt()->at(i),b.gen_eta()->at(i),b.gen_phi()->at(i),0);
+      }
+      if ( abs(b.gen_id()->at(i)) == 12 ||  abs(b.gen_id()->at(i)) == 14 || abs(b.gen_id()->at(i)) == 16 ){
+        n1.SetPtEtaPhiM(b.gen_pt()->at(i),b.gen_eta()->at(i),b.gen_phi()->at(i),0);
+      }
+    }
+    w_pt = (l1+n1).Pt(); 
+    return w_pt;
+    });
+
+  const NamedFunc higgs_pt("higgs_pt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float h_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 25) h_pt = b.gen_pt()->at(i);
+    }
+    return h_pt;
+    });
+
+  // count the number of b's in the fat jet
+  const NamedFunc nBInFatJet("nBInFatJet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nBinFat=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (abs(b.ak4pfjets_hadron_flavor()->at(j))==5){
+                        nBinFat++;
+                    }
+                }
+            }
+        }
+      }
+      return nBinFat;
+    });
+
+  // nFatJets with pt>250
+  const NamedFunc nFatJet250("nFatJet250",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.FatJet_pt()->size(); i++){
+      	if (b.FatJet_pt()->at(i) > 250) nloose++;
+      }
+      return nloose;
+    });
+
+
+  // first attempt for boosted higgs part
+  const NamedFunc nBoostedFatJet("nBoostedFatJet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_pt()->at(i) > 200) nloose++;
+      }
+      return nloose;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc HasBoostedHiggs("HasBoostedHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.60) nloose++;
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80) nmedium++;
+      }
+      if(nloose>=1 && nmedium>=1) return 1;
+      else return 0;
+    });
+
+  const NamedFunc HasReallyBoostedHiggs("HasReallyBoostedHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.90 && b.ak8pfjets_pt()->at(i) > 400) nmedium++;
+      }
+      if(nmedium>=1) return 1;
+      else return 0;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc nVLooseHiggsTags("nVLooseHiggsTags",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.50) nloose++;
+      }
+      return nloose;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc nLooseHiggsTags("nLooseHiggsTags",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80) nloose++;
+      }
+      return nloose;
+    });
+
+  const NamedFunc HasLooseBoostedHiggs("HasLooseBoostedHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80) nloose++;
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.90) nmedium++;
+      }
+      if(nloose>=1 && nmedium>=0) return 1;
+      else return 0;
+    });
 
    /*
    * returns 1 if there are two b jets with at least one Medium and one Loose score
@@ -250,6 +361,28 @@ namespace WH_Functions{
       }
       return nbquarks;
     });
+
+  const NamedFunc FatJet_HighestHScore("FatJet_HighestHScore",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float>* v = b.FatJet_deepTag_H();
+
+    sort(v->begin(), v->end(), greater<int>());
+
+    return v->at(0);
+  });
+
+  const NamedFunc FatJet_ClosestMSD("FatJet_ClosestMSD",[](const Baby &b) -> NamedFunc::ScalarType{
+    //vector<float>* v = b.FatJet_msoftdrop();
+    vector<float> masses;
+
+    for(unsigned i(0); i<b.FatJet_msoftdrop()->size(); i++){
+        masses.push_back(abs(b.FatJet_msoftdrop()->at(i) - 125.));
+        //if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) nbquarks++;
+    }
+
+    sort(masses.begin(), masses.end(), less<int>());
+
+    return masses.at(0);
+  });
 
   const NamedFunc sortedJetsPt_Leading("sortedJetsPt_Leading",[](const Baby &b) -> NamedFunc::ScalarType{
     vector<float>* v = b.ak4pfjets_pt();
@@ -470,6 +603,22 @@ namespace WH_Functions{
 
     for(unsigned i(0); i<b.gen_id()->size(); i++){
       if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
+            delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
+          }//Close if statement for opposite b, same mother index, pt cut
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b with gluon mother
+    }//Close for loop over all particles in event
+    return delR;
+
+    });
+
+  const NamedFunc bDeltaRHiggs("bDeltaRHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+    float delR = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==25){
         for(unsigned j(i+1);j<b.gen_id()->size();j++){
           if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
             delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
@@ -737,6 +886,14 @@ namespace WH_Functions{
     return pass;
   });
 
+  const NamedFunc nJetsGood("nJetsGood",[](const Baby &b) -> NamedFunc::ScalarType{
+
+    int pass = 0.;
+    pass = b.ngoodjets();
+
+    return pass;
+  });
+
   const NamedFunc mht("mht",[](const Baby &b) -> NamedFunc::ScalarType{
     double mht_var = 0;
     double x = 0;
@@ -877,6 +1034,48 @@ namespace WH_Functions{
 
     mt_var = sqrt(2*b.leps_pt()->at(0)*b.pfmet() * (1-(cos(b.leps_phi()->at(0)-b.pfmet_phi()))));
     return mt_var;
+
+    });
+
+  const NamedFunc dilepton_mass("dilepton_mass",[](const Baby &b) -> NamedFunc::ScalarType{
+    float mass = -1;
+    float newmass = -1;
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+        for(unsigned j(i+1);j<b.leps_pt()->size();j++){
+          if(b.leps_pdgid()->at(j)==-b.leps_pdgid()->at(i)){
+            TLorentzVector v1,v2,sum;
+            v1.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+            v2.SetPtEtaPhiM(b.leps_pt()->at(j),b.leps_eta()->at(j),b.leps_phi()->at(j),0);
+            sum=v1+v2;
+            mass = sum.M();
+            if (abs(mass-91.2) < abs(newmass-91.2)) newmass=mass;
+          }//Close if statement for opposite pdgId
+        }//Close for loop over second half of particles in event
+    }//Close for loop over all particles in event
+    return newmass;
+
+    });
+
+  const NamedFunc dilepton_pt("dilepton_pt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float mass = -1;
+    float newmass = -1;
+    float dl_pt = -1;
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+        for(unsigned j(i+1);j<b.leps_pt()->size();j++){
+          if(b.leps_pdgid()->at(j)==-b.leps_pdgid()->at(i)){
+            TLorentzVector v1,v2,sum;
+            v1.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+            v2.SetPtEtaPhiM(b.leps_pt()->at(j),b.leps_eta()->at(j),b.leps_phi()->at(j),0);
+            sum=v1+v2;
+            mass = sum.M();
+            if (abs(mass-91.2) < abs(newmass-91.2)){
+                newmass=mass;
+                dl_pt = sum.Pt();
+            }
+          }//Close if statement for opposite pdgId
+        }//Close for loop over second half of particles in event
+    }//Close for loop over all particles in event
+    return dl_pt;
 
     });
 
