@@ -219,12 +219,16 @@ int main(){
   vector<PlotMaker *> pms = {pm2016,pm2017,pm2018,pmSig};
   vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2016,sample_list_2017,sample_list_2018,sample_list};
   vector<string> years = {"y2016","y2017","y2018","yLegacy"};
-  vector<string> weights = {"weight","weight * w_pu"};
-  vector<NamedFunc> legacyWeights = {"weight"*yearWeight,"weight * w_pu" * yearWeight};
-  vector<string> metsels ={"pfmet>125","pfmet>200","pfmet>200&&pfmet<300","pfmet>300"};
+  vector<string> weights = {/*"weight",*/"weight * w_pu"};
+  vector<NamedFunc> legacyWeights = {/*"weight"*yearWeight,*/"weight * w_pu" * yearWeight};
+  vector<string> metsels ={"pfmet>125","pfmet>200","pfmet>125&&pfmet<200","pfmet>200&&pfmet<300","pfmet>300","pfmet>400"};
+  vector<string> mctsels ={"mct<200&&mct>150","mct>200&&mct<300","mct>300"};
 
   for(uint imetsel=0;imetsel<metsels.size();imetsel++){
-      for(uint iweight=0;iweight<weights.size();iweight++){
+    // if(imetsel!=1) continue;
+      //  for(uint imctsel=0;imctsel<mctsels.size();imctsel++){
+
+          for(uint iweight=0;iweight<weights.size();iweight++){
 
   
 
@@ -249,20 +253,42 @@ int main(){
       TableRow("3 jets, p$_{T} > 100$, ", metsels[imetsel]&&WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med>100,0,0,weights[iweight])}, sample_list_2018,true/*,true,true,false*/);
 
 
-  pm->Push<Table>(Form("yLegacy_cutflow_signalRegion_met%i_weight%i",imetsel,iweight), vector<TableRow>{
-      TableRow("2 jets, on mbb", metsels[imetsel]&&WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
-       TableRow("2 jets, on mbb, nWHleptons branch", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
-      TableRow("2 jets, high mbb", metsels[imetsel]&&WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>250&&ngoodbtags==2",0,0,legacyWeights[iweight]),
-      TableRow("3 jets, p$_{T} < 100$, ", metsels[imetsel]&&WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med<=100 && LeadingNonBJetPt_med!=0.,0,0,legacyWeights[iweight]),
-      TableRow("3 jets, p$_{T} > 100$, ", metsels[imetsel]&&WHLeptons==1&&"nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med>100,0,0,legacyWeights[iweight])}, sample_list,true/*,true,true,false*/);
+  // pm->Push<Table>(Form("yLegacy_cutflow_signalRegion_met%i_weight%i",imetsel,iweight), vector<TableRow>{
+  //     TableRow("2 jets, on mbb", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+  //     TableRow("2 jets, on mbb, hadronic tau", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2"&&HasHadronicTau>0.,0,0,legacyWeights[iweight]),
+  //     TableRow("2 jets, high mbb", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>250&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+  //     TableRow("2 jets, high mbb, hadronic tau", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>250&&ngoodbtags==2"&&HasHadronicTau>0.,0,0,legacyWeights[iweight]),
+  //     TableRow("3 jets, p$_{T} < 100$, ", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med<=100 && LeadingNonBJetPt_med!=0.,0,0,legacyWeights[iweight]),
+  //     TableRow("3 jets, p$_{T} > 100$, ", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med>100,0,0,legacyWeights[iweight])}, sample_list,true/*,true,true,false*/);
 
-      
-      }
+  pm->Push<Table>(Form("yLegacy_allRegions_met%i_weightpu",imetsel), vector<TableRow>{
+      TableRow("1l on higgs ", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("1l high mbb", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&mbb>250&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("1l inclu mbb", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("2l CR on higgs", metsels[imetsel]&&"nvetoleps==2&&ngoodjets==2&&mt_met_lep>150&&ngoodbtags==2 && nWHLeptons>=1&&mct>200&&mbb>90&&mbb<150",0,0,legacyWeights[iweight]),
+      TableRow("2l CR high mbb", metsels[imetsel]&&"nvetoleps==2&&ngoodjets==2&&mt_met_lep>150&&ngoodbtags==2 && nWHLeptons>=1&&mct>200&&mbb>250",0,0,legacyWeights[iweight]),
+      TableRow("2l CR inclu mbb", metsels[imetsel]&&"nvetoleps==2&&ngoodjets==2&&mt_met_lep>150&&ngoodbtags==2 && nWHLeptons>=1&&mct>200",0,0,legacyWeights[iweight]),
+      TableRow("1l low mCT CR on higgs", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>150&&mct<200&&mbb>90&&mbb<150&&mt_met_lep>150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("1l low mCT CR high mbb", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>150&&mct<200&&mbb>250&&mt_met_lep>150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("1l low mCT CR inclu", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>150&&mct<200&&mt_met_lep>150&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("2l low mCT CR on higgs", metsels[imetsel]&&"nvetoleps==2&&ngoodjets==2&&mt_met_lep>150&&ngoodbtags==2 && nWHLeptons>=1&&mct>150&&mct<200&&mbb>90&&mbb<150",0,0,legacyWeights[iweight]),
+      TableRow("2l low mCT CR high mbb", metsels[imetsel]&&"nvetoleps==2&&ngoodjets==2&&mt_met_lep>150&&ngoodbtags==2 && nWHLeptons>=1&&mct>150&&mct<200&&mbb>250",0,0,legacyWeights[iweight]),
+      TableRow("2l low mCT CR inclu", metsels[imetsel]&&"nvetoleps==2&&ngoodjets==2&&mt_met_lep>150&&ngoodbtags==2 && nWHLeptons>=1&&mct>150&&mct<200",0,0,legacyWeights[iweight]),
+      TableRow("1l low mT CR on higgs", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&mt_met_lep>90&&mt_met_lep<140&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("1l low mT CR high mbb", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mbb>250&&mt_met_lep>90&&mt_met_lep<140&&ngoodbtags==2",0,0,legacyWeights[iweight]),
+      TableRow("1l low mT CR inclu", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mct>200&&mt_met_lep>90&&mt_met_lep<140&&ngoodbtags==2",0,0,legacyWeights[iweight])},sample_list,true/*,true,true,false*/);
+
+      // TableRow("3 jets, p$_{T} < 100$, ", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med<=100 && LeadingNonBJetPt_med!=0.,0,0,legacyWeights[iweight]),
+      // TableRow("3 jets, p$_{T} > 100$, ", metsels[imetsel]&&"nWHLeptons==1&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&ngoodbtags==2&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150" && LeadingNonBJetPt_med>100,0,0,legacyWeights[iweight])}, sample_list,true/*,true,true,false*/);
+
+        }
+    //  }
   }
 
-  pm2016->MakePlots(lumi2016);
-  pm2017->MakePlots(lumi2017);
-  pm2018->MakePlots(lumi2018);
+  // pm2016->MakePlots(lumi2016);
+  // pm2017->MakePlots(lumi2017);
+  // pm2018->MakePlots(lumi2018);
+  pm->min_print_ = true;
   pm->MakePlots(lumi2016+lumi2017+lumi2018);
   cout<<lumi2016<<lumi2017<<lumi2018<<endl;
 
