@@ -2,9 +2,12 @@ int ngoodleps
 int nvetoleps
 int evt
 int year
+int run
 float mt_met_lep
 float pfmet
+float pfmet_uncorr
 float pfmet_phi
+float pfmet_uncorr_phi
 float genmet
 int ngoodjets
 int ngoodbtags
@@ -30,6 +33,7 @@ int njets
 float w_BtagSF_medmed
 float w_BtagSF_medloose
 float w_BtagSF_WH
+float w_L1
 
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_deepCSV
@@ -57,6 +61,7 @@ int HLT_SingleEl
 int HLT_SingleMu
 int HLT_MET_MHT
 int HLT_MET
+int HLT_PFHT_prescaled
 bool pass
 bool goodrun
 bool duplicate
@@ -105,6 +110,11 @@ std::vector<float> leps_pt
 std::vector<float> leps_eta
 std::vector<float> leps_phi
 std::vector<float> leps_id
+
+std::vector<float> vetoleps_pt
+std::vector<float> vetoleps_eta
+std::vector<float> vetoleps_phi
+std::vector<int> vetoleps_pdgid
 
 std::vector<float> els_pt
 std::vector<float> els_eta

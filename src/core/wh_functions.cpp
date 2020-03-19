@@ -1383,5 +1383,82 @@ namespace WH_Functions{
     });
 
 
+//Functions for Data Quality Checks
+      const NamedFunc pfmet_uncorr_func("pfmet_uncorr_func",[](const Baby &b) -> NamedFunc::ScalarType{
+      float pfmet_uncorr_var = 0;
+      if(b.pfmet_uncorr()!= -9999){
+        pfmet_uncorr_var  = b.pfmet_uncorr();
+      }else{
+        pfmet_uncorr_var = b.pfmet();
+      }
+      return pfmet_uncorr_var;
+    });
+
+  const NamedFunc mt_met_lep_uncorr("mt_met_lep_uncorr",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mt_met_lep_uncorr_var = 0;
+      if(b.pfmet_uncorr()!= -9999){
+        float phi1 = b.leps_phi()->at(0);
+        float phi2 = b.pfmet_uncorr_phi();
+        float Et1  = b.leps_pt()->at(0);
+        float Et2  = b.pfmet_uncorr();
+
+        mt_met_lep_uncorr_var = sqrt(2*Et1*Et2*(1.0-cos(phi1-phi2)));
+      }else{
+        mt_met_lep_uncorr_var = b.mt_met_lep();
+      }
+      return mt_met_lep_uncorr_var;
+    });
+
+  const NamedFunc noPrefireWeight("noPrefireWeight",[](const Baby &b) -> NamedFunc::ScalarType{
+      float noPrefireCuts = 0;
+
+      noPrefireCuts = b.pass()/b.w_L1();
+
+      return noPrefireCuts;
+    });
+
+  const NamedFunc HasHEMjet("HasHEMjet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int njet=0;
+
+      for (unsigned i(0); i<b.ak4pfjets_phi()->size(); i++){
+        if (b.run()>=319077 && b.ak4pfjets_phi()->at(i)>-1.6 && b.ak4pfjets_phi()->at(i) < -0.8 && b.ak4pfjets_eta()->at(i) > -2.4 && b.ak4pfjets_eta()->at(i) < -1.4){
+          njet++;
+        }
+      }
+      return njet;
+    });
+
+  const NamedFunc HasHEMevent("HasHEMevent",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nevent=0;
+
+      for (unsigned i(0); i<b.vetoleps_pdgid()->size(); i++){
+        if (b.run()>=319077 && abs(b.vetoleps_pdgid()->at(i))==11 && b.vetoleps_phi()->at(i)>-1.6 && b.vetoleps_phi()->at(i) < -0.8 && b.vetoleps_eta()->at(i) > -2.4 && b.vetoleps_eta()->at(i) < -1.4){
+          nevent++;
+        }
+      }
+      return nevent;
+    });
+
+  const NamedFunc muPt("muPt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float pt = 0;
+
+    if(abs(b.lep1_pdgid())==13){
+      pt = b.leps_pt()->at(0);
+    }//Close if
+    return pt;
+
+    });
+
+  const NamedFunc elPt("elPt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float pt = 0;
+
+    if(abs(b.lep1_pdgid())==11){
+      pt = b.leps_pt()->at(0);
+    }//Close if
+    return pt;
+
+    });
+
+
  
 }

@@ -81,6 +81,13 @@ namespace WH_Functions{
   extern const NamedFunc outsideHiggsWindow;
   extern const NamedFunc passTriggers;
   extern const NamedFunc mht;
+  extern const NamedFunc elPt;
+  extern const NamedFunc muPt;
+  extern const NamedFunc HasHEMevent;
+  extern const NamedFunc HasHEMjet;
+  extern const NamedFunc noPrefireWeight;
+  extern const NamedFunc mt_met_lep_uncorr;
+  extern const NamedFunc pfmet_uncorr_func;
 
 
   // Basic Jet Pt
