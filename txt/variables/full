@@ -26,6 +26,7 @@ float mass_lsp
 float weight
 float w_lumi
 float w_pu
+float w_L1
 float w_noBtagSF
 
 int njets
@@ -42,6 +43,22 @@ std::vector<float> ak4pfjets_deepCSVl
 std::vector<float> ak4pfjets_pt
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
+
+std::vector<float> FatJet_pt
+std::vector<float> FatJet_phi
+std::vector<float> FatJet_eta
+std::vector<float> FatJet_deepTag_H
+std::vector<float> FatJet_deepTagMD_HbbvsQCD
+std::vector<float> FatJet_btagHbb
+std::vector<float> FatJet_msoftdrop
+std::vector<float> FatJet_mass
+std::vector<float> FatJet_btagDDBvL
+std::vector<float> FatJet_btagDDBvL_noMD
+
+std::vector<float> ak8pfjets_deepdisc_hbb
+std::vector<float> ak8pfjets_pt
+std::vector<float> ak8pfjets_phi
+std::vector<float> ak8pfjets_eta
 
 std::vector<float> dphi_ak4pfjet_met
 std::vector<float> ak4pfjets_m
@@ -110,6 +127,7 @@ std::vector<float> leps_pt
 std::vector<float> leps_eta
 std::vector<float> leps_phi
 std::vector<float> leps_id
+std::vector<int> leps_pdgid
 
 std::vector<float> vetoleps_pt
 std::vector<float> vetoleps_eta

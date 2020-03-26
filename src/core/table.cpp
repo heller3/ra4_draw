@@ -149,7 +149,7 @@ void Table::Print(double luminosity,
     : "tables/"+name_+"_lumi_"+fmt_lumi+".tex";
   std::ofstream file(file_name);
   if (print_pie_) file << fixed << setprecision(2);
-  else file << fixed << setprecision(1);
+  else file << fixed << setprecision(2); // changed for boosted region numbers
   PrintHeader(file, luminosity);
   for(size_t i = 0; i < rows_.size(); ++i){
     PrintRow(file, i, luminosity);
@@ -327,14 +327,16 @@ void Table::PrintRow(ofstream &file, size_t irow, double luminosity) const{
       double totyield = luminosity*GetYield(backgrounds_, irow);
       for(size_t i = 0; i < backgrounds_.size(); ++i){
         if (print_pie_) 
-          file << " & " << luminosity*backgrounds_.at(i)->sumw_.at(irow)/totyield << "$\\pm$" 
+          file << " & " <<setprecision(2)<< luminosity*backgrounds_.at(i)->sumw_.at(irow)/totyield << "$\\pm$" 
               << luminosity*sqrt(backgrounds_.at(i)->sumw2_.at(irow))/totyield;
         else 
-          file << " & " << luminosity*backgrounds_.at(i)->sumw_.at(irow);
+          file << " & " <<setprecision(2)<< luminosity*backgrounds_.at(i)->sumw_.at(irow) << "$\\pm$" 
+              << luminosity*sqrt(backgrounds_.at(i)->sumw2_.at(irow));
+          //file << " & " << luminosity*backgrounds_.at(i)->sumw_.at(irow);
       }
       file << " & " << totyield << "$\\pm$" << luminosity*GetError(backgrounds_, irow);
     }else if(backgrounds_.size() == 1){
-      file << " & " << luminosity*GetYield(backgrounds_, irow) << "$\\pm$" << luminosity*GetError(backgrounds_, irow);
+      file << " & " << setprecision(2)<< luminosity*GetYield(backgrounds_, irow) << "$\\pm$" << luminosity*GetError(backgrounds_, irow);
     }
 
     if(datas_.size() > 1){
@@ -347,9 +349,9 @@ void Table::PrintRow(ofstream &file, size_t irow, double luminosity) const{
     }
 
     for(size_t i = 0; i < signals_.size(); ++i){
-      file << " & " << luminosity*signals_.at(i)->sumw_.at(irow);
-      // file << " & " << luminosity*signals_.at(i)->sumw_.at(irow) << "$\\pm$" 
-      //         << luminosity*sqrt(signals_.at(i)->sumw2_.at(irow));
+      //file << " & " << luminosity*signals_.at(i)->sumw_.at(irow);
+       file << " & " << luminosity*signals_.at(i)->sumw_.at(irow) << "$\\pm$" 
+               << luminosity*sqrt(signals_.at(i)->sumw2_.at(irow));
       if(do_zbi_){
 	file << " & " << RooStats::NumberCountingUtils::BinomialExpZ(luminosity*signals_.at(i)->sumw_.at(irow),
 								     luminosity*GetYield(backgrounds_, irow),

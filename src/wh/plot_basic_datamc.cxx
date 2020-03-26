@@ -158,6 +158,8 @@ int main(){
   NamedFunc wjets_sel = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50 && ngoodbtags==0 && nWHLeptons==1";
   NamedFunc wjets_sel_full_eff= "leps_pt[0]>50&&pfmet>250&&pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&mt_met_lep>50 && ngoodbtags==0 && nWHLeptons==1";
 
+  NamedFunc wjets_CR = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150 && mct>200 && ngoodbtags==0 && nWHLeptons==1";
+
   NamedFunc ttbar_2l_sel = "pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&ngoodbtags>=1 && nWHLeptons>=1";
   NamedFunc ttbar_2l_sel_full_eff = "leps_pt[0]>50&&pfmet>250&&pass&&nvetoleps==2&&ngoodjets==2&&ngoodbtags>=1 && nWHLeptons>=1";
 
@@ -173,7 +175,8 @@ int main(){
   NamedFunc CR_lower_mcT = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>150&&ngoodbtags==2&&mct>150&&mct<200 && nWHLeptons==1";
 
 
-  vector<NamedFunc> sels = {preselection,ttbar_2l_sel,wjets_sel,CR_lower_mcT,CR_lower_mT/*,highmT*/}; 
+  //vector<NamedFunc> sels = {preselection,ttbar_2l_sel,wjets_sel,CR_lower_mcT,CR_lower_mT/*,highmT*/}; 
+  vector<NamedFunc> sels = {wjets_CR}; 
   //vector<NamedFunc> sels = {preselection,ttbar_sel,wjets_sel,ttbar_1l_sel,ttbar_2l_sel}; 
   vector<NamedFunc> sels_full_eff = {preselection_full_eff,ttbar_sel_full_eff,wjets_sel_full_eff,ttbar_1l_sel_full_eff,ttbar_2l_sel_full_eff}; 
   vector<PlotMaker *> pms = {pm2016,pm2017,pm2018,pm};

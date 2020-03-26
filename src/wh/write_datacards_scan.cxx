@@ -111,7 +111,7 @@ int main(){
 
 
   TChain sig_tree("t");
-  sig_tree.Add("~/wh_babies/babies_signal_s16v3_v32_2019_10_07/slim_SMS_TChiWH_s16v3_0.root");
+  sig_tree.Add("/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2019_10_07/slim_SMS_TChiWH_s16v3_0.root");
 
   long nentries(sig_tree.GetEntries());
   cout<<"Got "<<nentries<<" entries."<<endl;
@@ -137,7 +137,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        if(mchi!=800) continue;
+        if(mchi!=750) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
