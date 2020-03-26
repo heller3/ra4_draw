@@ -221,7 +221,7 @@ namespace WH_Functions{
       float prob=1;
       float mistag=0;
       bool lepsInFatJet=false;
-      // load the map
+      // load the map. need to fix hardcoding the path
       TFile *mapFile = new TFile("/home/users/dspitzba/WH/CMSSW_10_2_9/src/WH_studies/Analysis/python/eff_pt_mass_allYears_QCD_combined.root", "READ");
       TString eff_2b = "eff_pt_mass_2b";
       TString eff_1b = "eff_pt_mass_1b";
