@@ -18,9 +18,14 @@ namespace WH_Functions{
   extern const NamedFunc failTauVetos;
   extern const NamedFunc yearWeight;
   extern const NamedFunc HasMedLooseCSV;
+  extern const NamedFunc nBTagInFat;
+  extern const NamedFunc OneDoubleBFat;
+  extern const NamedFunc HasOnHiggsJet;
   extern const NamedFunc HasBoostedHiggs;
+  extern const NamedFunc HasBoostedHiggsNoLepton;
   extern const NamedFunc HasReallyBoostedHiggs;
   extern const NamedFunc HasLooseBoostedHiggs;
+  extern const NamedFunc higgsMistagProb;
   extern const NamedFunc nBoostedFatJet;
   extern const NamedFunc nFatJet250;
   extern const NamedFunc nBInFatJet;

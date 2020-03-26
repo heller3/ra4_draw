@@ -2,6 +2,7 @@
 #include <algorithm> //std::min
 #include <math.h>
 
+#include "TFile.h"
 #include "TVector2.h"
 #include "TLorentzVector.h"
 
@@ -215,6 +216,143 @@ namespace WH_Functions{
       return nBinFat;
     });
 
+  // get the mistag probablility for higgs
+  const NamedFunc higgsMistagProb("higgsMistagProb",[](const Baby &b) -> NamedFunc::ScalarType{
+      float prob=1;
+      float mistag=0;
+      bool lepsInFatJet=false;
+      // load the map
+      TFile *mapFile = new TFile("/home/users/dspitzba/WH/CMSSW_10_2_9/src/WH_studies/Analysis/python/eff_pt_mass_allYears_QCD_combined.root", "READ");
+      TString eff_2b = "eff_pt_mass_2b";
+      TString eff_1b = "eff_pt_mass_1b";
+      TString eff_0b = "eff_pt_mass_0b";
+      if (b.year()==2016 || true){
+        eff_2b += TString("_2016");
+        eff_1b += TString("_2016");
+        eff_0b += TString("_2016");
+      }
+      else if (b.year()==2017){
+        eff_2b += TString("_2017");
+        eff_1b += TString("_2017");
+        eff_0b += TString("_2017");
+      }
+      else if (b.year()==2018){
+        eff_2b += TString("_2018");
+        eff_1b += TString("_2018");
+        eff_0b += TString("_2018");
+      }
+      TH2* effMap_2b = 0;
+      TH2* effMap_1b = 0;
+      TH2* effMap_0b = 0;
+      mapFile->GetObject(eff_2b, effMap_2b);
+      mapFile->GetObject(eff_1b, effMap_1b);
+      mapFile->GetObject(eff_0b, effMap_0b);
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        lepsInFatJet=false;
+        int nBInFat=0;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            // skip fat jet if leptons are found inside
+            continue;
+        }
+        //if (b.weight()>0.01){
+        //    std::cout << "Found large weight" << std::endl;
+        ////    continue;
+        //}
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    // have to use b-tag status as true flavor is not stored for the sub jets used for the efficiency measurement (nanoAOD/nanoAOD-tools)
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBInFat++;
+                    }
+                }
+            }
+            // get the rate for the fat jet
+            if (nBInFat==2){
+                mistag = effMap_2b->GetBinContent(effMap_2b->GetXaxis()->FindBin(b.ak8pfjets_pt()->at(i)), effMap_2b->GetYaxis()->FindBin(b.ak8pfjets_m()->at(i)));
+            }
+            else if (nBInFat==1){
+                mistag = effMap_1b->GetBinContent(effMap_1b->GetXaxis()->FindBin(b.ak8pfjets_pt()->at(i)), effMap_1b->GetYaxis()->FindBin(b.ak8pfjets_m()->at(i)));
+                //mistag = 0;
+            }
+            else {
+                mistag = effMap_0b->GetBinContent(effMap_0b->GetXaxis()->FindBin(b.ak8pfjets_pt()->at(i)), effMap_0b->GetYaxis()->FindBin(b.ak8pfjets_m()->at(i)));
+                //mistag = 0;
+            }
+            prob = prob*(1-mistag);
+        }
+      }
+      // clean up
+      mapFile->Close();
+      delete mapFile;
+      //std::cout << "prob: " << (1-prob) << std::endl;
+      return 1-prob;
+    });
+
+  // get the number of b-tagged jets in fat jets
+  const NamedFunc nBTagInFat("nBTagInFat",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nBInFat=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            //std::cout << "Found leptons in my fat jet. Passing." << std::endl;
+            continue;
+        }
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBInFat++;
+                    }
+                }
+            }
+        }
+      }
+      return nBInFat;
+    });
+
+  const NamedFunc OneDoubleBFat("OneDoubleBFat",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nBInFat=0;
+      int nDoubleBFat=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        int nBinThisFat=0;
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            //std::cout << "Found leptons in my fat jet. Passing." << std::endl;
+            continue;
+        }
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBInFat++;
+                        nBinThisFat++;
+                    }
+                }
+            }
+        }
+        if (nBinThisFat==2) nDoubleBFat++;
+      }
+      return nDoubleBFat==1;
+    });
+
   // nFatJets with pt>250
   const NamedFunc nFatJet250("nFatJet250",[](const Baby &b) -> NamedFunc::ScalarType{
       int nloose=0;
@@ -239,10 +377,38 @@ namespace WH_Functions{
       int nloose=0;
       int nmedium=0;
       for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
-      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.60) nloose++;
-      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80) nmedium++;
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.60 && b.ak8pfjets_pt()->at(i) > 200) nloose++;
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80 && b.ak8pfjets_pt()->at(i) > 200) nmedium++;
       }
       if(nloose>=1 && nmedium>=1) return 1;
+      else return 0;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc HasOnHiggsJet("HasOnHiggsJet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_m()->at(i) > 90 && b.ak8pfjets_m()->at(i) < 150 && b.ak8pfjets_pt()->at(i) > 200) nmedium++;
+      }
+      if(nmedium>=1) return 1;
+      else return 0;
+    });
+
+  // boosted AK8 jet, higgs-tagged, with now lepton overlap
+  const NamedFunc HasBoostedHiggsNoLepton("HasBoostedHiggsNoLepton",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nmedium=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet) { continue; }
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80 && b.ak8pfjets_pt()->at(i) > 200) nmedium++;
+      }
+      if(nmedium>=1) return 1;
       else return 0;
     });
 
@@ -1303,7 +1469,7 @@ namespace WH_Functions{
    const NamedFunc LeadingNonBJetPt_med("LeadingNonBJetPt_med",[](const Baby &b) -> NamedFunc::ScalarType{
       float maxpt=0;
       for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_pt()->at(i) > maxpt && b.ak4pfjets_deepCSV()->at(i) < 0.6321){
+        if (b.ak4pfjets_pt()->at(i) > maxpt && b.ak4pfjets_deepCSV()->at(i) < (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
            maxpt = b.ak4pfjets_pt()->at(i);
         }
       }

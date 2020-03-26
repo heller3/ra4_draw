@@ -336,7 +336,7 @@ void Table::PrintRow(ofstream &file, size_t irow, double luminosity) const{
       }
       file << " & " << totyield << "$\\pm$" << luminosity*GetError(backgrounds_, irow);
     }else if(backgrounds_.size() == 1){
-      file << " & " << luminosity*GetYield(backgrounds_, irow) << "$\\pm$" << luminosity*GetError(backgrounds_, irow);
+      file << " & " << setprecision(2)<< luminosity*GetYield(backgrounds_, irow) << "$\\pm$" << luminosity*GetError(backgrounds_, irow);
     }
 
     if(datas_.size() > 1){
