@@ -2,6 +2,7 @@
 #include <algorithm> //std::min
 #include <math.h>
 
+#include "TFile.h"
 #include "TVector2.h"
 #include "TLorentzVector.h"
 
@@ -165,11 +166,288 @@ namespace WH_Functions{
     });
 
   const NamedFunc wpt("wpt",[](const Baby &b) -> NamedFunc::ScalarType{
-    float w_pt=0;
+    float w_pt=-1;
       for (unsigned i(0); i<b.gen_pt()->size(); i++){
       if ( abs(b.gen_id()->at(i)) == 24) w_pt = b.gen_pt()->at(i);
     }
     return w_pt;
+    });
+
+  
+  const NamedFunc wpt_lnu("wpt_lnu",[](const Baby &b) -> NamedFunc::ScalarType{
+    // this only works like this because the gen collection is so pruned. otherwise a more careful check of the lepton/neutrino history would be necessary
+    float w_pt=-1;
+    TLorentzVector n1;
+    TLorentzVector l1;
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 11 ||  abs(b.gen_id()->at(i)) == 13 || abs(b.gen_id()->at(i)) == 15 ){
+        l1.SetPtEtaPhiM(b.gen_pt()->at(i),b.gen_eta()->at(i),b.gen_phi()->at(i),0);
+      }
+      if ( abs(b.gen_id()->at(i)) == 12 ||  abs(b.gen_id()->at(i)) == 14 || abs(b.gen_id()->at(i)) == 16 ){
+        n1.SetPtEtaPhiM(b.gen_pt()->at(i),b.gen_eta()->at(i),b.gen_phi()->at(i),0);
+      }
+    }
+    w_pt = (l1+n1).Pt(); 
+    return w_pt;
+    });
+
+  const NamedFunc higgs_pt("higgs_pt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float h_pt=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+      if ( abs(b.gen_id()->at(i)) == 25) h_pt = b.gen_pt()->at(i);
+    }
+    return h_pt;
+    });
+
+  // count the number of b's in the fat jet
+  const NamedFunc nBInFatJet("nBInFatJet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nBinFat=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (abs(b.ak4pfjets_hadron_flavor()->at(j))==5){
+                        nBinFat++;
+                    }
+                }
+            }
+        }
+      }
+      return nBinFat;
+    });
+
+  // get the mistag probablility for higgs
+  const NamedFunc higgsMistagProb("higgsMistagProb",[](const Baby &b) -> NamedFunc::ScalarType{
+      float prob=1;
+      float mistag=0;
+      bool lepsInFatJet=false;
+      // load the map. need to fix hardcoding the path
+      TFile *mapFile = new TFile("/home/users/dspitzba/WH/CMSSW_10_2_9/src/WH_studies/Analysis/python/eff_pt_mass_allYears_QCD_combined.root", "READ");
+      TString eff_2b = "eff_pt_mass_2b";
+      TString eff_1b = "eff_pt_mass_1b";
+      TString eff_0b = "eff_pt_mass_0b";
+      if (b.year()==2016 || true){
+        eff_2b += TString("_2016");
+        eff_1b += TString("_2016");
+        eff_0b += TString("_2016");
+      }
+      else if (b.year()==2017){
+        eff_2b += TString("_2017");
+        eff_1b += TString("_2017");
+        eff_0b += TString("_2017");
+      }
+      else if (b.year()==2018){
+        eff_2b += TString("_2018");
+        eff_1b += TString("_2018");
+        eff_0b += TString("_2018");
+      }
+      TH2* effMap_2b = 0;
+      TH2* effMap_1b = 0;
+      TH2* effMap_0b = 0;
+      mapFile->GetObject(eff_2b, effMap_2b);
+      mapFile->GetObject(eff_1b, effMap_1b);
+      mapFile->GetObject(eff_0b, effMap_0b);
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        lepsInFatJet=false;
+        int nBInFat=0;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            // skip fat jet if leptons are found inside
+            continue;
+        }
+        //if (b.weight()>0.01){
+        //    std::cout << "Found large weight" << std::endl;
+        ////    continue;
+        //}
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    // have to use b-tag status as true flavor is not stored for the sub jets used for the efficiency measurement (nanoAOD/nanoAOD-tools)
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBInFat++;
+                    }
+                }
+            }
+            // get the rate for the fat jet
+            if (nBInFat==2){
+                mistag = effMap_2b->GetBinContent(effMap_2b->GetXaxis()->FindBin(b.ak8pfjets_pt()->at(i)), effMap_2b->GetYaxis()->FindBin(b.ak8pfjets_m()->at(i)));
+            }
+            else if (nBInFat==1){
+                mistag = effMap_1b->GetBinContent(effMap_1b->GetXaxis()->FindBin(b.ak8pfjets_pt()->at(i)), effMap_1b->GetYaxis()->FindBin(b.ak8pfjets_m()->at(i)));
+                //mistag = 0;
+            }
+            else {
+                mistag = effMap_0b->GetBinContent(effMap_0b->GetXaxis()->FindBin(b.ak8pfjets_pt()->at(i)), effMap_0b->GetYaxis()->FindBin(b.ak8pfjets_m()->at(i)));
+                //mistag = 0;
+            }
+            prob = prob*(1-mistag);
+        }
+      }
+      // clean up
+      mapFile->Close();
+      delete mapFile;
+      //std::cout << "prob: " << (1-prob) << std::endl;
+      return 1-prob;
+    });
+
+  // get the number of b-tagged jets in fat jets
+  const NamedFunc nBTagInFat("nBTagInFat",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nBInFat=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            //std::cout << "Found leptons in my fat jet. Passing." << std::endl;
+            continue;
+        }
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBInFat++;
+                    }
+                }
+            }
+        }
+      }
+      return nBInFat;
+    });
+
+  const NamedFunc OneDoubleBFat("OneDoubleBFat",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nBInFat=0;
+      int nDoubleBFat=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        int nBinThisFat=0;
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            //std::cout << "Found leptons in my fat jet. Passing." << std::endl;
+            continue;
+        }
+      	if (b.ak8pfjets_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBInFat++;
+                        nBinThisFat++;
+                    }
+                }
+            }
+        }
+        if (nBinThisFat==2) nDoubleBFat++;
+      }
+      return nDoubleBFat==1;
+    });
+
+  // nFatJets with pt>250
+  const NamedFunc nFatJet250("nFatJet250",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.FatJet_pt()->size(); i++){
+      	if (b.FatJet_pt()->at(i) > 250) nloose++;
+      }
+      return nloose;
+    });
+
+
+  // first attempt for boosted higgs part
+  const NamedFunc nBoostedFatJet("nBoostedFatJet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_pt()->at(i) > 200) nloose++;
+      }
+      return nloose;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc HasBoostedHiggs("HasBoostedHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.60 && b.ak8pfjets_pt()->at(i) > 200) nloose++;
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80 && b.ak8pfjets_pt()->at(i) > 200) nmedium++;
+      }
+      if(nloose>=1 && nmedium>=1) return 1;
+      else return 0;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc HasOnHiggsJet("HasOnHiggsJet",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_m()->at(i) > 90 && b.ak8pfjets_m()->at(i) < 150 && b.ak8pfjets_pt()->at(i) > 200) nmedium++;
+      }
+      if(nmedium>=1) return 1;
+      else return 0;
+    });
+
+  // boosted AK8 jet, higgs-tagged, with now lepton overlap
+  const NamedFunc HasBoostedHiggsNoLepton("HasBoostedHiggsNoLepton",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nmedium=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet) { continue; }
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80 && b.ak8pfjets_pt()->at(i) > 200) nmedium++;
+      }
+      if(nmedium>=1) return 1;
+      else return 0;
+    });
+
+  const NamedFunc HasReallyBoostedHiggs("HasReallyBoostedHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.90 && b.ak8pfjets_pt()->at(i) > 400) nmedium++;
+      }
+      if(nmedium>=1) return 1;
+      else return 0;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc nVLooseHiggsTags("nVLooseHiggsTags",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.50) nloose++;
+      }
+      return nloose;
+    });
+
+  // first attempt for boosted higgs part
+  const NamedFunc nLooseHiggsTags("nLooseHiggsTags",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80) nloose++;
+      }
+      return nloose;
+    });
+
+  const NamedFunc HasLooseBoostedHiggs("HasLooseBoostedHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nloose=0;
+      int nmedium=0;
+      for (unsigned i(0); i<b.ak8pfjets_deepdisc_hbb()->size(); i++){
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.80) nloose++;
+      	if (b.ak8pfjets_deepdisc_hbb()->at(i) > 0.90) nmedium++;
+      }
+      if(nloose>=1 && nmedium>=0) return 1;
+      else return 0;
     });
 
     const NamedFunc LeadingToppT("LeadingToppT",[](const Baby &b) -> NamedFunc::ScalarType{
@@ -376,6 +654,28 @@ namespace WH_Functions{
       }
       return nbquarks;
     });
+
+  const NamedFunc FatJet_HighestHScore("FatJet_HighestHScore",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float>* v = b.FatJet_deepTag_H();
+
+    sort(v->begin(), v->end(), greater<int>());
+
+    return v->at(0);
+  });
+
+  const NamedFunc FatJet_ClosestMSD("FatJet_ClosestMSD",[](const Baby &b) -> NamedFunc::ScalarType{
+    //vector<float>* v = b.FatJet_msoftdrop();
+    vector<float> masses;
+
+    for(unsigned i(0); i<b.FatJet_msoftdrop()->size(); i++){
+        masses.push_back(abs(b.FatJet_msoftdrop()->at(i) - 125.));
+        //if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) nbquarks++;
+    }
+
+    sort(masses.begin(), masses.end(), less<int>());
+
+    return masses.at(0);
+  });
 
   const NamedFunc sortedJetsPt_Leading("sortedJetsPt_Leading",[](const Baby &b) -> NamedFunc::ScalarType{
     vector<float>* v = b.ak4pfjets_pt();
@@ -596,6 +896,22 @@ namespace WH_Functions{
 
     for(unsigned i(0); i<b.gen_id()->size(); i++){
       if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==21){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
+            delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
+          }//Close if statement for opposite b, same mother index, pt cut
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b with gluon mother
+    }//Close for loop over all particles in event
+    return delR;
+
+    });
+
+  const NamedFunc bDeltaRHiggs("bDeltaRHiggs",[](const Baby &b) -> NamedFunc::ScalarType{
+    float delR = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&b.gen_motherid()->at(i)==25){
         for(unsigned j(i+1);j<b.gen_id()->size();j++){
           if(b.gen_id()->at(j)==-b.gen_id()->at(i)&&b.gen_motheridx()->at(j)==b.gen_motheridx()->at(i)&&(b.gen_pt()->at(j)>30||b.gen_pt()->at(i)>30)){
             delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
@@ -863,6 +1179,14 @@ namespace WH_Functions{
     return pass;
   });
 
+  const NamedFunc nJetsGood("nJetsGood",[](const Baby &b) -> NamedFunc::ScalarType{
+
+    int pass = 0.;
+    pass = b.ngoodjets();
+
+    return pass;
+  });
+
   const NamedFunc mht("mht",[](const Baby &b) -> NamedFunc::ScalarType{
     double mht_var = 0;
     double x = 0;
@@ -871,15 +1195,15 @@ namespace WH_Functions{
     for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
       TLorentzVector v1;
       v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
-      x += v1.Px();
-      y += v1.Py();
+      x -= v1.Px();
+      y -= v1.Py();
     }//Close for loop over all jets in event
 
     for(unsigned i(0); i<b.leps_pt()->size(); i++){
       TLorentzVector v2;
       v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
-      x += v2.Px();
-      y += v2.Py();
+      x -= v2.Px();
+      y -= v2.Py();
     }//Close for loop over all leps in event
 
     mht_var = sqrt((x*x)+(y*y));
@@ -888,6 +1212,165 @@ namespace WH_Functions{
 
     });
 
+  const NamedFunc mht_phi("mht_phi",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mht_var = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    mht_var = atan2(x, y);
+    return mht_var;
+
+    });
+
+  const NamedFunc W_pt_lep_met("W_pt_lep_met",[](const Baby &b) -> NamedFunc::ScalarType{
+    double W_pt_var = 0;
+
+    TLorentzVector lep;
+    TLorentzVector met;
+    TLorentzVector W_cand;
+
+    lep.SetPtEtaPhiM(b.leps_pt()->at(0), b.leps_eta()->at(0), b.leps_phi()->at(0), 0.);
+    met.SetPtEtaPhiM(b.pfmet(), 0., b.pfmet_phi(), 0.); //b.genmet_phi()
+
+    W_cand = lep + met;
+
+    W_pt_var = W_cand.Pt();
+    return W_pt_var;
+
+    });
+
+  const NamedFunc W_pt_lep_mht("W_pt_lep_mht",[](const Baby &b) -> NamedFunc::ScalarType{
+    double W_pt_var = 0;
+
+    TLorentzVector lep;
+    TLorentzVector met;
+    TLorentzVector W_cand;
+
+    double var_mht_pt = 0;
+    double var_mht_phi = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    var_mht_phi = atan2(x, y);
+    var_mht_pt = sqrt((x*x)+(y*y));
+
+    lep.SetPtEtaPhiM(b.leps_pt()->at(0), b.leps_eta()->at(0), b.leps_phi()->at(0), 0.);
+    met.SetPtEtaPhiM(var_mht_pt, 0., var_mht_phi, 0.); //b.genmet_phi()
+
+    W_cand = lep + met;
+
+    W_pt_var = W_cand.Pt();
+    return W_pt_var;
+
+    });
+
+  const NamedFunc mt_lep_mht("mt_lep_mht",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mt_var = 0;
+
+    double var_mht_pt = 0;
+    double var_mht_phi = 0;
+    double x = 0;
+    double y = 0;
+
+    for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+      TLorentzVector v1;
+      v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+      x -= v1.Px();
+      y -= v1.Py();
+    }//Close for loop over all jets in event
+
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+      TLorentzVector v2;
+      v2.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+      x -= v2.Px();
+      y -= v2.Py();
+    }//Close for loop over all leps in event
+
+    var_mht_phi = atan2(x, y);
+    var_mht_pt = sqrt((x*x)+(y*y));
+
+    mt_var = sqrt(2*b.leps_pt()->at(0)*var_mht_pt * (1-(cos(b.leps_phi()->at(0)-var_mht_phi))));
+    return mt_var;
+
+    });
+
+  const NamedFunc mt_lep_met_rec("mt_lep_met_rec",[](const Baby &b) -> NamedFunc::ScalarType{
+    double mt_var = 0;
+
+    mt_var = sqrt(2*b.leps_pt()->at(0)*b.pfmet() * (1-(cos(b.leps_phi()->at(0)-b.pfmet_phi()))));
+    return mt_var;
+
+    });
+
+  const NamedFunc dilepton_mass("dilepton_mass",[](const Baby &b) -> NamedFunc::ScalarType{
+    float mass = -1;
+    float newmass = -1;
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+        for(unsigned j(i+1);j<b.leps_pt()->size();j++){
+          if(b.leps_pdgid()->at(j)==-b.leps_pdgid()->at(i)){
+            TLorentzVector v1,v2,sum;
+            v1.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+            v2.SetPtEtaPhiM(b.leps_pt()->at(j),b.leps_eta()->at(j),b.leps_phi()->at(j),0);
+            sum=v1+v2;
+            mass = sum.M();
+            if (abs(mass-91.2) < abs(newmass-91.2)) newmass=mass;
+          }//Close if statement for opposite pdgId
+        }//Close for loop over second half of particles in event
+    }//Close for loop over all particles in event
+    return newmass;
+
+    });
+
+  const NamedFunc dilepton_pt("dilepton_pt",[](const Baby &b) -> NamedFunc::ScalarType{
+    float mass = -1;
+    float newmass = -1;
+    float dl_pt = -1;
+    for(unsigned i(0); i<b.leps_pt()->size(); i++){
+        for(unsigned j(i+1);j<b.leps_pt()->size();j++){
+          if(b.leps_pdgid()->at(j)==-b.leps_pdgid()->at(i)){
+            TLorentzVector v1,v2,sum;
+            v1.SetPtEtaPhiM(b.leps_pt()->at(i),b.leps_eta()->at(i),b.leps_phi()->at(i),0);
+            v2.SetPtEtaPhiM(b.leps_pt()->at(j),b.leps_eta()->at(j),b.leps_phi()->at(j),0);
+            sum=v1+v2;
+            mass = sum.M();
+            if (abs(mass-91.2) < abs(newmass-91.2)){
+                newmass=mass;
+                dl_pt = sum.Pt();
+            }
+          }//Close if statement for opposite pdgId
+        }//Close for loop over second half of particles in event
+    }//Close for loop over all particles in event
+    return dl_pt;
+
+    });
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Basic Jet Pt
@@ -986,7 +1469,7 @@ namespace WH_Functions{
    const NamedFunc LeadingNonBJetPt_med("LeadingNonBJetPt_med",[](const Baby &b) -> NamedFunc::ScalarType{
       float maxpt=0;
       for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_pt()->at(i) > maxpt && b.ak4pfjets_deepCSV()->at(i) < 0.6321){
+        if (b.ak4pfjets_pt()->at(i) > maxpt && b.ak4pfjets_deepCSV()->at(i) < (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
            maxpt = b.ak4pfjets_pt()->at(i);
         }
       }
