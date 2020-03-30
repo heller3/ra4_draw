@@ -119,7 +119,8 @@ int main(){
   vector<shared_ptr<Process> > sample_list_2016 = {data2016,tt2l_2016,single_t_2016,signal_2016_225_75,signal_2016_700_1};
   vector<shared_ptr<Process> > sample_list_2017 = {data2017,tt2l_2017,single_t_2017,signal_2017_225_75,signal_2017_700_1};
   vector<shared_ptr<Process> > sample_list_2018 = {data2018,tt2l_2018,single_t_2018,signal_2018_225_75,signal_2018_700_1};
-  vector<shared_ptr<Process> > sample_list_comb = {dataComb,tt2l_Comb,single_t_Comb,signal_comb_225_75,signal_comb_700_1};
+  vector<shared_ptr<Process> > sample_list_comb = {dataComb,tt2l_Comb,single_t_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1};
+  vector<shared_ptr<Process> > sample_list_all_comb = {dataComb,tt2l_Comb,tt1l_Comb,single_t_Comb,wjets_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1};
   vector<shared_ptr<Process> > sample_list_tt1l_comb = {dataComb,tt1l_Comb,signal_comb_225_75,signal_comb_700_1};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
@@ -150,30 +151,30 @@ int main(){
 
 
   /*Table & loose_lep_cutflow_2016 = pm2016->Push<Table>("loose_lep_cutflow_2016", vector<TableRow>{
-    TableRow("125$<$MET$<$200", WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2",  0,0,"weight*w_pu"*yearWeight),
-    TableRow("200$<$MET$<$300", WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2",  0,0,"weight*w_pu"*yearWeight),
-    TableRow("300$<$MET$<$400", WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2",  0,0,"weight*w_pu"*yearWeight),
-    TableRow("400$<$MET",     WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2",             0,0,"weight*w_pu"*yearWeight)
+    TableRow("125$<$MET$<$200", WHLeptons==1&&"pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2",  0,0,"weight*w_pu"*yearWeight),
+    TableRow("200$<$MET$<$300", WHLeptons==1&&"pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2",  0,0,"weight*w_pu"*yearWeight),
+    TableRow("300$<$MET$<$400", WHLeptons==1&&"pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2",  0,0,"weight*w_pu"*yearWeight),
+    TableRow("400$<$MET",     WHLeptons==1&&"pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2",             0,0,"weight*w_pu"*yearWeight)
 
       }, sample_list_2016,true);
 
     Table & tight_lep_cutflow_2016 = pm2016->Push<Table>("tight_lep_cutflow_2016", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2016,true);
 
     Table & loose_lep_METextrap_cutflow_2016 = pm2016->Push<Table>("loose_lep_METextrap_cutflow_2016", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2016,true);
 
     Table & tight_lep_METextrap_cutflow_2016 = pm2016->Push<Table>("tight_lep_METextrap_cutflow_2016", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2016,true);
     
@@ -194,30 +195,30 @@ int main(){
 
 
     Table & loose_lep_cutflow_2017 = pm2017->Push<Table>("loose_lep_cutflow_2017", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2017,true);
 
     Table & tight_lep_cutflow_2017 = pm2017->Push<Table>("tight_lep_cutflow_2017", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2017,true);
 
     Table & loose_lep_METextrap_cutflow_2017 = pm2017->Push<Table>("loose_lep_METextrap_cutflow_2017", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2017,true);
 
     Table & tight_lep_METextrap_cutflow_2017 = pm2017->Push<Table>("tight_lep_METextrap_cutflow_2017", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2017,true);
     
@@ -238,30 +239,30 @@ int main(){
 
 
     Table & loose_lep_cutflow_2018 = pm2018->Push<Table>("loose_lep_cutflow_2018", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2018,true);
 
     Table & tight_lep_cutflow_2018 = pm2018->Push<Table>("tight_lep_cutflow_2018", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2018,true);
 
     Table & loose_lep_METextrap_cutflow_2018 = pm2018->Push<Table>("loose_lep_METextrap_cutflow_2018", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2018,true);
 
     Table & tight_lep_METextrap_cutflow_2018 = pm2018->Push<Table>("tight_lep_METextrap_cutflow_2018", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_2018,true);
 
@@ -281,63 +282,147 @@ int main(){
 
 
 
-    Table & loose_lep_cutflow_comb = pmcomb->Push<Table>("loose_lep_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
-
-        }, sample_list_comb,true);
-
-    Table & loose_lep_3jet_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med>100 && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med>100 && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med>100 && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med>100 && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
-
-        }, sample_list_comb,true);
-
-    Table & loose_lep_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_cutflow_comb_medloose", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
-
-        }, sample_list_comb,true);
-
-    /*Table & tight_lep_cutflow_comb = pmcomb->Push<Table>("tight_lep_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+    /*Table & loose_lep_cutflow_comb = pmcomb->Push<Table>("loose_lep_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_comb,true);*/
 
-    Table & loose_lep_METextrap_cutflow_comb = pmcomb->Push<Table>("loose_lep_METextrap_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+    Table & loose_lep_3jet_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_all_comb,true);
+
+    /*Table & loose_lep_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_cutflow_comb_medloose", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);
+
+    Table & loose_lep_low_mT_cutflow_comb = pmcomb->Push<Table>("loose_lep_low_mT_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>100&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>100&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>100&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>100&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_all_comb,true);
+
+    Table & loose_lep_3jet_low_mT_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_low_mT_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>100&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>100&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>100&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>100&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_all_comb,true);*/
+
+    /*Table & loose_lep_low_mT_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_low_mT_cutflow_comb_medloose", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>100" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>100" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>100" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>100" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);*/
+
+    /*Table & loose_lep_ext_mbb_cutflow_comb = pmcomb->Push<Table>("loose_lep_ext_mbb_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_all_comb,true);
+
+    Table & loose_lep_3jet_ext_mbb_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_ext_mbb_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<200&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<200&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<200&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<200&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_all_comb,true);*/
+
+    /*Table & loose_lep_ext_mbb_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_ext_mbb_cutflow_comb_medloose", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>125&&pfmet<200&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>200&&pfmet<300&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>300&&pfmet<400&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>400&&mt_met_lep>150" &&HasMedLooseCSV&& WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);*/
+
+    /*Table & tight_lep_cutflow_comb = pmcomb->Push<Table>("tight_lep_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&pfmet<300&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>300&&pfmet<400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>400&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);*/
+
+    /*Table & loose_lep_METextrap_cutflow_comb = pmcomb->Push<Table>("loose_lep_METextrap_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_comb,true);
 
     Table & loose_lep_3jet_METextrap_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_METextrap_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med>100 && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med>100 && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_comb,true);
 
     Table & loose_lep_METextrap_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_METextrap_cutflow_comb_medloose", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons==1,0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_comb,true);
 
-    /*Table & tight_lep_METextrap_cutflow_comb = pmcomb->Push<Table>("tight_lep_METextrap_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET","pass&&nvetoleps>=2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+    Table & loose_lep_METextrap_low_mT_cutflow_comb = pmcomb->Push<Table>("loose_lep_METextrap_low_mT_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>100&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>100&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);
+
+    Table & loose_lep_3jet_METextrap_low_mT_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_METextrap_low_mT_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>100&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>100&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);
+
+    Table & loose_lep_METextrap_low_mT_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_METextrap_low_mT_cutflow_comb_medloose", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>100" && HasMedLooseCSV && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>100" && HasMedLooseCSV && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);
+
+    Table & loose_lep_METextrap_ext_mbb_cutflow_comb = pmcomb->Push<Table>("loose_lep_METextrap_ext_mbb_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);
+
+    Table & loose_lep_3jet_METextrap_ext_mbb_cutflow_comb = pmcomb->Push<Table>("loose_lep_3jet_METextrap_ext_mbb_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<200&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==3&&mct>200&&mbb>90&&mbb<200&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && LeadingNonBJetPt_med<100 && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);
+
+    Table & loose_lep_METextrap_ext_mbb_cutflow_comb_medloose = pmcomb->Push<Table>("loose_lep_METextrap_ext_mbb_cutflow_comb_medloose", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>125&&pfmet<200&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<200&&pfmet>200&&mt_met_lep>150" && HasMedLooseCSV && WHLeptons>=1,0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_comb,true);*/
 
-    Table & signalRegion_cutflow_comb = pmcomb->Push<Table>("signalRegion_cutflow_comb", vector<TableRow>{
+    /*Table & tight_lep_METextrap_cutflow_comb = pmcomb->Push<Table>("tight_lep_METextrap_cutflow_comb", vector<TableRow>{
+      TableRow("125$<$MET$<$200","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>125&&pfmet<200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET","pass&&nvetoleps==2&&ngoodjets==2&&mct>200&&mbb>90&&mbb<150&&pfmet>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2,0,0,"weight*w_pu"*yearWeight)
+
+        }, sample_list_comb,true);*/
+
+    /*Table & signalRegion_cutflow_comb = pmcomb->Push<Table>("signalRegion_cutflow_comb", vector<TableRow>{
       TableRow("125$<$MET$<$200",WHLeptons==1&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
       TableRow("200$<$MET$<$300",WHLeptons==1&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
       TableRow("300$<$MET$<$400",WHLeptons==1&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
@@ -346,10 +431,10 @@ int main(){
         }, sample_list_comb,true);
 
     Table & signalRegion_3jet_cutflow_comb = pmcomb->Push<Table>("signalRegion_3jet_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_comb,true);
 
@@ -362,10 +447,10 @@ int main(){
         }, sample_list_tt1l_comb,true);
 
     Table & signalRegion_3jet_tt1l_cutflow_comb = pmcomb->Push<Table>("signalRegion_3jet_tt1l_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET$<$300",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("300$<$MET$<$400",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("400$<$MET",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET$<$300",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&pfmet<300&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("300$<$MET$<$400",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>300&&pfmet<400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("400$<$MET",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>400&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight)
 
         }, sample_list_tt1l_comb,true);
 
@@ -376,10 +461,10 @@ int main(){
         }, sample_list_comb,true);
 
     Table & signalRegion_3jet_METextrap_cutflow_comb = pmcomb->Push<Table>("signalRegion_3jet_METextrap_cutflow_comb", vector<TableRow>{
-      TableRow("125$<$MET$<$200",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
-      TableRow("200$<$MET",WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight)
+      TableRow("125$<$MET$<$200",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>125&&pfmet<200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight),
+      TableRow("200$<$MET",WHLeptons==1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==3&&pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2",0,0,"weight*w_pu"*yearWeight)
 
-        }, sample_list_comb,true);
+        }, sample_list_comb,true);*/
 
 
   /*if(single_thread) pm2016->multithreaded_ = false;
@@ -492,27 +577,57 @@ int main(){
 
 
 
-  vector<GammaParams> yields_loose_lep_comb = loose_lep_cutflow_comb.BackgroundYield(lumicomb);
+  /*vector<GammaParams> yields_loose_lep_comb = loose_lep_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_loose_lep_comb){
     cout << yield << endl;
-  }
+  }*/
 
   vector<GammaParams> yields_loose_lep_3jet_comb = loose_lep_3jet_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_loose_lep_3jet_comb){
     cout << yield << endl;
   }
 
-  vector<GammaParams> yields_loose_lep_comb_medloose = loose_lep_cutflow_comb_medloose.BackgroundYield(lumicomb);
+  /*vector<GammaParams> yields_loose_lep_comb_medloose = loose_lep_cutflow_comb_medloose.BackgroundYield(lumicomb);
   for(const auto &yield: yields_loose_lep_comb_medloose){
     cout << yield << endl;
   }
+
+  vector<GammaParams> yields_loose_lep_low_mT_comb = loose_lep_low_mT_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_low_mT_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_3jet_low_mT_comb = loose_lep_3jet_low_mT_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_3jet_low_mT_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_low_mT_comb_medloose = loose_lep_low_mT_cutflow_comb_medloose.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_low_mT_comb_medloose){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_ext_mbb_comb = loose_lep_ext_mbb_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_ext_mbb_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_3jet_ext_mbb_comb = loose_lep_3jet_ext_mbb_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_3jet_ext_mbb_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_ext_mbb_comb_medloose = loose_lep_ext_mbb_cutflow_comb_medloose.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_ext_mbb_comb_medloose){
+    cout << yield << endl;
+  }*/
 
   /*vector<GammaParams> yields_tight_lep_comb = tight_lep_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_tight_lep_comb){
     cout << yield << endl;
   }*/
 
-  vector<GammaParams> yields_loose_lep_METextrap_comb = loose_lep_METextrap_cutflow_comb.BackgroundYield(lumicomb);
+  /*vector<GammaParams> yields_loose_lep_METextrap_comb = loose_lep_METextrap_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_loose_lep_METextrap_comb){
     cout << yield << endl;
   }
@@ -527,12 +642,46 @@ int main(){
     cout << yield << endl;
   }
 
+
+
+  vector<GammaParams> yields_loose_lep_METextrap_low_mT_comb = loose_lep_METextrap_low_mT_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_METextrap_low_mT_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_3jet_METextrap_low_mT_comb = loose_lep_3jet_METextrap_low_mT_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_3jet_METextrap_low_mT_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_METextrap_low_mT_comb_medloose = loose_lep_METextrap_low_mT_cutflow_comb_medloose.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_METextrap_low_mT_comb_medloose){
+    cout << yield << endl;
+  }
+
+
+
+  vector<GammaParams> yields_loose_lep_METextrap_ext_mbb_comb = loose_lep_METextrap_ext_mbb_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_METextrap_ext_mbb_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_3jet_METextrap_ext_mbb_comb = loose_lep_3jet_METextrap_ext_mbb_cutflow_comb.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_3jet_METextrap_ext_mbb_comb){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_loose_lep_METextrap_ext_mbb_comb_medloose = loose_lep_METextrap_ext_mbb_cutflow_comb_medloose.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_loose_lep_METextrap_ext_mbb_comb_medloose){
+    cout << yield << endl;
+  }*/
+
   /*vector<GammaParams> yields_tight_lep_METextrap_comb = tight_lep_METextrap_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_tight_lep_METextrap_comb){
     cout << yield << endl;
   }*/
 
-  vector<GammaParams> yields_signalRegion_comb = signalRegion_cutflow_comb.BackgroundYield(lumicomb);
+  /*vector<GammaParams> yields_signalRegion_comb = signalRegion_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_signalRegion_comb){
     cout << yield << endl;
   }
@@ -560,7 +709,7 @@ int main(){
   vector<GammaParams> yields_signalRegion_3jet_METextrap_comb = signalRegion_3jet_METextrap_cutflow_comb.BackgroundYield(lumicomb);
   for(const auto &yield: yields_signalRegion_3jet_METextrap_comb){
     cout << yield << endl;
-  }
+  }*/
 
   
 }

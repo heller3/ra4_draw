@@ -46,7 +46,7 @@ int main(){
   auto data2016 = Process::MakeShared<Baby_full>("2016 Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto data2017 = Process::MakeShared<Baby_full>("2017 Data", Process::Type::data, colors("data"),{data2017_dir+"slim_data_2017*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
-  auto dataComb = Process::MakeShared<Baby_full>("Combined Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto dataComb = Process::MakeShared<Baby_full>("2016-2018 Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
 
   //ttbar
   auto tt1l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016", Process::Type::background, colors("tt_1l"),{mc2016_dir+"*TTJets_1lep_top_*.root",mc2016_dir+"*TTJets_1lep_tbar_*"},"stitch");
@@ -58,32 +58,32 @@ int main(){
   auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),{mc2018_dir+"slim*TTJets_1lep_top_*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
   auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),{mc2018_dir+"slim*TTJets_2lep_*.root"},"stitch");
 
-  auto tt1l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (1l) Combined", Process::Type::background, colors("tt_1l"),{mc2016_dir+"*TTJets_1lep_top_*.root",mc2016_dir+"*TTJets_1lep_tbar_*",mc2017_dir+"*TTJets_1lep_top_*.root",mc2017_dir+"*TTJets_1lep_tbar_*",mc2018_dir+"slim*TTJets_1lep_top_*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
-  auto tt2l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (2l) Combined", Process::Type::background, colors("tt_2l"),{mc2016_dir+"*TTJets_2lep_*.root",mc2017_dir+"*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root"},"stitch");
+  auto tt1l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016-2018", Process::Type::background, colors("tt_1l"),{mc2016_dir+"*TTJets_1lep_top_*.root",mc2016_dir+"*TTJets_1lep_tbar_*",mc2017_dir+"*TTJets_1lep_top_*.root",mc2017_dir+"*TTJets_1lep_tbar_*",mc2018_dir+"slim*TTJets_1lep_top_*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
+  auto tt2l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2016-2018", Process::Type::background, colors("tt_2l"),{mc2016_dir+"*TTJets_2lep_*.root",mc2017_dir+"*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root"},"stitch");
 
   //WJets
   auto wjets_2016 = Process::MakeShared<Baby_full>("W+jets 2016", Process::Type::background, colors("wjets"), {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"*W*Jets_NuPt200_s16v*.root"},"stitch");
   auto wjets_2017 = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"*W*Jets_NuPt200_f17v2*.root"},"stitch");
   auto wjets_2018 = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"},"stitch");
-  auto wjets_Comb = Process::MakeShared<Baby_full>("W+jets Combined", Process::Type::background, colors("wjets"), {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"},"stitch");
+  auto wjets_Comb = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, colors("wjets"), {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"},"stitch");
 
   //Single top
   auto single_t_2016 = Process::MakeShared<Baby_full>("Single t 2016", Process::Type::background, colors("single_t"), {mc2016_dir+"*_ST_*.root"});
   auto single_t_2017 = Process::MakeShared<Baby_full>("Single t 2017", Process::Type::background, colors("single_t"), {mc2017_dir+"*_ST_*.root"});
   auto single_t_2018 = Process::MakeShared<Baby_full>("Single t 2018", Process::Type::background, colors("single_t"), {mc2018_dir+"slim*_ST_*.root"});
-  auto single_t_Comb = Process::MakeShared<Baby_full>("Single t Combined", Process::Type::background, colors("single_t"), {mc2016_dir+"*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"slim*_ST_*.root"});
+  auto single_t_Comb = Process::MakeShared<Baby_full>("Single t 2016-2018", Process::Type::background, colors("single_t"), {mc2016_dir+"*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"slim*_ST_*.root"});
 
   //diboson
   auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"*WW*.root", mc2016_dir+"*WZ*.root",mc2016_dir+"*ZZ*.root"});
   auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"*WW*.root", mc2017_dir+"*WZ*.root",mc2017_dir+"*ZZ*.root"});
   auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
-  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"*WW*.root", mc2016_dir+"*WZ*.root",mc2016_dir+"*ZZ*.root",mc2017_dir+"*WW*.root", mc2017_dir+"*WZ*.root",mc2017_dir+"*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
+  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson 2016-2018", Process::Type::background, colors("other"),{mc2016_dir+"*WW*.root", mc2016_dir+"*WZ*.root",mc2016_dir+"*ZZ*.root",mc2017_dir+"*WW*.root", mc2017_dir+"*WZ*.root",mc2017_dir+"*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
 
   // ttV
   auto ttV_2016 = Process::MakeShared<Baby_full>("t#bar{t}V 2016", Process::Type::background, colors("ttv"),{mc2016_dir+"*_TTWJets*.root", mc2016_dir+"*_TTZ*.root"});
   auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"*_TTWJets*.root", mc2017_dir+"*_TTZ*.root"});
   auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
-  auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V Combined", Process::Type::background, colors("ttv"), {mc2016_dir+"*_TTWJets*.root", mc2016_dir+"*_TTZ*.root",mc2017_dir+"*_TTWJets*.root", mc2017_dir+"*_TTZ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
+  auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V 2016-2018", Process::Type::background, colors("ttv"), {mc2016_dir+"*_TTWJets*.root", mc2016_dir+"*_TTZ*.root",mc2017_dir+"*_TTWJets*.root", mc2017_dir+"*_TTZ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
 
 
   //signals
@@ -93,7 +93,7 @@ int main(){
     signal_2017_225_75->SetLineStyle(2);
   auto signal_2018_225_75 = Process::MakeShared<Baby_full>("2018 Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal2018_dir+"slim_*.root"},"pass&&mass_stop==225&&mass_lsp==75");
     signal_2018_225_75->SetLineStyle(2);
-  auto signal_comb_225_75 = Process::MakeShared<Baby_full>("Combined Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root",signal2017_dir+"slim_*.root",signal2018_dir+"slim_*.root"},"pass&&mass_stop==225&&mass_lsp==75");
+  auto signal_comb_225_75 = Process::MakeShared<Baby_full>("2016-2018 Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root",signal2017_dir+"slim_*.root",signal2018_dir+"slim_*.root"},"pass&&mass_stop==225&&mass_lsp==75");
     signal_comb_225_75->SetLineStyle(2);
 
 
@@ -106,7 +106,7 @@ int main(){
   auto signal_2016_700_1 = Process::MakeShared<Baby_full>("2016 Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
   auto signal_2017_700_1 = Process::MakeShared<Baby_full>("2017 Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2017_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
   auto signal_2018_700_1 = Process::MakeShared<Baby_full>("2018 Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2018_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
-  auto signal_comb_700_1 = Process::MakeShared<Baby_full>("Combined Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root",signal2017_dir+"slim_*.root",signal2018_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
+  auto signal_comb_700_1 = Process::MakeShared<Baby_full>("2016-2018 Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root",signal2017_dir+"slim_*.root",signal2018_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
 
   //List of processes
   vector<shared_ptr<Process> > sample_list_2016 = {data2016,wjets_2016,tt2l_2016,tt1l_2016,single_t_2016,diboson_2016,ttV_2016};
@@ -154,7 +154,7 @@ int main(){
 
   PlotMaker * pm2016_signal = new PlotMaker();
   PlotMaker * pm2017_signal = new PlotMaker();
-  PlotMaker * pm2018_signal = new PlotMaker();
+  PlotMaker * pm2018_signal = new PlotMaker();*
   PlotMaker * pmComb_signal = new PlotMaker();
 
   PlotMaker * pmetc = new PlotMaker();
@@ -168,40 +168,86 @@ int main(){
       "pass", sample_list_single_t, all_plot_types).Weight("weight*w_pu"*yearWeight).Tag("coarse_yAll_single_t_");
 
   //Selections
-  NamedFunc dilepton_lowMET_lowMT_looseLep = "pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>50&&ngoodbtags==2" && WHLeptons==1;
-  NamedFunc dilepton_lowMET_lowMT_tightLep = "pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>50&&ngoodbtags==2" && WHLeptons==2;
-  NamedFunc dilepton_lowMET_highMT_looseLep = "pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==1;
-  NamedFunc dilepton_lowMET_highMT_tightLep = "pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2;
-  NamedFunc dilepton_looseLep = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_tightLep = "pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>200&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2" && WHLeptons==2;
+  NamedFunc dilepton_looseLep_lowMET       = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_lowMET_noMbb = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_lowMET_noMCT = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_lowMET_noMT  = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&ngoodbtags==2";
 
-  NamedFunc dilepton_looseLep_noMET = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&ngoodbtags==2&&pfmet>50&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150";
-  NamedFunc dilepton_looseLep_noMbb = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&ngoodbtags==2&&pfmet>200&&mct>200&&mt_met_lep>150";
-  NamedFunc dilepton_looseLep_noMCT = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&ngoodbtags==2&&pfmet>200&&mbb>90&&mbb<150&&mt_met_lep>150";
-  NamedFunc dilepton_looseLep_noMT  = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&ngoodbtags==2&&pfmet>200&&mbb>90&&mbb<150&&mct>200";
+  NamedFunc dilepton_looseLep_medloose_lowMET       = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150";
+  NamedFunc dilepton_looseLep_medloose_lowMET_noMbb = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150";
+  NamedFunc dilepton_looseLep_medloose_lowMET_noMCT = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>150";
+  NamedFunc dilepton_looseLep_medloose_lowMET_noMT  = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200";
 
-  NamedFunc dilepton_looseLep_lowMET       = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_lowMET_noMbb = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_lowMET_noMCT = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_lowMET_noMT  = WHLeptons==1&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMET       = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMET_noMbb = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMET_noMCT = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMET_noMT  = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&ngoodbtags==2";
 
-  NamedFunc dilepton_looseLep_medloose_lowMET       = WHLeptons==1&&HasMedLooseCSV&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150";
-  NamedFunc dilepton_looseLep_medloose_lowMET_noMbb = WHLeptons==1&&HasMedLooseCSV&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150";
-  NamedFunc dilepton_looseLep_medloose_lowMET_noMCT = WHLeptons==1&&HasMedLooseCSV&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>150";
-  NamedFunc dilepton_looseLep_medloose_lowMET_noMT  = WHLeptons==1&&HasMedLooseCSV&&"pass&&nvetoleps>=2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200";
+  NamedFunc dilepton_looseLep_lowMT       = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_lowMT_noMbb = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_lowMT_noMCT = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>100&&ngoodbtags==2";
 
-  NamedFunc dilepton_looseLep_3jet_lowMET       = WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps>=2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_3jet_lowMET_noMbb = WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps>=2&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_3jet_lowMET_noMCT = WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps>=2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>150&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_3jet_lowMET_noMT  = WHLeptons==1&&LeadingNonBJetPt_med>100&&"pass&&nvetoleps>=2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMT       = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMT_noMbb = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_lowMT_noMCT = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>100&&ngoodbtags==2";
+
+  NamedFunc dilepton_looseLep_extMBB       = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<200&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_extMBB_noMCT = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_extMBB_noMT  = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<200&&mct>200&&ngoodbtags==2";
+
+  NamedFunc dilepton_looseLep_medloose_extMBB       = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<200&&mct>200&&mt_met_lep>150";
+  NamedFunc dilepton_looseLep_medloose_extMBB_noMCT = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<200&&mt_met_lep>150";
+  NamedFunc dilepton_looseLep_medloose_extMBB_noMT  = WHLeptons>=1&&HasMedLooseCSV&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<200&&mct>200";
+
+  NamedFunc dilepton_looseLep_3jet_extMBB       = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<200&&mct>200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_extMBB_noMCT = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<200&&mt_met_lep>150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_3jet_extMBB_noMT  = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<200&&mct>200&&ngoodbtags==2";
 
   //vector<NamedFunc> sels = {/*dilepton_lowMET_lowMT_tightLep,dilepton_lowMET_lowMT_looseLep,dilepton_lowMET_highMT_tightLep,dilepton_lowMET_highMT_looseLep,dilepton_tightLep,*/dilepton_looseLep}; 
   //vector<string> sels_tags = {/*"_dilepton_lowMET_lowMT_tightLep","_dilepton_lowMET_lowMT_looseLep","_dilepton_lowMET_highMT_tightLep","_dilepton_lowMET_highMT_looseLep","_dilepton_tightLep",*/"_dilepton_looseLep"}; 
-  vector<NamedFunc> sels   = {dilepton_looseLep_lowMET,dilepton_looseLep_lowMET_noMbb,dilepton_looseLep_lowMET_noMCT,dilepton_looseLep_lowMET_noMT,dilepton_looseLep_3jet_lowMET,dilepton_looseLep_3jet_lowMET_noMbb,dilepton_looseLep_3jet_lowMET_noMCT,dilepton_looseLep_3jet_lowMET_noMT}; 
-  vector<string> sels_tags = {"_dilepton_looseLep_lowMET","_dilepton_looseLep_lowMET_noMbb","_dilepton_looseLep_lowMET_noMCT","_dilepton_looseLep_lowMET_noMT","_dilepton_looseLep_3jet_lowMET","_dilepton_looseLep_3jet_lowMET_noMbb","_dilepton_looseLep_3jet_lowMET_noMCT","_dilepton_looseLep_3jet_lowMET_noMT"}; 
-  vector<PlotMaker *> pms = {pm2016,pm2017,pm2018,pmComb,pm2016_signal,pm2017_signal,pm2018_signal,pmComb_signal};
-  vector<vector<shared_ptr<Process> > > samples_Run2 = {sample_list_2016,sample_list_2017,sample_list_2018,sample_list_Comb,sample_list_signal_2016,sample_list_signal_2017,sample_list_signal_2018,sample_list_signal_Comb};
-  vector<string> years = {"y2016","y2017","y2018","yAll","y2016_signal","y2017_signal","y2018_signal","yAll_signal"};
+  vector<NamedFunc> sels   = {dilepton_looseLep_lowMET,
+                              dilepton_looseLep_lowMET_noMbb,
+                              dilepton_looseLep_lowMET_noMCT,
+                              dilepton_looseLep_lowMET_noMT,
+                              dilepton_looseLep_3jet_lowMET,
+                              dilepton_looseLep_3jet_lowMET_noMbb,
+                              dilepton_looseLep_3jet_lowMET_noMCT,
+                              dilepton_looseLep_3jet_lowMET_noMT,
+                              dilepton_looseLep_lowMT,
+                              dilepton_looseLep_lowMT_noMbb,
+                              dilepton_looseLep_lowMT_noMCT,
+                              dilepton_looseLep_3jet_lowMT,
+                              dilepton_looseLep_3jet_lowMT_noMbb,
+                              dilepton_looseLep_3jet_lowMT_noMCT,
+                              dilepton_looseLep_extMBB,
+                              dilepton_looseLep_extMBB_noMCT,
+                              dilepton_looseLep_extMBB_noMT,
+                              dilepton_looseLep_3jet_extMBB,
+                              dilepton_looseLep_3jet_extMBB_noMCT,
+                              dilepton_looseLep_3jet_extMBB_noMT}; 
+  vector<string> sels_tags = {"_dilepton_looseLep_lowMET",
+                              "_dilepton_looseLep_lowMET_noMbb",
+                              "_dilepton_looseLep_lowMET_noMCT",
+                              "_dilepton_looseLep_lowMET_noMT",
+                              "_dilepton_looseLep_3jet_lowMET",
+                              "_dilepton_looseLep_3jet_lowMET_noMbb",
+                              "_dilepton_looseLep_3jet_lowMET_noMCT",
+                              "_dilepton_looseLep_3jet_lowMET_noMT",
+                              "_dilepton_looseLep_lowMT",
+                              "_dilepton_looseLep_lowMT_noMbb",
+                              "_dilepton_looseLep_lowMT_noMCT",
+                              "_dilepton_looseLep_3jet_lowMT",
+                              "_dilepton_looseLep_3jet_lowMT_noMbb",
+                              "_dilepton_looseLep_3jet_lowMT_noMCT",
+                              "_dilepton_looseLep_extMBB",
+                              "_dilepton_looseLep_extMBB_noMCT",
+                              "_dilepton_looseLep_extMBB_noMT",
+                              "_dilepton_looseLep_3jet_extMBB",
+                              "_dilepton_looseLep_3jet_extMBB_noMCT",
+                              "_dilepton_looseLep_3jet_extMBB_noMT"}; 
+  vector<PlotMaker *> pms = {pmComb,pmComb_signal};
+  vector<vector<shared_ptr<Process> > > samples_Run2 = {sample_list_Comb,sample_list_signal_Comb};
+  vector<string> years = {"yAll","yAll_signal"};
   vector<NamedFunc> weights = {"weight * w_pu"*yearWeight};
 
   for(uint isel=0;isel<sels.size();isel++){
