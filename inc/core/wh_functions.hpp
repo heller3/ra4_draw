@@ -119,6 +119,7 @@ namespace WH_Functions{
   extern const NamedFunc muPt;
   extern const NamedFunc HasHEMevent;
   extern const NamedFunc HasHEMjet;
+  extern const NamedFunc mcHEMWeight;
   extern const NamedFunc noPrefireWeight;
   extern const NamedFunc mt_met_lep_uncorr;
   extern const NamedFunc pfmet_uncorr_func;
@@ -151,6 +152,9 @@ namespace WH_Functions{
   extern const NamedFunc SubLeadingBJetPt;
   extern const NamedFunc SubLeadingRealBJetPt;
   extern const NamedFunc SubLeadingFakeBJetPt;
+
+  extern const NamedFunc nNonBTagJets;
+  extern const NamedFunc signature_pT;
 
   // Looking at gen level ISR
   extern const NamedFunc genISRPt;

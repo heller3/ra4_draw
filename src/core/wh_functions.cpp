@@ -1642,6 +1642,50 @@ float medDeepCSV2018 = 0.4184;
       return maxpt;
     });
 
+   const NamedFunc nNonBTagJets("nNonBTagJets",[](const Baby &b) -> NamedFunc::ScalarType{
+      float njet=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) < (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
+           njet++;
+        }
+      }
+      return njet;
+    });
+  
+   const NamedFunc signature_pT("signature_pT",[](const Baby &b) -> NamedFunc::ScalarType{
+      TLorentzVector jet1;
+      TLorentzVector jet2;
+      TLorentzVector lep1;
+      TLorentzVector lep2;
+      TLorentzVector sum;
+
+      unsigned idx(0);
+
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) < (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
+           jet1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+           idx = i;
+           break;
+        }
+      }
+
+      for (unsigned j(0); j<b.ak4pfjets_deepCSV()->size(); j++){
+        if (j>idx && b.ak4pfjets_deepCSV()->at(j) < (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
+           jet2.SetPtEtaPhiM(b.ak4pfjets_pt()->at(j),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j),b.ak4pfjets_m()->at(j));
+           break;
+        }
+      }
+
+      if (b.leps_pt()->size()>=2){
+        lep1.SetPtEtaPhiM(b.leps_pt()->at(0),b.leps_eta()->at(0),b.leps_phi()->at(0),0.);
+        lep2.SetPtEtaPhiM(b.leps_pt()->at(1),b.leps_eta()->at(1),b.leps_phi()->at(1),0.);
+      }
+
+      sum = (jet1+jet2+lep1+lep2);
+
+      return sum.Pt();
+    });
+
 
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    // Funcs to look at number of B-tags which are fakes
@@ -2045,6 +2089,35 @@ float medDeepCSV2018 = 0.4184;
         }
       }
       return nevent;
+    });
+
+  const NamedFunc mcHEMWeight("mcHEMWeight",[](const Baby &b) -> NamedFunc::ScalarType{
+      float weight=0.;
+      int nEls = 0;
+      int nJets = 0;
+
+      if(b.year()==2018&&b.genmet()!=-9999){
+
+        for (unsigned i(0); i<b.vetoleps_pdgid()->size(); i++){
+          if (abs(b.vetoleps_pdgid()->at(i))==11 && b.vetoleps_phi()->at(i)>-1.6 && b.vetoleps_phi()->at(i) < -0.8 && b.vetoleps_eta()->at(i) > -2.4 && b.vetoleps_eta()->at(i) < -1.4){
+            nEls++;
+          }
+        }
+
+        for (unsigned i(0); i<b.ak4pfjets_phi()->size(); i++){
+          if (b.ak4pfjets_phi()->at(i)>-1.6 && b.ak4pfjets_phi()->at(i) < -0.8 && b.ak4pfjets_eta()->at(i) > -2.4 && b.ak4pfjets_eta()->at(i) < -1.4){
+            nJets++;
+          }
+        }
+
+      }
+
+      if(nEls>0||nJets>0){
+        weight=0.352;
+        }else{
+          weight = 1.;
+        }
+      return weight;
     });
 
   const NamedFunc muPt("muPt",[](const Baby &b) -> NamedFunc::ScalarType{

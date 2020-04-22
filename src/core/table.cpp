@@ -149,11 +149,7 @@ void Table::Print(double luminosity,
     : "tables/"+name_+"_lumi_"+fmt_lumi+".tex";
   std::ofstream file(file_name);
   if (print_pie_) file << fixed << setprecision(2);
-<<<<<<< HEAD
   else file << fixed << setprecision(3);
-=======
-  else file << fixed << setprecision(2); // changed for boosted region numbers
->>>>>>> e34c7bf991b2b3027bb8c299debbe4b24d0f3e83
   PrintHeader(file, luminosity);
   for(size_t i = 0; i < rows_.size(); ++i){
     PrintRow(file, i, luminosity);
