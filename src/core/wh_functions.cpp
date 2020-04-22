@@ -701,61 +701,58 @@ float medDeepCSV2018 = 0.4184;
       return nbquarks;
     });
 
-  const NamedFunc nMatchedLightLeps("nMatchedLightLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+  const NamedFunc nGenLightLeps("nGenLightLeps",[](const Baby &b) -> NamedFunc::ScalarType{
       int nGenLeps=0;
-      int nRecoLeps=0;
+
       for(unsigned i(0); i<b.gen_id()->size(); i++){
-        if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
           nGenLeps++;
         }
       }
 
-      nRecoLeps = b.leps_pdgid()->size();
-
-      if (nGenLeps==nRecoLeps){
-        return 1;
-      }else{
-        return 0;
-      }
+      return nGenLeps;
+      //if function returns 2, 1 is lost lepton, assuming single reco lepton
     });
 
-  const NamedFunc nLostHadTaus("nLostHadTaus",[](const Baby &b) -> NamedFunc::ScalarType{
-      int nGenLeps=0;
-      int nLightLeps=0;
-      int nRecoLeps=0;
-      int nLepsfromTau=0;
+  const NamedFunc LostHadTaus("LostHadTaus",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenLepsfromW=0;
+      int nGenLepsfromTau=0;
+
+      int lostLepChecker = 0;
 
       int counter=0; 
+
+
       for(unsigned i(0); i<b.gen_id()->size(); i++){
         if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15){
-          nGenLeps++;
+          lostLepChecker++;
         }
       }
 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
-        if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13){
-          nLightLeps++;
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==24){
+          nGenLepsfromW++;
         }
       }
 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
-        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==15){
-          nLepsfromTau++;
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==15){
+          nGenLepsfromTau++;
         }
       }
 
-      nRecoLeps = b.leps_pdgid()->size();
-
-      if(nGenLeps==nRecoLeps){
-        counter = 0;
-      }else{
-        if((nLightLeps+nLepsfromTau)<2){
+      if(lostLepChecker==2){
+        if((nGenLepsfromW+nGenLepsfromTau)<2){
           counter = 1;
+          //if light leptons from W or tau is less than 2, then the lost lepton is a hadronic tau
         }else{
           counter = 0;
+          //if there are two light leptons from either a W or a tau, then then lost lepton is just a light lepton and can be counted using the nGenLightLeps function
         }
+      }else{
+        counter = 0;
       }
-      
+
       return counter;
     });
 
