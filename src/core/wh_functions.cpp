@@ -16,8 +16,11 @@ namespace WH_Functions{
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Miscellaneous
+float medDeepCSV2016 = 0.6321;
+float medDeepCSV2017 = 0.4941;
+float medDeepCSV2018 = 0.4184;
 
-  
+
   const NamedFunc failTauVetos("failTauVetos",[](const Baby &b) -> NamedFunc::ScalarType{
     if(!b.PassTauVeto() || !b.PassTauVeto()) return 1.;
     else return 0.;
@@ -38,6 +41,7 @@ namespace WH_Functions{
 
   //Temporary hack
   const NamedFunc ST_up("ST_up",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
       int nTop = 0; 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
         if(abs(b.gen_id()->at(i)) == 6) nTop++;
@@ -46,6 +50,7 @@ namespace WH_Functions{
       else return 1.;
   });
   const NamedFunc ST_off("ST_off",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
       int nTop = 0; 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
         if(abs(b.gen_id()->at(i)) == 6) nTop++;
@@ -54,6 +59,7 @@ namespace WH_Functions{
       else return 1.;
   });
   const NamedFunc ST_down("ST_down",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
       int nTop = 0; 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
         if(abs(b.gen_id()->at(i)) == 6) nTop++;
@@ -62,6 +68,7 @@ namespace WH_Functions{
       else return 1.;
   });
   const NamedFunc fake_up("fake_up",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
       int ndeepfakes=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
         if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
@@ -71,6 +78,7 @@ namespace WH_Functions{
   });
 
   const NamedFunc fake_down("fake_down",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
       int ndeepfakes=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
         if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
@@ -80,6 +88,7 @@ namespace WH_Functions{
   });
 
     const NamedFunc ttbar_genmet_fix("ttbar_genmet_fix",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
       //genmet 200=1
       //genmet 540=1.4
       if(b.year()==2016 || b.genmet() <125) return 1.;
@@ -91,6 +100,7 @@ namespace WH_Functions{
       }
   });
       const NamedFunc ttbar_genmet_antifix("ttbar_genmet_antifix",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
     //genmet 200=1
     //genmet 540=1.4
     if(b.year()==2016 || b.genmet() <125) return 1.;
@@ -267,7 +277,7 @@ namespace WH_Functions{
             for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
                 if (deltaR(b.ak8pfjets_eta()->at(i),b.ak8pfjets_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
                     // have to use b-tag status as true flavor is not stored for the sub jets used for the efficiency measurement (nanoAOD/nanoAOD-tools)
-                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                    if (b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){
                         nBInFat++;
                     }
                 }
@@ -490,6 +500,26 @@ namespace WH_Functions{
     });
 
 
+    const NamedFunc n_true_emu("n_true_emu",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nemu = 0;
+
+     for (unsigned i(0); i<b.gen_id()->size(); i++){
+        if ((abs(b.gen_id()->at(i))==11 || abs(b.gen_id()->at(i))==13) && (abs(b.gen_motherid()->at(i) == 24)|| abs(b.gen_motherid()->at(i))==15)) nemu++;
+    }//Close if
+    return nemu;
+    });
+
+      //Number of b-flavor jets in acceptance but failing tagger.
+      const NamedFunc HasBFailedTag("HasBFailedTag",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nfail=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (abs(b.ak4pfjets_hadron_flavor()->at(i))==5 && b.ak4pfjets_deepCSV()->at(i) < (0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))) nfail++;
+      }
+      return nfail;
+
+    });
+
+
    /*
    * returns 1 if there are two b jets with at least one Medium and one Loose score
    * returns 0 otherwise
@@ -654,6 +684,23 @@ namespace WH_Functions{
       }
       return nbquarks;
     });
+
+  const NamedFunc nRealBs2("nRealBs2",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==5) nbquarks++;
+      }
+      return nbquarks;
+    });
+
+    const NamedFunc nRealBtags("nRealBtags",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
+        if(abs(b.ak4pfjets_parton_flavor()->at(i))==5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) nbquarks++;
+      }
+      return nbquarks;
+    });
+
 
   const NamedFunc FatJet_HighestHScore("FatJet_HighestHScore",[](const Baby &b) -> NamedFunc::ScalarType{
     vector<float>* v = b.FatJet_deepTag_H();
@@ -839,6 +886,32 @@ namespace WH_Functions{
       return nbquarks;
     });
 
+  const NamedFunc nGenBs_forward("nGenBs_forward",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nbquarks=0;
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&abs(b.gen_eta()->at(i))>2.4) nbquarks++;
+    }
+    return nbquarks;
+  });
+
+  const NamedFunc nGenBs_central("nGenBs_central",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nbquarks=0;
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5&&abs(b.gen_eta()->at(i))<2.4) nbquarks++;
+    }
+    return nbquarks;
+  });
+
+  const NamedFunc nGenBs_ptG30_central("nGenBs_ptG30_central",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nbquarks=0;
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5 && abs(b.gen_eta()->at(i))<2.4 && b.gen_pt()->at(i)>30) nbquarks++;
+    }
+    return nbquarks;
+  });
+
+
+
   const NamedFunc nGenBsFromGluons_ptG30("nGenBsFromGluons_ptG30",[](const Baby &b) -> NamedFunc::ScalarType{
       int nbquarks=0;
       for(unsigned i(0); i<b.gen_id()->size(); i++){
@@ -857,6 +930,27 @@ namespace WH_Functions{
       return bquarkpT;
     });
   
+  const NamedFunc genBeta("genBeta",[](const Baby &b) -> NamedFunc::VectorType{
+      vector <double> bquarketa;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5){
+          bquarketa.push_back (b.gen_eta()->at(i));
+        }
+      }
+      return bquarketa;
+    });
+
+    const NamedFunc genBeta_mostForward("genBeta_mostForward",[](const Baby &b) -> NamedFunc::ScalarType{
+      double bquarketa=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5 && abs(b.gen_eta()->at(i))>abs(bquarketa)){
+          bquarketa=b.gen_eta()->at(i);
+        }
+      }
+      return bquarketa;
+    });
+
+
   const NamedFunc genB_leadingpT("genB_leadingpT",[](const Baby &b) -> NamedFunc::ScalarType{
     vector< pair <float,float> > v;
     for(unsigned i(0);i<b.gen_id()->size();i++){
@@ -933,6 +1027,37 @@ namespace WH_Functions{
             delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
           }//Close if statement for opposite b
         }//Close for loop over second half of particles in event
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return delR;
+
+    });
+
+  const NamedFunc bDeltaRfromtop("bDeltaRfromtop",[](const Baby &b) -> NamedFunc::ScalarType{
+    float delR = 0;
+
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5 && abs(b.gen_motherid()->at(i))==6){
+        for(unsigned j(i+1);j<b.gen_id()->size();j++){
+          if(b.gen_id()->at(j)==-b.gen_id()->at(i) && abs(b.gen_motherid()->at(j))==6){
+
+            delR = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.gen_eta()->at(j),b.gen_phi()->at(j));
+          }//Close if statement for opposite b
+        }//Close for loop over second half of particles in event
+      }//Close if statement that find b
+    }//Close for loop over all particles in event
+    return delR;
+
+    });
+
+  const NamedFunc minDR_lep_bquark("minDR_lep_bquark",[](const Baby &b) -> NamedFunc::ScalarType{
+    float delR = 999;
+    for(unsigned i(0); i<b.gen_id()->size(); i++){
+      if(abs(b.gen_id()->at(i))==5 && abs(b.gen_motherid()->at(i))==6){
+        for(unsigned j(0);j<b.leps_eta()->size();j++){
+          float this_dr = deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j));
+          if (this_dr < delR) delR = this_dr; 
+        }//Close for loop over leptons
       }//Close if statement that find b
     }//Close for loop over all particles in event
     return delR;
@@ -1941,6 +2066,7 @@ namespace WH_Functions{
     return pt;
 
     });
+
 
 
  

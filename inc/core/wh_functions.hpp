@@ -7,7 +7,8 @@
  
 namespace WH_Functions{
 
-  // Miscellaneous 
+  // Miscellaneous
+
   extern const NamedFunc ST_up;
   extern const NamedFunc ST_off;
   extern const NamedFunc ST_down;
@@ -43,8 +44,10 @@ namespace WH_Functions{
   extern const NamedFunc LeadingWpT;
   extern const NamedFunc SubLeadingWpT;
   extern const NamedFunc HasHadronicTau;
+  extern const NamedFunc n_true_emu;
   extern const NamedFunc PassThirdJetHighpTVeto;
   //extern const NamedFunc wpt_reco;
+  extern const NamedFunc HasBFailedTag;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc HasMedMedDeepCSV;
   extern const NamedFunc HasExactMedMedDeepCSV;
@@ -66,6 +69,8 @@ namespace WH_Functions{
   extern const NamedFunc WHLeptons;
   extern const NamedFunc NBJets;
   extern const NamedFunc nRealBs;
+  extern const NamedFunc nRealBs2;
+  extern const NamedFunc nRealBtags;
   extern const NamedFunc FatJet_HighestHScore;
   extern const NamedFunc FatJet_ClosestMSD;
   extern const NamedFunc sortedJetsPt_Leading;
@@ -81,8 +86,12 @@ namespace WH_Functions{
   extern const NamedFunc nGenBs_ptG30;
   extern const NamedFunc nGenBsFromGluons_ptG30;
   extern const NamedFunc genBpT;
+  extern const NamedFunc genBeta;
+  extern const NamedFunc genBeta_mostForward;
   extern const NamedFunc bDeltaRGluonSplit;
   extern const NamedFunc bDeltaR;
+  extern const NamedFunc bDeltaRfromtop;
+  extern const NamedFunc minDR_lep_bquark;
   extern const NamedFunc bMother;
   extern const NamedFunc bMother_pt15;
   extern const NamedFunc bMother_pt30;
@@ -113,6 +122,9 @@ namespace WH_Functions{
   extern const NamedFunc noPrefireWeight;
   extern const NamedFunc mt_met_lep_uncorr;
   extern const NamedFunc pfmet_uncorr_func;
+
+
+
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
@@ -147,11 +159,13 @@ namespace WH_Functions{
   extern const NamedFunc genISRrecoISRdPhi;
   extern const NamedFunc genISRrecoISRDeltaPt;
   extern const NamedFunc truthOrigin3rdJet;
- 
-  extern const NamedFunc bDeltaR;
+
   extern const NamedFunc bbmass;
   extern const NamedFunc nGenBs_ptG15;
   extern const NamedFunc nGenBs_ptG30;
+  extern const NamedFunc nGenBs_forward;
+  extern const NamedFunc nGenBs_central;
+  extern const NamedFunc nGenBs_ptG30_central;
 
 }
 
