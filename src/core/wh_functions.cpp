@@ -701,6 +701,64 @@ float medDeepCSV2018 = 0.4184;
       return nbquarks;
     });
 
+  const NamedFunc nMatchedLightLeps("nMatchedLightLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenLeps=0;
+      int nRecoLeps=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13){
+          nGenLeps++;
+        }
+      }
+
+      nRecoLeps = b.leps_pdgid()->size();
+
+      if (nGenLeps==nRecoLeps){
+        return 1;
+      }else{
+        return 0;
+      }
+    });
+
+  const NamedFunc nLostHadTaus("nLostHadTaus",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenLeps=0;
+      int nLightLeps=0;
+      int nRecoLeps=0;
+      int nLepsfromTau=0;
+
+      int counter=0; 
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15){
+          nGenLeps++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13){
+          nLightLeps++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==15){
+          nLepsfromTau++;
+        }
+      }
+
+      nRecoLeps = b.leps_pdgid()->size();
+
+      if(nGenLeps==nRecoLeps){
+        counter = 0;
+      }else{
+        if((nLightLeps+nLepsfromTau)<2){
+          counter = 1;
+        }else{
+          counter = 0;
+        }
+      }
+      
+      return counter;
+    });
+
 
   const NamedFunc FatJet_HighestHScore("FatJet_HighestHScore",[](const Baby &b) -> NamedFunc::ScalarType{
     vector<float>* v = b.FatJet_deepTag_H();
