@@ -292,6 +292,11 @@ int main(){
   NamedFunc onelepton_lowMET_noMCT_highmbb       = WHLeptons==1&&"pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
   NamedFunc onelepton_3jet_lowMET_noMCT_highmbb  = WHLeptons==1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
 
+  NamedFunc onelepton_highMET_noMCT       = WHLeptons==1&&"pass&&nvetoleps==1&&ngoodjets==2&&pfmet>200&&(mbb<90||mbb>150)&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
+  NamedFunc onelepton_3jet_highMET_noMCT  = WHLeptons==1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>200&&(mbb<90||mbb>150)&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
+
+  NamedFunc onelepton_highMET_noMCT_highmbb       = WHLeptons==1&&"pass&&nvetoleps==1&&ngoodjets==2&&pfmet>200&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
+  NamedFunc onelepton_3jet_highMET_noMCT_highmbb  = WHLeptons==1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>200&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
 
   vector<NamedFunc> sels   = {/*dilepton_looseLep_lowMET,
                               dilepton_looseLep_lowMET_noMbb,
@@ -351,11 +356,15 @@ int main(){
                               dilepton_looseLep_no3jet_lowMT_highMET_boost,
                               dilepton_looseLep_no3jet_regMT_highMET_boost,
                               dilepton_looseLep_no3jet_lowMT_windMET_boost,
-                              dilepton_looseLep_no3jet_regMT_windMET_boost,*/
+                              dilepton_looseLep_no3jet_regMT_windMET_boost,
                               onelepton_lowMET_noMCT,
                               onelepton_3jet_lowMET_noMCT,
                               onelepton_lowMET_noMCT_highmbb,
-                              onelepton_3jet_lowMET_noMCT_highmbb}; 
+                              onelepton_3jet_lowMET_noMCT_highmbb,*/
+                              onelepton_highMET_noMCT,
+                              onelepton_3jet_highMET_noMCT,
+                              onelepton_highMET_noMCT_highmbb,
+                              onelepton_3jet_highMET_noMCT_highmbb}; 
   vector<string> sels_tags = {/*"_dilepton_looseLep_lowMET",
                               "_dilepton_looseLep_lowMET_noMbb",
                               "_dilepton_looseLep_lowMET_noMCT",
@@ -414,11 +423,15 @@ int main(){
                               "_dilepton_looseLep_no3jet_lowMT_highMET_boost",
                               "_dilepton_looseLep_no3jet_regMT_highMET_boost",
                               "_dilepton_looseLep_no3jet_lowMT_windMET_boost",
-                              "_dilepton_looseLep_no3jet_regMT_windMET_boost",*/
+                              "_dilepton_looseLep_no3jet_regMT_windMET_boost",
                               "_onelepton_lowMET_noMCT",
                               "_onelepton_3jet_lowMET_noMCT",
                               "_onelepton_lowMET_noMCT_highmbb",
-                              "_onelepton_3jet_lowMET_noMCT_highmbb"}; 
+                              "_onelepton_3jet_lowMET_noMCT_highmbb",*/
+                              "_onelepton_highMET_noMCT",
+                              "_onelepton_3jet_highMET_noMCT",
+                              "_onelepton_highMET_noMCT_highmbb",
+                              "_onelepton_3jet_highMET_noMCT_highmbb"}; 
   vector<PlotMaker *> pms = {/*pm2016,pm2017,pm2018,pmComb,pm2016_signal,pm2017_signal,pm2018_signal,*/pmComb_signal};
   vector<vector<shared_ptr<Process> > > samples_Run2 = {/*sample_list_2016,sample_list_2017,sample_list_2018,sample_list_Comb,sample_list_signal_2016,sample_list_signal_2017,sample_list_signal_2018,*/sample_list_signal_Comb};
   vector<string> years = {/*"y2016","y2017","y2018","yAll","y2016_signal","y2017_signal","y2018_signal",*/"yAll_signal"};

@@ -724,19 +724,19 @@ float medDeepCSV2018 = 0.4184;
 
 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
-        if(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
           lostLepChecker++;
         }
       }
 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
-        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==24){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==24){
           nGenLepsfromW++;
         }
       }
 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
-        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==15){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==15){
           nGenLepsfromTau++;
         }
       }
@@ -754,6 +754,68 @@ float medDeepCSV2018 = 0.4184;
       }
 
       return counter;
+    });
+
+  const NamedFunc ptLostLeps("ptLostLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+      float ptLostLep=0.;
+
+      int lostLepChecker = 0;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        //check for lost light leptons first
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we want to save the pt
+              ptLostLep=b.gen_pt()->at(i);
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we just automatically save the pt of the tau
+          ptLostLep=b.gen_pt()->at(i);
+        }//closes if statement
+      }//closes first for loop
+
+      return ptLostLep;
+      //returns pt of least energetic light lepton in gen-level event
+    });
+
+  const NamedFunc etaLostLeps("etaLostLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+      float etaLostLep=0.;
+
+      int lostLepChecker = 0;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+      //check for lost light leptons first
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we want to save the eta
+              etaLostLep=b.gen_eta()->at(i);
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we just automatically save the eta of the tau
+          etaLostLep=b.gen_eta()->at(i);
+        }//closes if statement
+      }//closes first for loop
+
+      return etaLostLep;
+      //returns eta of least energetic light lepton in gen-level event
     });
 
 

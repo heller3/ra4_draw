@@ -73,6 +73,8 @@ namespace WH_Functions{
   extern const NamedFunc nRealBtags;
   extern const NamedFunc nGenLightLeps;
   extern const NamedFunc LostHadTaus;
+  extern const NamedFunc ptLostLeps;
+  extern const NamedFunc etaLostLeps;
   extern const NamedFunc FatJet_HighestHScore;
   extern const NamedFunc FatJet_ClosestMSD;
   extern const NamedFunc sortedJetsPt_Leading;
