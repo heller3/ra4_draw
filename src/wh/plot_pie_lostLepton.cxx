@@ -39,21 +39,21 @@ int main(){
   auto single_t_Comb_lostLight = Process::MakeShared<Baby_full>("Single t 2016-2018, lost e or mu", Process::Type::background, colors("wjets"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2);
   auto single_t_Comb_lostHadTau = Process::MakeShared<Baby_full>("Single t 2016-2018, lost hadronic tau", Process::Type::background, colors("dy"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},LostHadTaus==1);
 
-  auto Comb_lostlep_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1]==1.&&"stitch");
-  auto Comb_lostlep_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1]==2.&&"stitch");
-  auto Comb_lostlep_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1]==0.&&"stitch");
+  auto Comb_lostlep_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1.]==1.&&"stitch");
+  auto Comb_lostlep_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1.]==2.&&"stitch");
+  auto Comb_lostlep_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1.]==0.&&"stitch");
 
-  auto Comb_lostTau_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==15&&causeLostLeps[1]==1.&&"stitch");
-  auto Comb_lostTau_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==15&&causeLostLeps[1]==2.&&"stitch");
-  auto Comb_lostTau_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==15&&causeLostLeps[1]==0.&&"stitch");
+  auto Comb_lostTau_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1.]==1.&&"stitch");
+  auto Comb_lostTau_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1.]==2.&&"stitch");
+  auto Comb_lostTau_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1.]==0.&&"stitch");
 
-  auto Comb_lostMu_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==13.&&causeLostLeps[1]==1.&&"stitch");
-  auto Comb_lostMu_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==13.&&causeLostLeps[1]==2.&&"stitch");
-  auto Comb_lostMu_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==13.&&causeLostLeps[1]==0.&&"stitch");
+  auto Comb_lostMu_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1.]==1.&&"stitch");
+  auto Comb_lostMu_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1.]==2.&&"stitch");
+  auto Comb_lostMu_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1.]==0.&&"stitch");
 
-  auto Comb_lostEl_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==11.&&causeLostLeps[1]==1.&&"stitch");
-  auto Comb_lostEl_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==11.&&causeLostLeps[1]==2.&&"stitch");
-  auto Comb_lostEl_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0]==11.&&causeLostLeps[1]==0.&&"stitch");
+  auto Comb_lostEl_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1.]==1.&&"stitch");
+  auto Comb_lostEl_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1.]==2.&&"stitch");
+  auto Comb_lostEl_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1.]==0.&&"stitch");
 
 
 
@@ -105,20 +105,20 @@ int main(){
   categories["process"].push_back(Comb_lostlep_largeeta);
   categories["process"].push_back(Comb_lostlep_other);
 
-  categories["LostTau"] = vector<shared_ptr<Process> >();
-  categories["LostTau"].push_back(Comb_lostlep_lowpT);
-  categories["LostTau"].push_back(Comb_lostlep_largeeta);
-  categories["LostTau"].push_back(Comb_lostlep_other);
+  LostTau["LostTau"] = vector<shared_ptr<Process> >();
+  LostTau["LostTau"].push_back(Comb_lostTau_lowpT);
+  LostTau["LostTau"].push_back(Comb_lostTau_largeeta);
+  LostTau["LostTau"].push_back(Comb_lostTau_other);
 
-  categories["LostMu"] = vector<shared_ptr<Process> >();
-  categories["LostMu"].push_back(Comb_lostlep_lowpT);
-  categories["LostMu"].push_back(Comb_lostlep_largeeta);
-  categories["LostMu"].push_back(Comb_lostlep_other);
+  LostMu["LostMu"] = vector<shared_ptr<Process> >();
+  LostMu["LostMu"].push_back(Comb_lostMu_lowpT);
+  LostMu["LostMu"].push_back(Comb_lostMu_largeeta);
+  LostMu["LostMu"].push_back(Comb_lostMu_other);
 
-  categories["LostEl"] = vector<shared_ptr<Process> >();
-  categories["LostEl"].push_back(Comb_lostlep_lowpT);
-  categories["LostEl"].push_back(Comb_lostlep_largeeta);
-  categories["LostEl"].push_back(Comb_lostlep_other);
+  LostEl["LostEl"] = vector<shared_ptr<Process> >();
+  LostEl["LostEl"].push_back(Comb_lostEl_lowpT);
+  LostEl["LostEl"].push_back(Comb_lostEl_largeeta);
+  LostEl["LostEl"].push_back(Comb_lostEl_other);
 
 
   vector<TableRow> bb_table_cuts;

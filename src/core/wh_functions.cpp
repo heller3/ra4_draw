@@ -826,7 +826,7 @@ float medDeepCSV2018 = 0.4184;
 
   const NamedFunc causeLostLeps("causeLostLeps",[](const Baby &b) -> NamedFunc::VectorType{
 
-      int causeVar = 0;
+      int causeVar = 999;
         //causeVar==1 for low pT
         //causeVar==2 for high |eta|
         //causeVar==0 for other
@@ -839,6 +839,10 @@ float medDeepCSV2018 = 0.4184;
         if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
           lostLepChecker++;
         }
+      }
+
+      if(lostLepChecker == 2){
+        causeVar = 0;
       }
 
       //now we will check if lost due to being too forward
@@ -894,14 +898,6 @@ float medDeepCSV2018 = 0.4184;
 
       causeVec.push_back(lostLepID);
       causeVec.push_back(causeVar);
-
-      if(lostLepID==11){
-        cout << causeVec.size() << endl;
-        cout << causeVec[0] << endl;
-        cout << causeVec[1] << endl;
-        cout << causeVec[2] << endl;
-        cout << "*************************" << endl;
-      }
 
       return causeVec;
       //returns cause of losing lepton in gen-level event
