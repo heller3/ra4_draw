@@ -796,6 +796,12 @@ float medDeepCSV2018 = 0.4184;
       int lostLepChecker = 0;
 
       for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
       //check for lost light leptons first
         if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
           //if we found an event with two light leptons, check for gen matching
@@ -816,6 +822,89 @@ float medDeepCSV2018 = 0.4184;
 
       return etaLostLep;
       //returns eta of least energetic light lepton in gen-level event
+    });
+
+  const NamedFunc causeLostLeps("causeLostLeps",[](const Baby &b) -> NamedFunc::VectorType{
+
+      int causeVar = 0;
+        //causeVar==1 for low pT
+        //causeVar==2 for high |eta|
+        //causeVar==0 for other
+      int lostLepID = 0;
+      int lostLepChecker = 0;
+
+      vector<double> causeVec;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      //now we will check if lost due to being too forward
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+      //check for lost light leptons first
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we want to check the eta threshold
+              if((b.gen_id()->at(i)==11&&abs(b.gen_eta()->at(i))>2.4)||(b.gen_id()->at(i)==13&&abs(b.gen_eta()->at(i))>2.4)){
+                causeVar = 2;
+                lostLepID = abs(b.gen_id()->at(i));
+              }
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we check the eta threshold
+          if(abs(b.gen_eta()->at(i))>2.4){
+                causeVar = 2;
+                lostLepID = abs(b.gen_id()->at(i));
+          }
+        }//closes if statement
+      }//closes first for loop
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        //check for lost light leptons first
+        if(lostLepChecker==2&&causeVar!=2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we need to enforce the pT threshold to check if that's why it's lost
+              if((b.gen_id()->at(i)==11&&b.gen_pt()->at(i)<5)||(b.gen_id()->at(i)==13&&b.gen_pt()->at(i)<5)){
+                causeVar = 1;
+                lostLepID = abs(b.gen_id()->at(i));
+              }
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&causeVar!=2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we check the pT of the tau
+          if(b.gen_pt()->at(i)<20){
+            causeVar = 1;
+            lostLepID = abs(b.gen_id()->at(i));
+          }
+        }//closes if statement
+      }//closes first for loop
+
+      causeVec.push_back(lostLepID);
+      causeVec.push_back(causeVar);
+
+      if(lostLepID==11){
+        cout << causeVec.size() << endl;
+        cout << causeVec[0] << endl;
+        cout << causeVec[1] << endl;
+        cout << causeVec[2] << endl;
+        cout << "*************************" << endl;
+      }
+
+      return causeVec;
+      //returns cause of losing lepton in gen-level event
     });
 
 
