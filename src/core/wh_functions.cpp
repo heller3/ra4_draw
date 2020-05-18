@@ -826,7 +826,7 @@ float medDeepCSV2018 = 0.4184;
 
   const NamedFunc causeLostLeps("causeLostLeps",[](const Baby &b) -> NamedFunc::VectorType{
 
-      int causeVar = 999;
+      int causeVar = 0;
         //causeVar==1 for low pT
         //causeVar==2 for high |eta|
         //causeVar==0 for other
@@ -839,10 +839,6 @@ float medDeepCSV2018 = 0.4184;
         if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
           lostLepChecker++;
         }
-      }
-
-      if(lostLepChecker == 2){
-        causeVar = 0;
       }
 
       //now we will check if lost due to being too forward
@@ -893,6 +889,27 @@ float medDeepCSV2018 = 0.4184;
             causeVar = 1;
             lostLepID = abs(b.gen_id()->at(i));
           }
+        }//closes if statement
+      }//closes first for loop
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        //check for lost light leptons first
+        if(lostLepChecker==2&&causeVar!=2&&causeVar!=1&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one!
+              causeVar = 0;
+              lostLepID = abs(b.gen_id()->at(i));
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&causeVar!=2&&causeVar!=1&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau
+          causeVar = 0;
+          lostLepID = abs(b.gen_id()->at(i));
         }//closes if statement
       }//closes first for loop
 
