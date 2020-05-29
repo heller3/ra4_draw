@@ -45,32 +45,19 @@ int main(){
   string mc2017_dir = "/home/users/dspitzba/wh_babies/babies_mc_f17v2_v33_4_2019_12_30/";
   string mc2018_dir = "/home/users/dspitzba/wh_babies/babies_mc_a18v1_v33_4_2019_12_30/";
 
-//  string data2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2019_12_30/";
-//  string data2017_dir = "/home/users/dspitzba/wh_babies/babies_Run2017_v33_4_2019_12_30/";
-//  string data2018_dir = "/home/users/dspitzba/wh_babies/babies_Run2018_v33_4_2019_12_30/";
+  string data2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2019_12_30/";
+  string data2017_dir = "/home/users/dspitzba/wh_babies/babies_Run2017_v33_4_2019_12_30/";
+  string data2018_dir = "/home/users/dspitzba/wh_babies/babies_Run2018_v33_4_2019_12_30/";
 
   string signal2016_dir = "/home/users/dspitzba/wh_babies/babies_signal_s16v3_v33_4_2019_12_30/";
   string signal2017_dir = "/home/users/dspitzba/wh_babies/babies_signal_f17v2_v33_4_2019_12_30/";
   string signal2018_dir = "/home/users/dspitzba/wh_babies/babies_signal_a18v1_v33_4_2019_12_30/";
 
-  // paths, new babies
-  string mc2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
-  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
-  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
-
-//  string data2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27babies_v33_4_2019_12_30/";
-//  string data2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27babies_Run2017_v33_4_2019_12_30/";
-//  string data2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27babies_Run2018_v33_4_2019_12_30/";
-
-  string signal2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27babies_signal_s16v3_v33_4_2019_12_30/";
-  string signal2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27babies_signal_f17v2_v33_4_2019_12_30/";
-  string signal2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27babies_signal_a18v1_v33_4_2019_12_30/";
-
-
   //  string signal_dir = "hadoop/cms/store/user/dspitzba/WH_babies/";
 
   std::string random_cut = "ak4pfjets_pt>30";
-  std::string basic_cut = "nWHLeptons==1&&pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2";
+  std::string basic_cut = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2";
+  std::string basic_cut_CR = "PassTrackVeto&&PassTauVeto";
   // signal cut
   //WHLeptons==1&&“pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2”
   // basic cut 
@@ -93,10 +80,10 @@ int main(){
   //  {signal2017_dir + "slim_*.root"}, "pass&&mass_stop==225&&mass_lsp==75");
 
   //Data
-//  auto data2016 = Process::MakeShared<Baby_full>("2016 Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
-//  auto data2017 = Process::MakeShared<Baby_full>("2017 Data", Process::Type::data, colors("data"),{data2017_dir+"slim_data_2017*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
-//  auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
-//  auto dataComb = Process::MakeShared<Baby_full>("Combined Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
+  auto data2016 = Process::MakeShared<Baby_full>("2016 Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto data2017 = Process::MakeShared<Baby_full>("2017 Data", Process::Type::data, colors("data"),{data2017_dir+"slim_data_2017*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
+  auto dataComb = Process::MakeShared<Baby_full>("Combined Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
 
   //ttbar
   auto tt1l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_*.root",mc2016_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
@@ -124,16 +111,16 @@ int main(){
   auto single_t_Comb = Process::MakeShared<Baby_full>("Single t Combined", Process::Type::background, colors("single_t"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"});
 
   //diboson
-  auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root"});
-  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root"});
-  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
-  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
+//  auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root"});
+//  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root"});
+//  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
+//  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
 
   // ttV
-  auto ttV_2016 = Process::MakeShared<Baby_full>("t#bar{t}V 2016", Process::Type::background, colors("ttv"),{mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root"});
-  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root"});
-  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
-  auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V Combined", Process::Type::background, colors("ttv"), {mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root",mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
+//  auto ttV_2016 = Process::MakeShared<Baby_full>("t#bar{t}V 2016", Process::Type::background, colors("ttv"),{mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root"});
+//  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root"});
+//  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
+//  auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V Combined", Process::Type::background, colors("ttv"), {mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root",mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
 
   //signals
   auto signal_2016_225_75 = Process::MakeShared<Baby_full>("2016 Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root"},"pass&&mass_stop==225&&mass_lsp==75");
@@ -152,14 +139,20 @@ int main(){
   auto signal_comb_700_1 = Process::MakeShared<Baby_full>("Combined Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root",signal2017_dir+"slim_*.root",signal2018_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
   
   // Column combinations by year
-  vector<shared_ptr<Process> > sample_list_2016 = {tt2l_2016,tt1l_2016,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
-  vector<shared_ptr<Process> > sample_list_2017 = {tt2l_2017,tt1l_2017,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
-  vector<shared_ptr<Process> > sample_list_2018 = {tt2l_2018,tt1l_2018,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
+  vector<shared_ptr<Process> > sample_list_2016 = {tt2l_2016,tt1l_2016,single_t_2016,wjets_2016,/*ttV_2016,diboson_2016,*/signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
+  vector<shared_ptr<Process> > sample_list_2017 = {tt2l_2017,tt1l_2017,single_t_2017,wjets_2017,/*ttV_2017,diboson_2017,*/signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
+  vector<shared_ptr<Process> > sample_list_2018 = {tt2l_2018,tt1l_2018,single_t_2018,wjets_2018,/*ttV_2018,diboson_2018,*/signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
+  // include data for CR
+  vector<shared_ptr<Process> > CR_sample_list_2016 = {data2016, tt2l_2016,tt1l_2016,single_t_2016,wjets_2016,/*ttV_2016,diboson_2016,*/signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2017 = {data2017, tt2l_2017,tt1l_2017,single_t_2017,wjets_2017,/*ttV_2017,diboson_2017,*/signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2018 = {data2018, tt2l_2018,tt1l_2018,single_t_2018,wjets_2018,/*ttV_2018,diboson_2018,*/signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
   //vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb,single_t_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
   //vector<shared_ptr<Process> > sample_list_all_comb = {dataComb,tt2l_Comb,tt1l_Comb,single_t_Comb,wjets_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 
   // Column combinations all years
-  vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb, tt1l_Comb, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
+  vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb, tt1l_Comb, single_t_Comb, wjets_Comb, /*ttV_Comb, diboson_Comb,*/ signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
+  // include data for CR
+  vector<shared_ptr<Process> > CR_sample_list_comb = {dataComb, tt2l_Comb, tt1l_Comb, single_t_Comb, wjets_Comb, /*ttV_Comb, diboson_Comb,*/ signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
 //  vector<shared_ptr<Process> > sample_list_comb = {/*dataComb,*/tt2l_Comb,/*tt1l_Comb,*/single_t_Comb,/*wjets_Comb,ttV_Comb, diboson_Comb,*/signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 //  vector<shared_ptr<Process> > sample_list_tt1l_comb = {dataComb,tt1l_Comb,signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 
@@ -194,43 +187,43 @@ int main(){
   // &&pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2”
 
   // Making tables. Adding rows. 
-//  Table & cutflow_SR_2016 = pm.Push<Table>("cutflow_SR_2016", vector<TableRow>{
-//      TableRow("", basic_cut),
-//	TableRow("125$<$MET", basic_cut&&"pfmet>125"),
-//	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200"), 
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150"),
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"), 
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2"), 
-//	}, sample_list_2016, false);
-//  Table & cutflow_SR_2017 = pm.Push<Table>("cutflow_SR_2017", vector<TableRow>{
-//      TableRow("", basic_cut),
-//	TableRow("125$<$MET", basic_cut&&"pfmet>125"),
-//	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200"), 
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150"),
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"), 
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2"), 
-//	}, sample_list_2017, false);
-//  Table & cutflow_SR_2018 = pm.Push<Table>("cutflow_SR_2018", vector<TableRow>{
-//      TableRow("", basic_cut),
-//	TableRow("125$<$MET", basic_cut&&"pfmet>125"),
-//	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200"), 
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150"),
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"), 
-//	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2"), 
-//	}, sample_list_2018, false);
+  Table & cutflow_SR_2016 = pm.Push<Table>("cutflow_SR_2016", vector<TableRow>{
+      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+	}, sample_list_2016, false);
+  Table & cutflow_SR_2017 = pm.Push<Table>("cutflow_SR_2017", vector<TableRow>{
+      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+	}, sample_list_2017, false);
+  Table & cutflow_SR_2018 = pm.Push<Table>("cutflow_SR_2018", vector<TableRow>{
+      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+	}, sample_list_2018, false);
   Table & cutflow_SR_all = pm.Push<Table>("cutflow_SR_all", vector<TableRow>{
-      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	//	TableRow("200$<$mct", basic_cut&&"mct>200", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	//	TableRow("150$<$mt MET lep", basic_cut&&"mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),	
-	//	TableRow("90$<$mbb$<$150", basic_cut&&"mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	//	TableRow("2 good b tags", basic_cut&&"ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight), 
-	//	TableRow("125$<$MET, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	//	TableRow("200$<$mct, 150$<$mt MET lep", basic_cut&&"mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight*mcHEMWeight), 
+      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("200$<$mct", basic_cut&&"mct>200", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("150$<$mt MET lep", basic_cut&&"mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),	
+	//	TableRow("90$<$mbb$<$150", basic_cut&&"mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("2 good b tags", basic_cut&&"ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	//	TableRow("125$<$MET, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("200$<$mct, 150$<$mt MET lep", basic_cut&&"mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
 //	TableRow("_____________________________________________________________________", "mct>10000"), // empty row
 //	TableRow("", basic_cut),
 //	TableRow("200$<$mct", basic_cut&&"mct>200"),
@@ -240,6 +233,59 @@ int main(){
 //	TableRow("200$<$mct, 125$<$MET, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"mct>200&&pfmet>125&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2"), 
 	}, sample_list_comb, false);
   
+  // Control Region(s) tables
+  // 1. 3 veto leps, 2 good jets
+  Table & cutflow_CR_2GoodJets_2016 = pm.Push<Table>("cutflow_CR_2GoodJets_2016", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_2016, false);
+  Table & cutflow_CR_2GoodJets_2017 = pm.Push<Table>("cutflow_CR_2GoodJets_2017", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_2017, false);
+  Table & cutflow_CR_2GoodJets_2018 = pm.Push<Table>("cutflow_CR_2GoodJets_2018", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_2018, false);
+  Table & cutflow_CR_2GoodJets_all = pm.Push<Table>("cutflow_CR_2GoodJets_all", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_comb, false);
+  // 2. 2 veto leps, 4 or 5 good jets
+  Table & cutflow_CR_4_5GoodJets_2016 = pm.Push<Table>("cutflow_CR_4_5GoodJets_2016", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_2016, false);
+  Table & cutflow_CR_4_5GoodJets_2017 = pm.Push<Table>("cutflow_CR_4_5GoodJets_2017", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_2017, false);
+  Table & cutflow_CR_4_5GoodJets_2018 = pm.Push<Table>("cutflow_CR_4_5GoodJets_2018", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_2018, false);
+  Table & cutflow_CR_4_5GoodJets_all = pm.Push<Table>("cutflow_CR_4_5GoodJets_all", vector<TableRow>{
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	}, CR_sample_list_comb, false);
+
+
 
 //  Table & cutflow = pm.Push<Table>("cutflow", vector<TableRow>{
 //      TableRow("125$<$MET$<$300", random_cut&&"pfmet>125&&pfmet<300"),
@@ -250,130 +296,66 @@ int main(){
 //      TableRow("700$<$MET", random_cut&&"pfmet>700")
 //	}, sample_list, false);
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-//  Table & cutflow = pm.Push<Table>("cutflow", vector<TableRow>{
-//      TableRow("2b Region",basic_cuts&&WHLeptons==1&&HasMedMedDeepCSV&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2b Region, mbb>200",basic_cuts&&WHLeptons==1&&HasMedMedDeepCSV&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, mbb>200",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200")
-//
-//        }, sample_list,false);
-//  
-//  Table & cutflow_CvB = pm.Push<Table>("cutflow_CvB", vector<TableRow>{
-//      TableRow("2b Region, $<$2 medium b",basic_cuts&&WHLeptons==1&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 medium c",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==1.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==1.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150")
-//
-//        }, sample_list,false);
-//
-//  Table & cutflow_CvB_highMbb = pm.Push<Table>("cutflow_CvB_highMbb", vector<TableRow>{
-//      TableRow("2b Region, $<$2 medium b",basic_cuts&&WHLeptons==1&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 medium c",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==1.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==1.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200")
-//
-//        }, sample_list,false);
-//
-//  Table & cutflow_CvB_noMbb = pm.Push<Table>("cutflow_CvB_noMbb", vector<TableRow>{
-//      TableRow("2b Region, $<$2 medium b",basic_cuts&&WHLeptons==1&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 medium c",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==1.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==1.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150")
-//
-//        }, sample_list,false);
-//
-//  Table & cutflow_CvB_v2 = pm.Push<Table>("cutflow_CvB_v2", vector<TableRow>{
-//      TableRow("2b Region, $<$2 medium b",basic_cuts&&WHLeptons==1&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 medium c",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 2 tight c, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150")
-//
-//        }, sample_list,false);
-//
-//  Table & cutflow_CvB_highMbb_v2 = pm.Push<Table>("cutflow_CvB_highMbb_v2", vector<TableRow>{
-//      TableRow("2b Region, $<$2 medium b",basic_cuts&&WHLeptons==1&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 medium c",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 2 tight c, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150&&mbb>200")
-//
-//        }, sample_list,false);
-//
-//  Table & cutflow_CvB_noMbb_v2 = pm.Push<Table>("cutflow_CvB_noMbb_v2", vector<TableRow>{
-//      TableRow("2b Region, $<$2 medium b",basic_cuts&&WHLeptons==1&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 medium c",basic_cuts&&WHLeptons==1&&nDeepMedCTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 2 tight c, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==2.&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 tight CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepTightCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 medium CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepMedCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150"),
-//      TableRow("2c Region, 1 tight+1 medium c, 2 loose CvB",basic_cuts&&WHLeptons==1&&nDeepTightCTagged==1.&&nDeepMedCTagged==2.&&nDeepLooseCvBTagged==2.&&nDeepMedBTagged<2.&&"pfmet>200&&mct>200&&mt_met_lep>150")
-//
-//        }, sample_list,false);
-
   if(single_thread) pm.multithreaded_ = false;
   pm.MakePlots(lumi);
 
-//  vector<GammaParams> yields_2016 = cutflow_SR_2016.BackgroundYield(lumi);
-//  for(const auto &yield: yields_2016) {
-//    cout << "my yield 2016: " << yield << endl;
-//  }
-//  vector<GammaParams> yields_2017 = cutflow_SR_2017.BackgroundYield(lumi);
-//  for(const auto &yield: yields_2017) {
-//    cout << "my yield 2017: " << yield << endl;
-//  }
-//  vector<GammaParams> yields_2018 = cutflow_SR_2018.BackgroundYield(lumi);
-//  for(const auto &yield: yields_2018) {
-//    cout << "my yield 2018: " << yield << endl;
-//  }
+  vector<GammaParams> yields_2016 = cutflow_SR_2016.BackgroundYield(lumi);
+  for(const auto &yield: yields_2016) {
+    cout << "my yield 2016: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_2017 = cutflow_SR_2017.BackgroundYield(lumi);
+  for(const auto &yield: yields_2017) {
+    cout << "my yield 2017: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_2018 = cutflow_SR_2018.BackgroundYield(lumi);
+  for(const auto &yield: yields_2018) {
+    cout << "my yield 2018: " << yield << endl;
+  }
+  cout << "---" << endl;
   vector<GammaParams> yields_all = cutflow_SR_all.BackgroundYield(lumi);
   for(const auto &yield: yields_all) {
+    cout << "my yield all: " << yield << endl;
+  }
+  // 1.
+  vector<GammaParams> yields_CR1_2016 = cutflow_CR_2GoodJets_2016.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR1_2016) {
+    cout << "my yield 2016: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_CR1_2017 = cutflow_CR_2GoodJets_2017.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR1_2017) {
+    cout << "my yield 2017: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_CR1_2018 = cutflow_CR_2GoodJets_2018.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR1_2018) {
+    cout << "my yield 2018: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_CR1_all = cutflow_CR_2GoodJets_all.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR1_all) {
+    cout << "my yield all: " << yield << endl;
+  }
+  // 2.
+  vector<GammaParams> yields_CR2_2016 = cutflow_CR_4_5GoodJets_2016.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR2_2016) {
+    cout << "my yield 2016: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_CR2_2017 = cutflow_CR_4_5GoodJets_2017.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR2_2017) {
+    cout << "my yield 2017: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_CR2_2018 = cutflow_CR_4_5GoodJets_2018.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR2_2018) {
+    cout << "my yield 2018: " << yield << endl;
+  }
+  cout << "---" << endl;
+  vector<GammaParams> yields_CR2_all = cutflow_CR_4_5GoodJets_all.BackgroundYield(lumi);
+  for(const auto &yield: yields_CR2_all) {
     cout << "my yield all: " << yield << endl;
   }
 
