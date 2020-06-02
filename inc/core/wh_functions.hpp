@@ -8,7 +8,10 @@
 namespace WH_Functions{
 
   // Miscellaneous
-
+  extern const NamedFunc nTightb;
+  extern const NamedFunc nMedb;
+  extern const NamedFunc nLooseb;
+  extern const NamedFunc genmct;
   extern const NamedFunc ST_up;
   extern const NamedFunc ST_off;
   extern const NamedFunc ST_down;
@@ -61,11 +64,7 @@ namespace WH_Functions{
   extern const NamedFunc nDeepMedCvBTagged;
   extern const NamedFunc nDeepTightCTagged;
   extern const NamedFunc nDeepTightCvBTagged;
-  extern const NamedFunc nTightb;
-  extern const NamedFunc nMedb;
-  extern const NamedFunc nLooseb;
   extern const NamedFunc nAK8jets;
-  extern const NamedFunc genmct;
   extern const NamedFunc nHiggsTag;
   extern const NamedFunc max_ak8pfjets_deepdisc_hbb;
   extern const NamedFunc bJetPt;
@@ -75,6 +74,11 @@ namespace WH_Functions{
   extern const NamedFunc nRealBs;
   extern const NamedFunc nRealBs2;
   extern const NamedFunc nRealBtags;
+  extern const NamedFunc nGenLightLeps;
+  extern const NamedFunc LostHadTaus;
+  extern const NamedFunc ptLostLeps;
+  extern const NamedFunc etaLostLeps;
+  extern const NamedFunc causeLostLeps;
   extern const NamedFunc FatJet_HighestHScore;
   extern const NamedFunc FatJet_ClosestMSD;
   extern const NamedFunc sortedJetsPt_Leading;

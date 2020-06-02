@@ -71,9 +71,8 @@ float medDeepCSV2018 = 0.4184;
       if(b.genmet()==-9999) return 1.; //data
       int ndeepfakes=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if(abs(b.ak4pfjets_parton_flavor()->at(i))!=5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) ndeepfakes++;
-
-        // if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+        //if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+	if(abs(b.ak4pfjets_parton_flavor()->at(i))!=5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) ndeepfakes++;
       }
       if(ndeepfakes>0) return 1.5;
       else return 1.;
@@ -83,7 +82,8 @@ float medDeepCSV2018 = 0.4184;
       if(b.genmet()==-9999) return 1.; //data
       int ndeepfakes=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if(abs(b.ak4pfjets_parton_flavor()->at(i))!=5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) ndeepfakes++;
+	if(abs(b.ak4pfjets_parton_flavor()->at(i))!=5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) ndeepfakes++;
+	//if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
       }
       if(ndeepfakes>0) return 0.5;
       else return 1.;
@@ -114,6 +114,52 @@ float medDeepCSV2018 = 0.4184;
     }
 });
 
+  const NamedFunc genmct("genmct",[](const Baby &b) -> NamedFunc::ScalarType{
+      float gen_mct=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+	if (abs(b.gen_id()->at(i)) == 5 && abs(b.gen_motherid()->at(i)) == 6 ){
+	  for (unsigned j(i+1); j<b.gen_pt()->size(); j++){
+	    if (abs(b.gen_id()->at(j)) == 5 && abs(b.gen_motherid()->at(j)) == 6 ){
+	      gen_mct = sqrt(2*b.gen_pt()->at(j)*b.gen_pt()->at(i)*(1+cos(deltaPhi(b.gen_phi()->at(i),b.gen_phi()->at(j)))));
+	      break;
+	    }
+	  }
+	  break;
+	}
+      }
+      return gen_mct;
+    });
+
+  const NamedFunc nTightb("nTightb",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nb=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > (0.8953*(b.year()==2016) + 0.8001*(b.year()==2017) + 0.7527*(b.year()==2018))){
+	  nb++;
+        }
+      }
+      return nb;
+    });
+
+  const NamedFunc nMedb("nMedb",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nb=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
+	  nb++;
+        }
+      }
+      return nb;
+    });
+
+
+  const NamedFunc nLooseb("nLooseb",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nb=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > (0.2217*(b.year()==2016) + 0.1522*(b.year()==2017) + 0.1241*(b.year()==2018))){
+	  nb++;
+        }
+      }
+      return nb;
+    });
 
   const NamedFunc nEventsGluonSplit("nEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
     int nevent = 0;
@@ -511,23 +557,6 @@ float medDeepCSV2018 = 0.4184;
     return nemu;
     });
 
-    const NamedFunc genmct("genmct",[](const Baby &b) -> NamedFunc::ScalarType{
-    float gen_mct=0;
-      for (unsigned i(0); i<b.gen_pt()->size(); i++){
-      if (abs(b.gen_id()->at(i)) == 5 && abs(b.gen_motherid()->at(i)) == 6 ){
-        for (unsigned j(i+1); j<b.gen_pt()->size(); j++){
-           if (abs(b.gen_id()->at(j)) == 5 && abs(b.gen_motherid()->at(j)) == 6 ){
-            gen_mct = sqrt(2*b.gen_pt()->at(j)*b.gen_pt()->at(i)*(1+cos(deltaPhi(b.gen_phi()->at(i),b.gen_phi()->at(j)))));
-            break;
-           }
-        }
-        break;
-      }
-    }
-    return gen_mct;
-    });
-
-
       //Number of b-flavor jets in acceptance but failing tagger.
       const NamedFunc HasBFailedTag("HasBFailedTag",[](const Baby &b) -> NamedFunc::ScalarType{
       int nfail=0;
@@ -718,6 +747,225 @@ float medDeepCSV2018 = 0.4184;
         if(abs(b.ak4pfjets_parton_flavor()->at(i))==5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) nbquarks++;
       }
       return nbquarks;
+    });
+
+  const NamedFunc nGenLightLeps("nGenLightLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenLeps=0;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          nGenLeps++;
+        }
+      }
+
+      return nGenLeps;
+      //if function returns 2, 1 is lost lepton, assuming single reco lepton
+    });
+
+  const NamedFunc LostHadTaus("LostHadTaus",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenLepsfromW=0;
+      int nGenLepsfromTau=0;
+
+      int lostLepChecker = 0;
+
+      int counter=0; 
+
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==24){
+          nGenLepsfromW++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&abs(b.gen_motherid()->at(i))==15){
+          nGenLepsfromTau++;
+        }
+      }
+
+      if(lostLepChecker==2){
+        if((nGenLepsfromW+nGenLepsfromTau)<2){
+          counter = 1;
+          //if light leptons from W or tau is less than 2, then the lost lepton is a hadronic tau
+        }else{
+          counter = 0;
+          //if there are two light leptons from either a W or a tau, then then lost lepton is just a light lepton and can be counted using the nGenLightLeps function
+        }
+      }else{
+        counter = 0;
+      }
+
+      return counter;
+    });
+
+  const NamedFunc ptLostLeps("ptLostLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+      float ptLostLep=0.;
+
+      int lostLepChecker = 0;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        //check for lost light leptons first
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we want to save the pt
+              ptLostLep=b.gen_pt()->at(i);
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we just automatically save the pt of the tau
+          ptLostLep=b.gen_pt()->at(i);
+        }//closes if statement
+      }//closes first for loop
+
+      return ptLostLep;
+      //returns pt of least energetic light lepton in gen-level event
+    });
+
+  const NamedFunc etaLostLeps("etaLostLeps",[](const Baby &b) -> NamedFunc::ScalarType{
+      float etaLostLep=0.;
+
+      int lostLepChecker = 0;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+      //check for lost light leptons first
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we want to save the eta
+              etaLostLep=b.gen_eta()->at(i);
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we just automatically save the eta of the tau
+          etaLostLep=b.gen_eta()->at(i);
+        }//closes if statement
+      }//closes first for loop
+
+      return etaLostLep;
+      //returns eta of least energetic light lepton in gen-level event
+    });
+
+  const NamedFunc causeLostLeps("causeLostLeps",[](const Baby &b) -> NamedFunc::VectorType{
+
+      int causeVar = 0;
+        //causeVar==1 for low pT
+        //causeVar==2 for high |eta|
+        //causeVar==0 for other
+      int lostLepID = 0;
+      int lostLepChecker = 0;
+
+      vector<double> causeVec;
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&abs(b.gen_motherid()->at(i))==24){
+          lostLepChecker++;
+        }
+      }
+
+      //now we will check if lost due to being too forward
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+      //check for lost light leptons first
+        if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we want to check the eta threshold
+              if((b.gen_id()->at(i)==11&&abs(b.gen_eta()->at(i))>2.4)||(b.gen_id()->at(i)==13&&abs(b.gen_eta()->at(i))>2.4)){
+                causeVar = 2;
+                lostLepID = abs(b.gen_id()->at(i));
+              }
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we check the eta threshold
+          if(abs(b.gen_eta()->at(i))>2.4){
+                causeVar = 2;
+                lostLepID = abs(b.gen_id()->at(i));
+          }
+        }//closes if statement
+      }//closes first for loop
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        //check for lost light leptons first
+        if(lostLepChecker==2&&causeVar!=2&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one! so we need to enforce the pT threshold to check if that's why it's lost
+              if((b.gen_id()->at(i)==11&&b.gen_pt()->at(i)<5)||(b.gen_id()->at(i)==13&&b.gen_pt()->at(i)<5)){
+                causeVar = 1;
+                lostLepID = abs(b.gen_id()->at(i));
+              }
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&causeVar!=2&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau, so we check the pT of the tau
+          if(b.gen_pt()->at(i)<20){
+            causeVar = 1;
+            lostLepID = abs(b.gen_id()->at(i));
+          }
+        }//closes if statement
+      }//closes first for loop
+
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        //check for lost light leptons first
+        if(lostLepChecker==2&&causeVar!=2&&causeVar!=1&&(abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13)&&(abs(b.gen_motherid()->at(i))==24||abs(b.gen_motherid()->at(i))==15)){
+          //if we found an event with two light leptons, check for gen matching
+          for(unsigned j(0); j<b.leps_eta()->size(); j++){
+            if(deltaR(b.gen_eta()->at(i),b.gen_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.4){
+              //this lepton is matched! so we want to continue the for loop
+              continue;
+            }else{
+              //this lepton is the lost one!
+              causeVar = 0;
+              lostLepID = abs(b.gen_id()->at(i));
+            }//closes if/else statement
+          }//closes for loop over reco leps
+        }else if(lostLepChecker==2&&causeVar!=2&&causeVar!=1&&(abs(b.gen_id()->at(i))==15)&&(abs(b.gen_motherid()->at(i))==24)){
+          //this is a lost hadronic tau
+          causeVar = 0;
+          lostLepID = abs(b.gen_id()->at(i));
+        }//closes if statement
+      }//closes first for loop
+
+      causeVec.push_back(lostLepID);
+      causeVec.push_back(causeVar);
+
+      return causeVec;
+      //returns cause of losing lepton in gen-level event
     });
 
 
@@ -1618,38 +1866,6 @@ float medDeepCSV2018 = 0.4184;
         }
       }
       return maxpt;
-    });
-
-
-   const NamedFunc nTightb("nTightb",[](const Baby &b) -> NamedFunc::ScalarType{
-      int nb=0;
-      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_deepCSV()->at(i) > (0.8953*(b.year()==2016) + 0.8001*(b.year()==2017) + 0.7527*(b.year()==2018))){
-           nb++;
-        }
-      }
-      return nb;
-    });
-
-   const NamedFunc nMedb("nMedb",[](const Baby &b) -> NamedFunc::ScalarType{
-      int nb=0;
-      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_deepCSV()->at(i) > (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
-           nb++;
-        }
-      }
-      return nb;
-    });
-
-
-   const NamedFunc nLooseb("nLooseb",[](const Baby &b) -> NamedFunc::ScalarType{
-      int nb=0;
-      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_deepCSV()->at(i) > (0.2217*(b.year()==2016) + 0.1522*(b.year()==2017) + 0.1241*(b.year()==2018))){
-           nb++;
-        }
-      }
-      return nb;
     });
 
    const NamedFunc max_ak8pfjets_deepdisc_hbb("max_ak8pfjets_deepdisc_hbb",[](const Baby &b) -> NamedFunc::ScalarType{
