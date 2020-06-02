@@ -162,6 +162,7 @@ string CodeToRootTex(string code){
   ReplaceAll(code, "run<280919", "Runs B-G");
   ReplaceAll(code, "pass&&stitch", "ps");
   ReplaceAll(code, "&&1", "");
+  ReplaceAll(code, "yearWeight", "w_year");
   ReplaceAll(code, "weight", "w");
   ReplaceAll(code, "nbt<=1&&nbm==2","TM+MM");
   ReplaceAll(code, "nbdm==0","0b");
@@ -187,6 +188,10 @@ string CodeToRootTex(string code){
   ReplaceAll(code, "met>100&&met<=200", "100<met<=200");
   ReplaceAll(code, "met>150&&met<=200", "150<met<=200");
   ReplaceAll(code, "met>200&&met<=300", "200<met<=300");
+  ReplaceAll(code, "pfmet>200&&pfmet<=300", "200<pfmet<=300");
+  ReplaceAll(code, "pfmet>125&&pfmet<=200", "125<pfmet<=200");
+  ReplaceAll(code, "pfmet>125&&pfmet<=300", "125<pfmet<=300");
+  ReplaceAll(code, "pfmet>300&&pfmet<=400", "300<pfmet<=400");
   ReplaceAll(code, "met>200&&met<=350", "200<met<=350");
   ReplaceAll(code, "met>300&&met<=450", "300<met<=450");
   ReplaceAll(code, "met>300&&met<=500", "300<met<=500");
@@ -274,6 +279,7 @@ string CodeToRootTex(string code){
   ReplaceAll(code, "onmet", "MET^{on}");
   ReplaceAll(code, "onht", "H_{T}^{on}");
   ReplaceAll(code, "njets30","N_{jets}^{30}");
+  ReplaceAll(code, "ngoodjets","N_{jets}");
   ReplaceAll(code, "els_pt","p^{e}_{T}");
   ReplaceAll(code, "mus_pt","p^{#mu}_{T}");
   ReplaceAll(code, "fjets_nconst","N_{const}^{fat jet}");
