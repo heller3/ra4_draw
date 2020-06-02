@@ -363,12 +363,12 @@ int main(int argc, char *argv[]){
   // Makes a plot for each vector in plotcuts
   vector<oneplot> plotcuts({
     // {"ngoodjets", "pfmet>200" && deepAK8bins[0], njetbins},
-    {true, "pfmet", "ngoodbtags==2" && njetbins[0] && deepAK8bins[0], metbins, metbin_denominators,numerators},
-    {true, "pfmet", "ngoodbtags==2" && njetbins[1] && deepAK8bins[0], metbins, metbin_denominators,numerators},
+    {true, "pfmet_SR", "ngoodbtags==2" && njetbins[0] && deepAK8bins[0], metbins, metbin_denominators,numerators},
+    {true, "pfmet_SR", "ngoodbtags==2" && njetbins[1] && deepAK8bins[0], metbins, metbin_denominators,numerators},
     // {"ngoodjets", "pfmet>200" && deepAK8bins[1], njetbins},
     // {true,"pfmet", "ngoodbtags==2" && njetbins[0] && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
     // {true,"pfmet", "ngoodbtags==2" && njetbins[1] && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
-    {true,"pfmet", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
+    {true,"pfmet_SR", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
 
 
     {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[0] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
