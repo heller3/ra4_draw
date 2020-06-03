@@ -44,16 +44,29 @@ std::vector<float> ak4pfjets_pt
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
 
+int nFatJet
+
 std::vector<float> FatJet_pt
 std::vector<float> FatJet_phi
 std::vector<float> FatJet_eta
 std::vector<float> FatJet_deepTag_H
 std::vector<float> FatJet_deepTagMD_HbbvsQCD
+std::vector<float> FatJet_deepTagMD_bbvsLight
 std::vector<float> FatJet_btagHbb
 std::vector<float> FatJet_msoftdrop
 std::vector<float> FatJet_mass
 std::vector<float> FatJet_btagDDBvL
 std::vector<float> FatJet_btagDDBvL_noMD
+std::vector<float> FatJet_subJetIdx1
+std::vector<float> FatJet_subJetIdx2
+
+int nSubJet
+
+std::vector<float> SubJet_pt
+std::vector<float> SubJet_phi
+std::vector<float> SubJet_eta
+std::vector<float> SubJet_btagDeepB
+
 
 std::vector<float> ak8pfjets_deepdisc_hbb
 std::vector<float> ak8pfjets_pt

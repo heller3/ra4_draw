@@ -20,6 +20,8 @@ namespace WH_Functions{
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc nBTagInFat;
   extern const NamedFunc OneDoubleBFat;
+  extern const NamedFunc OneDoubleBFatNano;
+  extern const NamedFunc OneDoubleBFatNanoV0;
   extern const NamedFunc HasOnHiggsJet;
   extern const NamedFunc HasBoostedHiggs;
   extern const NamedFunc HasBoostedHiggsNoLepton;
@@ -58,6 +60,20 @@ namespace WH_Functions{
   extern const NamedFunc nDeepMedCvBTagged;
   extern const NamedFunc nDeepTightCTagged;
   extern const NamedFunc nDeepTightCvBTagged;
+  extern const NamedFunc MediumMDHiggsTag_msoftdrop;
+  extern const NamedFunc MediumMDHiggsTag_mass;
+  extern const NamedFunc LooseMDHiggsTag_msoftdrop;
+  extern const NamedFunc MediumMDHiggsTag_m;
+  extern const NamedFunc MediumMDHiggsTag_pt;
+  extern const NamedFunc MediumMDHiggsTag_MDHscore;
+  extern const NamedFunc MediumMDHiggsTag_Hscore;
+  extern const NamedFunc nMediumMDHiggsTag;
+  extern const NamedFunc HasMediumMDHiggsTag;
+  extern const NamedFunc HasMediumMDHiggsTag_medPt;
+  extern const NamedFunc HasMediumMDBBTag_medPt;
+  extern const NamedFunc nMediumHiggsTag;
+  extern const NamedFunc HasMediumHiggsTag;
+  extern const NamedFunc HasHbbTag;
   extern const NamedFunc nAK8jets;
   extern const NamedFunc nHiggsTag;
   extern const NamedFunc max_ak8pfjets_deepdisc_hbb;
@@ -67,6 +83,7 @@ namespace WH_Functions{
   extern const NamedFunc NBJets;
   extern const NamedFunc nRealBs;
   extern const NamedFunc FatJet_HighestHScore;
+  extern const NamedFunc FatJet_HighestMDHScore;
   extern const NamedFunc FatJet_ClosestMSD;
   extern const NamedFunc sortedJetsPt_Leading;
   extern const NamedFunc sortedJetsPt_subLeading;
@@ -104,6 +121,7 @@ namespace WH_Functions{
   extern const NamedFunc W_pt_lep_mht;
   extern const NamedFunc mt_lep_mht;
   extern const NamedFunc mt_lep_met_rec;
+  extern const NamedFunc dijet_mass;
   extern const NamedFunc dilepton_mass;
   extern const NamedFunc dilepton_pt;
   extern const NamedFunc elPt;

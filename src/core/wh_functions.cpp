@@ -322,6 +322,8 @@ namespace WH_Functions{
       return nBInFat;
     });
 
+
+
   const NamedFunc OneDoubleBFat("OneDoubleBFat",[](const Baby &b) -> NamedFunc::ScalarType{
       int nBInFat=0;
       int nDoubleBFat=0;
@@ -345,6 +347,71 @@ namespace WH_Functions{
                         nBInFat++;
                         nBinThisFat++;
                     }
+                }
+            }
+        }
+        if (nBinThisFat==2) nDoubleBFat++;
+      }
+      return nDoubleBFat==1;
+    });
+
+  const NamedFunc OneDoubleBFatNanoV0("OneDoubleBFatNanoV0",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nDoubleBFat=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        int nBinThisFat=0;
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            //std::cout << "Found leptons in my fat jet. Passing." << std::endl;
+            continue;
+        }
+      	if (b.FatJet_pt()->at(i) > 200){
+            for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+                if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+                    if (b.ak4pfjets_deepCSV()->at(j)>(0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                        nBinThisFat++;
+                    }
+                }
+            }
+        }
+        if (nBinThisFat==2) nDoubleBFat++;
+      }
+      return nDoubleBFat==1;
+    });
+
+  const NamedFunc OneDoubleBFatNano("OneDoubleBFatNano",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nDoubleBFat=0;
+      bool lepsInFatJet=false;
+      for (unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        int nBinThisFat=0;
+        lepsInFatJet=false;
+        for (unsigned j(0); j<b.leps_pt()->size(); j++){
+            if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.leps_eta()->at(j),b.leps_phi()->at(j))<0.8){
+                lepsInFatJet=true;
+            }
+        }
+        if (lepsInFatJet){
+            //std::cout << "Found leptons in my fat jet. Passing." << std::endl;
+            continue;
+        }
+      	if (b.FatJet_pt()->at(i) > 200){
+            //std::cout << "SubJet index 1 " << b.FatJet_subJetIdx1()->at(i) << std::endl;
+            //std::cout << "SubJet index 2 " << b.FatJet_subJetIdx2()->at(i) << std::endl;
+            //std::cout << "WTF" << std::endl;
+            //std::cout << "SubJet length " << b.nSubJet() << std::endl; // I don't yet store the SubJets... only in the next round. MCT enforces this anyway?!
+            if (b.FatJet_subJetIdx1()->at(i)>=0 && b.SubJet_btagDeepB()->size()>b.FatJet_subJetIdx1()->at(i)){
+                if (b.SubJet_btagDeepB()->at( b.FatJet_subJetIdx1()->at(i) ) > (0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                    nBinThisFat++;
+                }
+            }
+            if (b.FatJet_subJetIdx2()->at(i)>=0 && b.SubJet_btagDeepB()->size()>b.FatJet_subJetIdx2()->at(i)){
+                if (b.SubJet_btagDeepB()->at( b.FatJet_subJetIdx2()->at(i) ) > (0.4941*(b.year()==2017) + 0.6321*(b.year()==2016) + 0.4184*(b.year()==2018))){
+                    nBinThisFat++;
                 }
             }
         }
@@ -656,12 +723,240 @@ namespace WH_Functions{
     });
 
   const NamedFunc FatJet_HighestHScore("FatJet_HighestHScore",[](const Baby &b) -> NamedFunc::ScalarType{
-    vector<float>* v = b.FatJet_deepTag_H();
+    //vector<float>* v = b.FatJet_deepTag_H();
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200){
+            v.push_back(b.FatJet_deepTag_H()->at(i));
+        }
+    }
+    sort(v.begin(), v.end(), greater<int>());
 
-    sort(v->begin(), v->end(), greater<int>());
-
-    return v->at(0);
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
   });
+
+  const NamedFunc FatJet_HighestMDHScore("FatJet_HighestMDHScore",[](const Baby &b) -> NamedFunc::ScalarType{
+    //vector<float>* v = b.FatJet_deepTagMD_HbbvsQCD();
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200){
+            v.push_back(b.FatJet_deepTagMD_HbbvsQCD()->at(i));
+        }
+    }
+    sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc MediumMDHiggsTag_m("MediumMDHiggsTag_m",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            v.push_back(b.FatJet_mass()->at(i));
+        }
+    }
+    //sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc MediumMDHiggsTag_msoftdrop("MediumMDHiggsTag_msoftdrop",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            v.push_back(b.FatJet_msoftdrop()->at(i));
+        }
+    }
+    //sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc MediumMDHiggsTag_mass("MediumMDHiggsTag_mass",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            v.push_back(b.FatJet_mass()->at(i));
+        }
+    }
+    //sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc LooseMDHiggsTag_msoftdrop("LooseMDHiggsTag_msoftdrop",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.5165){
+            v.push_back(b.FatJet_msoftdrop()->at(i));
+        }
+    }
+    //sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+
+
+  const NamedFunc MediumMDHiggsTag_pt("MediumMDHiggsTag_pt",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            v.push_back(b.FatJet_pt()->at(i));
+        }
+    }
+    sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc MediumMDHiggsTag_MDHscore("MediumMDHiggsTag_MDHscore",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            v.push_back(b.FatJet_deepTagMD_HbbvsQCD()->at(i));
+        }
+    }
+    sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc MediumMDHiggsTag_Hscore("MediumMDHiggsTag_Hscore",[](const Baby &b) -> NamedFunc::ScalarType{
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            v.push_back(b.FatJet_deepTag_H()->at(i));
+        }
+    }
+    sort(v.begin(), v.end(), greater<int>());
+
+    if (v.size()>0){
+        return v.at(0);
+    }
+    else {
+        return 0;
+    }
+  });
+
+  const NamedFunc nMediumMDHiggsTag("nMediumMDHiggsTag",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            nTags++;
+        }
+    }
+    return nTags;
+  });
+
+  const NamedFunc HasMediumMDHiggsTag("HasMediumMDHiggsTag",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            nTags++;
+        }
+    }
+    return nTags>0;
+  });
+
+  const NamedFunc HasMediumMDHiggsTag_medPt("HasMediumMDHiggsTag_medPt",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>250 && b.FatJet_deepTagMD_HbbvsQCD()->at(i)>0.8365){
+            nTags++;
+        }
+    }
+    return nTags>0;
+  });
+
+  const NamedFunc HasMediumMDBBTag_medPt("HasMediumMDBBTag_medPt",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>400 && b.FatJet_deepTagMD_bbvsLight()->at(i)>0.8365){
+            nTags++;
+        }
+    }
+    return nTags>0;
+  });
+
+
+  const NamedFunc HasHbbTag("HasHbbTag",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_btagHbb()->at(i)>0.7){
+            nTags++;
+        }
+    }
+    return nTags>0;
+  });
+
+  const NamedFunc nMediumHiggsTag("nMediumHiggsTag",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTag_H()->at(i)>0.8){
+            nTags++;
+        }
+    }
+    return nTags;
+  });
+
+  const NamedFunc HasMediumHiggsTag("HasMediumHiggsTag",[](const Baby &b) -> NamedFunc::ScalarType{
+    int nTags = 0;
+    vector<float> v;
+    for(unsigned i(0); i<b.FatJet_pt()->size(); i++){
+        if(b.FatJet_pt()->at(i)>200 && b.FatJet_deepTag_H()->at(i)>0.8){
+            nTags++;
+        }
+    }
+    return nTags>0;
+  });
+
 
   const NamedFunc FatJet_ClosestMSD("FatJet_ClosestMSD",[](const Baby &b) -> NamedFunc::ScalarType{
     //vector<float>* v = b.FatJet_msoftdrop();
@@ -674,7 +969,7 @@ namespace WH_Functions{
 
     sort(masses.begin(), masses.end(), less<int>());
 
-    return masses.at(0);
+    return (masses.at(0)+125.);
   });
 
   const NamedFunc sortedJetsPt_Leading("sortedJetsPt_Leading",[](const Baby &b) -> NamedFunc::ScalarType{
@@ -1328,6 +1623,18 @@ namespace WH_Functions{
     mt_var = sqrt(2*b.leps_pt()->at(0)*b.pfmet() * (1-(cos(b.leps_phi()->at(0)-b.pfmet_phi()))));
     return mt_var;
 
+    });
+
+  const NamedFunc dijet_mass("dijet_mass",[](const Baby &b) -> NamedFunc::ScalarType{
+    float mass = -1;
+    if (b.ak4pfjets_pt()->size()>1){
+        TLorentzVector v1,v2,sum;
+        v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(0),b.ak4pfjets_eta()->at(0),b.ak4pfjets_phi()->at(0),0);
+        v2.SetPtEtaPhiM(b.ak4pfjets_pt()->at(1),b.ak4pfjets_eta()->at(1),b.ak4pfjets_phi()->at(1),0);
+        sum=v1+v2;
+        mass = sum.M();
+        }
+    return mass;
     });
 
   const NamedFunc dilepton_mass("dilepton_mass",[](const Baby &b) -> NamedFunc::ScalarType{
