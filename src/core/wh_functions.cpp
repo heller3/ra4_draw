@@ -71,7 +71,8 @@ float medDeepCSV2018 = 0.4184;
       if(b.genmet()==-9999) return 1.; //data
       int ndeepfakes=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+        //if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+	if(abs(b.ak4pfjets_parton_flavor()->at(i))!=5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) ndeepfakes++;
       }
       if(ndeepfakes>0) return 1.5;
       else return 1.;
@@ -81,7 +82,8 @@ float medDeepCSV2018 = 0.4184;
       if(b.genmet()==-9999) return 1.; //data
       int ndeepfakes=0;
       for(unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
-        if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
+	if(abs(b.ak4pfjets_parton_flavor()->at(i))!=5 && b.ak4pfjets_deepCSV()->at(i)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))) ndeepfakes++;
+	//if (b.ak4pfjets_deepCSV()->at(i) > 0.6324 && abs(b.ak4pfjets_parton_flavor()->at(i)) != 5) ndeepfakes++;
       }
       if(ndeepfakes>0) return 0.5;
       else return 1.;
@@ -112,6 +114,52 @@ float medDeepCSV2018 = 0.4184;
     }
 });
 
+  const NamedFunc genmct("genmct",[](const Baby &b) -> NamedFunc::ScalarType{
+      float gen_mct=0;
+      for (unsigned i(0); i<b.gen_pt()->size(); i++){
+	if (abs(b.gen_id()->at(i)) == 5 && abs(b.gen_motherid()->at(i)) == 6 ){
+	  for (unsigned j(i+1); j<b.gen_pt()->size(); j++){
+	    if (abs(b.gen_id()->at(j)) == 5 && abs(b.gen_motherid()->at(j)) == 6 ){
+	      gen_mct = sqrt(2*b.gen_pt()->at(j)*b.gen_pt()->at(i)*(1+cos(deltaPhi(b.gen_phi()->at(i),b.gen_phi()->at(j)))));
+	      break;
+	    }
+	  }
+	  break;
+	}
+      }
+      return gen_mct;
+    });
+
+  const NamedFunc nTightb("nTightb",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nb=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > (0.8953*(b.year()==2016) + 0.8001*(b.year()==2017) + 0.7527*(b.year()==2018))){
+	  nb++;
+        }
+      }
+      return nb;
+    });
+
+  const NamedFunc nMedb("nMedb",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nb=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > (0.6321*(b.year()==2016) + 0.4941*(b.year()==2017) + 0.4184*(b.year()==2018))){
+	  nb++;
+        }
+      }
+      return nb;
+    });
+
+
+  const NamedFunc nLooseb("nLooseb",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nb=0;
+      for (unsigned i(0); i<b.ak4pfjets_deepCSV()->size(); i++){
+        if (b.ak4pfjets_deepCSV()->at(i) > (0.2217*(b.year()==2016) + 0.1522*(b.year()==2017) + 0.1241*(b.year()==2018))){
+	  nb++;
+        }
+      }
+      return nb;
+    });
 
   const NamedFunc nEventsGluonSplit("nEventsGluonSplit",[](const Baby &b) -> NamedFunc::ScalarType{
     int nevent = 0;

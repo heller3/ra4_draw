@@ -8,7 +8,10 @@
 namespace WH_Functions{
 
   // Miscellaneous
-
+  extern const NamedFunc nTightb;
+  extern const NamedFunc nMedb;
+  extern const NamedFunc nLooseb;
+  extern const NamedFunc genmct;
   extern const NamedFunc ST_up;
   extern const NamedFunc ST_off;
   extern const NamedFunc ST_down;
