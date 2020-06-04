@@ -852,7 +852,7 @@ float medDeepCSV2018 = 0.4184;
               continue;
             }else{
               //this lepton is the lost one! so we want to check the eta threshold
-              if((b.gen_id()->at(i)==11&&abs(b.gen_eta()->at(i))>2.4)||(b.gen_id()->at(i)==13&&abs(b.gen_eta()->at(i))>2.4)){
+              if((b.gen_id()->at(i)==11&&abs(b.gen_eta()->at(i))>2.4)||(b.gen_id()->at(i)==11&&(abs(b.gen_eta()->at(i))>1.4442&&abs(b.gen_eta()->at(i))<1.566))||(b.gen_id()->at(i)==13&&abs(b.gen_eta()->at(i))>2.4)){
                 causeVar = 2;
                 lostLepID = abs(b.gen_id()->at(i));
               }

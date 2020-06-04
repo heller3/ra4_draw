@@ -46,26 +46,50 @@ int main(){
 
   auto mc_2017 = Process::MakeShared<Baby_full>("MC 2017", Process::Type::background, colors("t1tttt"),{mc2017_dir+"slim_*.root","pass"});
 
-  auto tt1l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2017", Process::Type::background, colors("tt_1l"),
-    {mc2017_dir+"*TTJets_1lep_top_f17v2*.root",mc2017_dir+"*TTJets_1lep_tbar_f17v2*"});
+  /*auto tt1l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2017", Process::Type::background, colors("tt_1l"),
+    {mc2017_dir+"slim*TTJets_1lep_top_f17v2*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f17v2*.root"},"pass");
   auto tt2l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2017", Process::Type::background, colors("tt_2l"),
-    {mc2017_dir+"*TTJets_2lep_f17v2*.root"});
+    {mc2017_dir+"slim*TTJets_2lep_f17v2*.root"},"pass&&stitch");
   auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),
-    {mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*"});
+    {mc2018_dir+"slim*TTJets_1lep_top_a18v1*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a18v1*.root"},"pass");
   auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),
-    {mc2018_dir+"*TTJets_2lep_a18v1*.root"});
+    {mc2018_dir+"slim*TTJets_2lep_a18v1*.root"},"pass&&stitch");
 
-  auto wjets_2017 = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {mc2017_dir+"*slim_W*JetsToLNu_f17v2*"});
-  auto wjets_2018 = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {mc2018_dir+"*slim_W*JetsToLNu_a18v1*"});
+  auto wjets_2017 = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {mc2017_dir+"slim_W*JetsToLNu_f17v2*.root"},"pass&&stitch");
+  auto wjets_2018 = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {mc2018_dir+"slim_W*JetsToLNu_a18v1*.root"},"pass&&stitch");
 
-  auto single_t_2017 = Process::MakeShared<Baby_full>("Single t 2017", Process::Type::background, colors("single_t"), {mc2017_dir+"*_ST_*.root"});
-  auto single_t_2018 = Process::MakeShared<Baby_full>("Single t 2018", Process::Type::background, colors("single_t"), {mc2018_dir+"*_ST_*.root"});
+  auto single_t_2017 = Process::MakeShared<Baby_full>("Single t 2017", Process::Type::background, colors("single_t"), {mc2017_dir+"slim*_ST_*.root"},"pass");
+  auto single_t_2018 = Process::MakeShared<Baby_full>("Single t 2018", Process::Type::background, colors("single_t"), {mc2018_dir+"slim*_ST_*.root"},"pass");
  
-  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"*WW*.root", mc2017_dir+"*WZ*.root",mc2017_dir+"*ZZ*.root"});
-  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"*WW*.root", mc2018_dir+"*WZ*.root",mc2018_dir+"*ZZ*.root"});
+  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root"},"pass");
+  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"},"pass");
 
-  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"*_TTWJets*.root", mc2017_dir+"*_TTZ*.root"});
-  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"*_TTWJets*.root", mc2018_dir+"*_TTZ*.root"});
+  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root"},"pass");
+  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"},"pass");
+*/
+
+  //ttbar
+  auto tt1l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2017", Process::Type::background, colors("tt_1l"),{mc2017_dir+"slim*TTJets_1lep_top_*.root",mc2017_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
+  auto tt2l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2017", Process::Type::background, colors("tt_2l"),{mc2017_dir+"slim*TTJets_2lep_*.root"},"stitch");
+
+  auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),{mc2018_dir+"slim*TTJets_1lep_top_*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
+  auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),{mc2018_dir+"slim*TTJets_2lep_*.root"},"stitch");
+
+  //WJets
+  auto wjets_2017 = Process::MakeShared<Baby_full>("W+jets 2017", Process::Type::background, colors("wjets"), {mc2017_dir+"slim*_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root"},"stitch");
+  auto wjets_2018 = Process::MakeShared<Baby_full>("W+jets 2018", Process::Type::background, colors("wjets"), {mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"},"stitch");
+
+  //Single top
+  auto single_t_2017 = Process::MakeShared<Baby_full>("Single t 2017", Process::Type::background, colors("single_t"), {mc2017_dir+"slim*_ST_*.root"});
+  auto single_t_2018 = Process::MakeShared<Baby_full>("Single t 2018", Process::Type::background, colors("single_t"), {mc2018_dir+"slim*_ST_*.root"});
+
+  //diboson
+  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root"});
+  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
+
+  // ttV
+  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root"});
+  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
 
 
   vector<shared_ptr<Process> > sample_list_2018 = {data2018,tt1l_2018,tt2l_2018,wjets_2018,single_t_2018,diboson_2018,ttV_2018};
@@ -97,13 +121,18 @@ int main(){
   //Need different PlotMaker for each luminosity.
     //For some reason, they needed to be pointers to go into vector later on..
   PlotMaker * pm2017 = new PlotMaker();
+  PlotMaker * pm2017B = new PlotMaker();
+  PlotMaker * pm2017C = new PlotMaker();
+  PlotMaker * pm2017D = new PlotMaker();
+  PlotMaker * pm2017E = new PlotMaker();
+  PlotMaker * pm2017F = new PlotMaker();
   PlotMaker * pm2018 = new PlotMaker();
 
   //Preselection
-  NamedFunc preselection = "nvetoleps==2&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
-  NamedFunc tt2l = "nvetoleps==3&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125" && WHLeptons==1;
-  NamedFunc tt1l = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&ngoodbtags>=1&&pfmet>125" && WHLeptons==1;
-  NamedFunc tt1l_noMET = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&ngoodbtags>=1" && WHLeptons==1;
+  NamedFunc preselection = "pass&&nvetoleps==2&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50" && WHLeptons==1;
+  NamedFunc tt2l = "pass&&nvetoleps==3&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125" && WHLeptons==1;
+  NamedFunc tt1l = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&ngoodbtags>=1&&pfmet>125" && WHLeptons==1;
+  NamedFunc tt1l_noMET = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&ngoodbtags>=1" && WHLeptons==1;
 
  /* NamedFunc ttbar_sel = "pass&&ngoodjets>=4&&pfmet>125&&ngoodbtags>=1" && WHLeptons==1;
   NamedFunc ttbar_sel_full_eff = "leps_pt[0]>50&&pfmet>250&&pass&&ngoodjets>=4&&ngoodbtags>=1" && WHLeptons==1;
@@ -118,34 +147,38 @@ int main(){
   NamedFunc ttbar_2l_sel_full_eff = "leps_pt[0]>50&&pfmet>250&&pass&&nvetoleps==2&&ngoodjets==2&&ngoodbtags>=1" && WHLeptons>=1;*/
 
   vector<NamedFunc> sels = {preselection,tt2l,tt1l,tt1l_noMET}; 
-  vector<PlotMaker *> pms = {pm2018,pm2017};
+  vector<PlotMaker *> pms = {pm2018,pm2017,pm2017B,pm2017C,pm2017D,pm2017E,pm2017F};
   vector<vector<shared_ptr<Process> >> samples_Run2 = {sample_list_2018,sample_list_2017,sample_list_2017B,sample_list_2017C,sample_list_2017D,sample_list_2017E,sample_list_2017F};
   vector<string> years = {"y2018","y2017","y2017B","y2017C","y2017D","y2017E","y2017F"};
   vector<string> selectionTags = {"_preselection_","_tt2l_","_tt1l_","_tt1l_noMET_"};
-  vector<string> weights = {"weight","weight * w_pu"};
+  vector<NamedFunc> weights = {"weight","weight * w_pu","weight * w_pu"*yearWeight};
+  vector<string> weightnames = {"weight","weight * w_pu","weight * w_pu*yearWeight"};
 
   for(uint isel=0;isel<sels.size();isel++){
     for(uint iyear=0;iyear<pms.size();iyear++){
-      for(uint iproc=0;iproc<years.size();iproc++){
         for(uint iweight=0;iweight<weights.size();iweight++){
 
-          pms[iyear]->Push<Hist1D>(Axis(40, 0, 400., mt_met_lep_uncorr, "mT (uncorr) [GeV]"),
-            sels[isel], samples_Run2[iproc], all_plot_types).Weight(weights[iweight]).Tag(years[iproc]+"_EESmearing_"+selectionTags[isel]);
+        pms[iyear]->Push<Hist1D>(Axis(40, 0, 400., mt_met_lep_uncorr, "mT (uncorr) [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+"_EESmearing_"+selectionTags[isel]);
         
-          pms[iyear]->Push<Hist1D>(Axis(40, 0, 400., "mt_met_lep", "mT [GeV]"),
-            sels[isel], samples_Run2[iproc], all_plot_types).Weight(weights[iweight]).Tag(years[iproc]+"_EESmearing_"+selectionTags[isel]);  
+        pms[iyear]->Push<Hist1D>(Axis(40, 0, 400., "mt_met_lep", "mT [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+"_EESmearing_"+selectionTags[isel]);  
         
-          pms[iyear]->Push<Hist1D>(Axis(40, 0, 400., "pfmet", "MET [GEV]"),
-            sels[isel], samples_Run2[iproc], all_plot_types).Weight(weights[iweight]).Tag(years[iproc]+"_EESmearing_"+selectionTags[isel]);
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., "pfmet", "MET [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+"_EESmearing_"+selectionTags[isel]);
 
-          pms[iyear]->Push<Hist1D>(Axis(40, 0, 400., pfmet_uncorr_func, "MET [GEV]"),
-            sels[isel], samples_Run2[iproc], all_plot_types).Weight(weights[iweight]).Tag(years[iproc]+"_EESmearing_"+selectionTags[isel]);
-        }
+        pms[iyear]->Push<Hist1D>(Axis(20, 0, 400., pfmet_uncorr_func, "MET (uncorr) [GeV]"),
+          sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+"_EESmearing_"+selectionTags[isel]);
       }
     }
   }
 
   pm2017->MakePlots(lumi2017);
+  pm2017B->MakePlots(lumi2017);
+  pm2017C->MakePlots(lumi2017);
+  pm2017D->MakePlots(lumi2017);
+  pm2017E->MakePlots(lumi2017);
+  pm2017F->MakePlots(lumi2017);
   pm2018->MakePlots(lumi2018);
 
 }

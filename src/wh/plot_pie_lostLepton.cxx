@@ -39,21 +39,21 @@ int main(){
   auto single_t_Comb_lostLight = Process::MakeShared<Baby_full>("Single t 2016-2018, lost e or mu", Process::Type::background, colors("wjets"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2);
   auto single_t_Comb_lostHadTau = Process::MakeShared<Baby_full>("Single t 2016-2018, lost hadronic tau", Process::Type::background, colors("dy"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},LostHadTaus==1);
 
-  auto Comb_lostlep_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1.]==1.&&"stitch");
-  auto Comb_lostlep_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1.]==2.&&"stitch");
-  auto Comb_lostlep_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1.]==0.&&"stitch");
+  auto Comb_lostlep_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1]==1.&&"stitch");
+  auto Comb_lostlep_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1]==2.&&"stitch");
+  auto Comb_lostlep_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[1]==0.&&"stitch");
 
   auto Comb_lostTau_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1.]==1.&&"stitch");
   auto Comb_lostTau_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1.]==2.&&"stitch");
-  auto Comb_lostTau_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1.]==0.&&"stitch");
+  auto Comb_lostTau_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==15.&&causeLostLeps[1]==0.&&"stitch");
 
   auto Comb_lostMu_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1.]==1.&&"stitch");
   auto Comb_lostMu_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1.]==2.&&"stitch");
-  auto Comb_lostMu_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1.]==0.&&"stitch");
+  auto Comb_lostMu_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==13.&&causeLostLeps[1]==0.&&"stitch");
 
   auto Comb_lostEl_lowpT = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, low pT", Process::Type::background, colors("dy"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1.]==1.&&"stitch");
   auto Comb_lostEl_largeeta = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, large eta", Process::Type::background, colors("wjets"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1.]==2.&&"stitch");
-  auto Comb_lostEl_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1.]==0.&&"stitch");
+  auto Comb_lostEl_other = Process::MakeShared<Baby_full>("t#bar{t} (2l) + ST 2016-2018, mis-ID, non-isolated, etc", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"},nGenLightLeps==2&&causeLostLeps[0.]==11.&&causeLostLeps[1]==0.&&"stitch");
 
 
 
@@ -62,6 +62,10 @@ int main(){
   vector<shared_ptr<Process> > causeTau_sample_list ={Comb_lostTau_lowpT,Comb_lostTau_largeeta,Comb_lostTau_other};
   vector<shared_ptr<Process> > causeMu_sample_list ={Comb_lostMu_lowpT,Comb_lostMu_largeeta,Comb_lostMu_other};
   vector<shared_ptr<Process> > causeEl_sample_list ={Comb_lostEl_lowpT,Comb_lostEl_largeeta,Comb_lostEl_other};
+
+  vector<shared_ptr<Process> > lowpT_sample_list ={Comb_lostEl_lowpT,Comb_lostMu_lowpT,Comb_lostTau_lowpT};
+  vector<shared_ptr<Process> > largeeta_sample_list ={Comb_lostEl_largeeta,Comb_lostMu_largeeta,Comb_lostTau_largeeta};
+  vector<shared_ptr<Process> > other_sample_list ={Comb_lostEl_other,Comb_lostMu_other,Comb_lostTau_other};
 
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
@@ -93,6 +97,9 @@ int main(){
   map<string, vector<shared_ptr<Process> > > LostTau;
   map<string, vector<shared_ptr<Process> > > LostMu;
   map<string, vector<shared_ptr<Process> > > LostEl;
+  map<string, vector<shared_ptr<Process> > > LowPt;
+  map<string, vector<shared_ptr<Process> > > LargeEta;
+  map<string, vector<shared_ptr<Process> > > Other;
 
   /*categories["process"] = vector<shared_ptr<Process> >();
   categories["process"].push_back(tt2l_Comb_lostLight);
@@ -120,20 +127,41 @@ int main(){
   LostEl["LostEl"].push_back(Comb_lostEl_largeeta);
   LostEl["LostEl"].push_back(Comb_lostEl_other);
 
+  LowPt["LowPt"] = vector<shared_ptr<Process> >();
+  LowPt["LowPt"].push_back(Comb_lostTau_lowpT);
+  LowPt["LowPt"].push_back(Comb_lostMu_lowpT);
+  LowPt["LowPt"].push_back(Comb_lostEl_lowpT);
+
+  LargeEta["LargeEta"] = vector<shared_ptr<Process> >();
+  LargeEta["LargeEta"].push_back(Comb_lostTau_largeeta);
+  LargeEta["LargeEta"].push_back(Comb_lostMu_largeeta);
+  LargeEta["LargeEta"].push_back(Comb_lostEl_largeeta);
+
+  Other["Other"] = vector<shared_ptr<Process> >();
+  Other["Other"].push_back(Comb_lostTau_other);
+  Other["Other"].push_back(Comb_lostMu_other);
+  Other["Other"].push_back(Comb_lostEl_other);
+
 
   vector<TableRow> bb_table_cuts;
 
-  bb_table_cuts.push_back(TableRow("cause", bbRegion,0,0,"weight*w_pu"*yearWeight*mcHEMWeight)); 
+  bb_table_cuts.push_back(TableRow("cause", bbRegion,0,0,"weight*w_pu"*yearWeight)); 
 
   for(auto &ipr: categories) pm.Push<Table>("pieChart_cause_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
   for(auto &ipr: LostTau) pm.Push<Table>("pieChart_cause_Tau_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
   for(auto &ipr: LostMu) pm.Push<Table>("pieChart_cause_Mu_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
   for(auto &ipr: LostEl) pm.Push<Table>("pieChart_cause_El_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: LowPt) pm.Push<Table>("pieChart_cause_LowPt_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: LargeEta) pm.Push<Table>("pieChart_cause_LargeEta_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: Other) pm.Push<Table>("pieChart_cause_Other_"+ipr.first,  bb_table_cuts, ipr.second, true, true, true, false);
 
   Table & cause_chart = pm.Push<Table>("cause_chart", bb_table_cuts, cause_sample_list, false);
   Table & causeTau_chart = pm.Push<Table>("causeTau_chart", bb_table_cuts, causeTau_sample_list, false);
   Table & causeMu_chart = pm.Push<Table>("causeMu_chart", bb_table_cuts, causeMu_sample_list, false);
   Table & causeEl_chart = pm.Push<Table>("causeEl_chart", bb_table_cuts, causeEl_sample_list, false);
+  Table & causeLowPt_chart = pm.Push<Table>("causeLowPt_chart", bb_table_cuts, lowpT_sample_list, false);
+  Table & causeLargeEta_chart = pm.Push<Table>("causeLargeEta_chart", bb_table_cuts, largeeta_sample_list, false);
+  Table & causeOther_chart = pm.Push<Table>("causeOther_chart", bb_table_cuts, other_sample_list, false);
 
   vector<GammaParams> yields_cause = cause_chart.BackgroundYield(lumicomb);
   for(const auto &yield: yields_cause){
@@ -152,6 +180,21 @@ int main(){
 
   vector<GammaParams> yields_causeEl = causeEl_chart.BackgroundYield(lumicomb);
   for(const auto &yield: yields_causeEl){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_causeLowPt = causeLowPt_chart.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_causeLowPt){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_causeLargeEta = causeLargeEta_chart.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_causeLargeEta){
+    cout << yield << endl;
+  }
+
+  vector<GammaParams> yields_causeOther = causeOther_chart.BackgroundYield(lumicomb);
+  for(const auto &yield: yields_causeOther){
     cout << yield << endl;
   }
 
