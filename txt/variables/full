@@ -35,6 +35,38 @@ float w_BtagSF_medmed
 float w_BtagSF_medloose
 float w_BtagSF_WH
 float w_L1
+float w_ISRnjets
+
+
+float trig_eff
+float w_btagHFUp
+float w_btagHFDown
+float w_btagLFUp
+float w_btagLFDown
+float w_btagFSUp
+float w_btagFSDown
+float w_lepSFUp
+float w_lepSFDown
+float w_lepFSSFUp
+float w_lepFSSFDown
+float w_topPtSFUp
+float w_topPtSFDown
+float w_pdfUp
+float w_pdfDown
+float w_alphasUp
+float w_alphasDown
+float w_q2Up
+float w_q2Down
+float w_ISRUp
+float w_ISRDown
+float w_xsecUp
+float w_xsecDown
+float w_puUp
+float w_puDown
+float w_tauSFUp
+float w_tauSFDown
+float w_L1prefireUp
+float w_L1prefireDown
 
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_deepCSV
