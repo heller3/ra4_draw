@@ -132,7 +132,7 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
   TLine line; line.SetLineWidth(2); line.SetLineStyle(2);
   TLatex label; label.SetTextSize(0.05); label.SetTextFont(42); label.SetTextAlign(23);
 
-  float minx = 0.5, maxx = nbins+0.5, miny = minr*0.55, maxy = maxr*1.35;
+  float minx = 0.5, maxx = nbins+0.5, miny = minr*0.55, maxy = maxr*1.45;
   miny=0;
   if(maxy>5) maxy = 5;
   TH1D histo("histo", "", nbins, minx, maxx);
@@ -198,8 +198,8 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
 
   Palette colors("txt/colors.txt", "default");
   //vector<int> mcolors({kRed, kGreen+1, 4, kMagenta+2});
-  vector<int> mcolors({kGray+2,kRed,kRed, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2});
-  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23});
+  vector<int> mcolors({kGray+2,kRed,kRed, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange+2,kOrange+2,kBlue+2,kBlue+2,kGray,kGray});
+  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
   if(data_mode){
     mcolors = {1,kRed+1};
     styles= {20,20};
@@ -293,20 +293,33 @@ int main(int argc, char *argv[]){
   NamedFunc single_lep ="nvetoleps==1&&PassTrackVeto&&PassTauVeto&&nWHLeptons==1";
   NamedFunc dilep="nvetoleps==2";
 
-  string data2016_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_10_05/";
-  string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
-  string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
+  // string data2016_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_10_05/";
+  // string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
+  // string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
 
 
-  string mc2016_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/s16v3/";
-  string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/s16v3/";
+  // string mc2016_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/s16v3/";
+  // string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/s16v3/";
 
-  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/f17v2/";
-  string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/f17v2/";
+  // string mc2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/f17v2/";
+  // string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/f17v2/";
 
-  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/a18v1/";
-  string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_07/a18v1/";
+  // string mc2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/a18v1/";
+  // string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_07/a18v1/";
 
+  string data2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  string data2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  string data2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+
+
+  string mc2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+  string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+
+  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+  string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+
+  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+  string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
 
   auto all_top = {mc2016_dir+"*TTJets_1lep_top_s16v3*.root",mc2016_dir+"*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"*TTJets_1lep_*met150*.root",mc2017_dir+"*TTJets_1lep_top_f17v2*.root",mc2017_dir+"*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"*TTJets_1lep_*met150*.root",mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root",mc2016_dir+"*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2017_dir+"*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2018_dir+"*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet+"*TTJets_2lep_*met80*.root"};
 
@@ -350,7 +363,7 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
   vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<200.}; 
  
-  vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"/*,"pfmet>200"*/};
+  vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<=400","pfmet>400"/*,"pfmet>200"*/};
   vector<NamedFunc> metbins_validation = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"/*,"pfmet>200"*/};
   vector<NamedFunc> metbin_denominators = {denominator_lowmet,denominator_lowmet,denominator_highmet,denominator_highmet};
   vector<NamedFunc> metbin_denominators_validation = {denominator_lowmet,denominator_lowmet,denominator_highmet};
@@ -370,7 +383,7 @@ int main(int argc, char *argv[]){
     // {true,"pfmet", "ngoodbtags==2" && njetbins[1] && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
     {true,"pfmet_SR", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
 
-
+/*
     {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[0] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
     {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[1] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
     {false,"pfmet", nTightb==1. && nLooseb==1.  && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
@@ -387,7 +400,7 @@ int main(int argc, char *argv[]){
     {false,"pfmet_dilep", nTightb==2. && njetbins[0] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
     {false,"pfmet_dilep", nTightb==2. && njetbins[1] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
     {false,"pfmet_dilep", nTightb==2. && deepAK8bins[1], metbins_boosted, {denominator_dilep_boosted,denominator_dilep_boosted_highmet,denominator_dilep_boosted,denominator_dilep_boosted_highmet},{numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted}},
-
+*/
 });
 
 
@@ -403,26 +416,71 @@ int main(int argc, char *argv[]){
 
 
 // });
+    string tag = "";
+    if(year_mode) tag += "year_";
+    if(data_mode) tag += "data_";
 
   vector<NamedFunc> weights; size_t nsels; //vector<NamedFunc> numerators,denominators;
   vector<TString> leglabels;
   vector<NamedFunc> cuts;
   /////// Systematic weight mode //////
   if(systematic_mode){ // Same numerator and denominator, vary weights
-    weights= { "weight * w_pu" * yearWeight,
-                "weight * w_pu" * yearWeight * ST_up,
-                "weight * w_pu" * yearWeight * ST_down,
-                "weight * w_pu * w_pu" * yearWeight,
-                "weight" * yearWeight,
-                "weight * w_pu" * yearWeight * ttbar_genmet_fix,
-                "weight * w_pu" * yearWeight * ttbar_genmet_antifix,
-                "weight * w_pu" * yearWeight * fake_up,
-                "weight * w_pu" * yearWeight * fake_down
+    // weights= { "weight " * yearWeight,
+    //             "weight " * yearWeight * ST_up,
+    //             "weight " * yearWeight * ST_down,
+    //             "weight  * w_puUp" * yearWeight,
+    //             "weight * w_puDown" * yearWeight,
+    //             "weight " * yearWeight * ttbar_genmet_fix,
+    //             "weight " * yearWeight * ttbar_genmet_antifix,
+    //             "weight * w_btagLFUp" * yearWeight,
+    //             "weight * w_btagLFDown" * yearWeight,
+    //             "weight * w_btagHFUp" * yearWeight,
+    //             "weight * w_btagHFDown" * yearWeight,
+    //             "weight * w_topPtSFUp" * yearWeight,
+    //             "weight * w_topPtSFDown" * yearWeight,
+    //              };
+    // tag+="realistic1_";
+    // leglabels = {"Nominal"/* 1-lepton m_{bb} on higgs"*/,"Single top x1.5","Single top x0.5","PU weights up","PU weights down","Reweight genMET to 2016","Reweight genMET away from 2016",
+    //               "b-tag mistag up","b-tag mistag down","b-tag HF up","b-tag HF down","top p_{T} up", "top p_{t} down"};
+
+    weights= { "weight " * yearWeight,
+                "weight * w_lepSFUp" * yearWeight ,
+                "weight * w_lepSFDown" * yearWeight ,
+                "weight * w_tauSFUp" * yearWeight ,
+                "weight * w_tauSFDown" * yearWeight ,
+                "weight * w_L1prefireUp" * yearWeight ,
+                "weight * w_L1prefireDown" * yearWeight ,
+                "weight * w_ISRnjets * w_ISRUp" * yearWeight ,
+                "weight * w_ISRnjets * w_ISRDown" * yearWeight ,
+                "weight * w_pdfUp" * yearWeight ,
+                "weight * w_pdfDown" * yearWeight ,
+                "weight * w_alphasUp" * yearWeight ,
+                "weight * w_alphasDown" * yearWeight ,
+                "weight * w_q2Up" * yearWeight ,
+                "weight * w_q2Down" * yearWeight 
                  };
+    tag+="realistic2_";
+    leglabels = {"Nominal","Lepton SF up","Lepton SF down","Tau SF up","Tau SF down","L1 prefire up","L1 prefire down","ISR njets up","ISR njets down","PDF up","PDF down",
+                "alphas up","alphas down","q2 up","q2 down"};
+
+
+    // weights= { "weight " * yearWeight,
+    //             "weight " * yearWeight * ST_up,
+    //             "weight " * yearWeight * ST_down,
+    //             "weight  * w_pu" * yearWeight,
+    //             "weight / w_pu" * yearWeight,
+    //             "weight " * yearWeight * ttbar_genmet_fix,
+    //             "weight " * yearWeight * ttbar_genmet_antifix,
+    //             "weight " * yearWeight * fake_up,
+    //             "weight " * yearWeight * fake_down
+    //              };
+
+
     for(uint ivar=0;ivar<weights.size();ivar++){
       cuts.push_back("1");
     }
-    leglabels = {"Nominal"/* 1-lepton m_{bb} on higgs"*/,"Single top x1.5","Single top x0.5","PU weights squared","PU weights off","Reweight genMET to 2016","Reweight genMET away from 2016","b-tag fake rate x1.5","b-tag fake rate x0.5"};
+    // leglabels = {"Nominal"/* 1-lepton m_{bb} on higgs"*/,"Single top x1.5","Single top x0.5","PU weights up","PU weights down","Reweight genMET to 2016","Reweight genMET away from 2016","b-tag mistag up","b-tag mistag down","b-tag HF up","b-tag HF down","top p_{T} up", "top p_{t} down"};
+    // leglabels = {"Nominal"/* 1-lepton m_{bb} on higgs"*/,"Single top x1.5","Single top x0.5","PU weights squared","PU weights off","Reweight genMET to 2016","Reweight genMET away from 2016","b-tag fake rate x1.5","b-tag fake rate x0.5"};
 
     nsels = 2*weights.size();
 
@@ -433,7 +491,7 @@ int main(int argc, char *argv[]){
     leglabels = {"Full Run II","2016 only","2017 only","2018 only"};
    
     for(uint ivar=0;ivar<cuts.size();ivar++){
-      weights.push_back("weight * w_pu" * yearWeight);
+      weights.push_back("weight" * yearWeight);
     }
     nsels = 2*cuts.size();
 
@@ -444,7 +502,7 @@ int main(int argc, char *argv[]){
     leglabels = {"Data, 2016-2018","MC, 2016-2018"};
    
     for(uint ivar=0;ivar<cuts.size();ivar++){
-      weights.push_back("weight * w_pu" * yearWeight);
+      weights.push_back("weight" * yearWeight);
     }
     nsels = 2*cuts.size();
 
@@ -596,9 +654,7 @@ int main(int argc, char *argv[]){
     //// Print MC/Data yields, cuts applied, kappas, preds
     if(debug) printDebug(allcuts[iplot], allyields, baseline);
 
-    string tag = "";
-    if(year_mode) tag += "year_";
-    if(data_mode) tag += "data_";
+
     plotRatio(allyields, plotcuts[iplot], indices, leglabels,systematic_mode,tag);
     if(systematic_mode) plotRatio(allyields, plotcuts[iplot], indices_double_ratio, leglabels,systematic_mode,tag+"double");
 

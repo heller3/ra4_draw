@@ -23,9 +23,9 @@ using namespace WH_Functions;
 int main(){
   gErrorIgnoreLevel = 6000;
   
-  /*double lumi2016 = 35.9;
+  double lumi2016 = 35.9;
   double lumi2017 = 41.6;
-  double lumi2018 = 59.7;*/
+  double lumi2018 = 59.7;
   double lumicomb = 137.2;
 
   string mc2016_dir = "/home/users/dspitzba/wh_babies/babies_mc_s16v3_v33_4_2019_12_30/";
@@ -39,6 +39,19 @@ int main(){
   string signal2016_dir = "/home/users/dspitzba/wh_babies/babies_signal_s16v3_v33_4_2019_12_30/";
   string signal2017_dir = "/home/users/dspitzba/wh_babies/babies_signal_f17v2_v33_4_2019_12_30/";
   string signal2018_dir = "/home/users/dspitzba/wh_babies/babies_signal_a18v1_v33_4_2019_12_30/";
+
+  /*string mc2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+
+  string data2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  string data2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  string data2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+
+  string signal2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  string signal2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  string signal2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";*/
+
 
   Palette colors("txt/colors.txt", "default");
 
@@ -181,9 +194,9 @@ int main(){
   PlotMaker * pm2018 = new PlotMaker();
   PlotMaker * pmComb = new PlotMaker();*/
 
-  /*PlotMaker * pm2016_signal = new PlotMaker();
+  PlotMaker * pm2016_signal = new PlotMaker();
   PlotMaker * pm2017_signal = new PlotMaker();
-  PlotMaker * pm2018_signal = new PlotMaker();*/
+  PlotMaker * pm2018_signal = new PlotMaker();
   PlotMaker * pmComb_signal = new PlotMaker();
 
   /*PlotMaker * pmetc = new PlotMaker();
@@ -195,14 +208,14 @@ int main(){
       "pass", sample_list_single_t, all_plot_types).Weight("weight*w_pu"*yearWeight).Tag("coarse_yAll_single_t_");
 
   pmetc->Push<Hist1D>(Axis(5, 0, 500., "mbb", "mbb [GeV]"),
-      "pass", sample_list_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight*mcHEMWeight).Tag("coarse_yAll_mCTSide_");
+      "pass", sample_list_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight).Tag("coarse_yAll_mCTSide_");
   pmetc->Push<Hist1D>(Axis(5, 0, 500., "pfmet", "MET [GeV]"),
-      "pass&&mbb>90&&mbb<150", sample_list_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight*mcHEMWeight).Tag("coarse_yAll_mCTSide_");
+      "pass&&mbb>90&&mbb<150", sample_list_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight).Tag("coarse_yAll_mCTSide_");
 
   pmetc->Push<Hist1D>(Axis(5, 0, 500., "mbb", "mbb [GeV]"),
-      "pass", sample_list_3j_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight*mcHEMWeight).Tag("coarse_yAll_3j_mCTSide_");
+      "pass", sample_list_3j_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight).Tag("coarse_yAll_3j_mCTSide_");
   pmetc->Push<Hist1D>(Axis(5, 0, 500., "pfmet", "MET [GeV]"),
-      "pass&&mbb>90&&mbb<150", sample_list_3j_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight*mcHEMWeight).Tag("coarse_yAll_3j_mCTSide_");
+      "pass&&mbb>90&&mbb<150", sample_list_3j_mctSide, all_plot_types).Weight("weight*w_pu"*yearWeight).Tag("coarse_yAll_3j_mCTSide_");
 
 
   vector <string> METcuts = {"pfmet>125&&pfmet<200","pfmet>200&&pfmet<300","pfmet>300&&pfmet<400","pfmet>400"};
@@ -239,16 +252,20 @@ int main(){
 
   NamedFunc dilepton_looseLep_lowMT       = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
   NamedFunc dilepton_looseLep_lowMT_noMbb = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_lowMT_MbbSide = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
   NamedFunc dilepton_looseLep_lowMT_noMCT = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>100&&ngoodbtags==2";
 
   NamedFunc dilepton_looseLep_3jet_lowMT       = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
   NamedFunc dilepton_looseLep_3jet_lowMT_noMbb = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
   NamedFunc dilepton_looseLep_3jet_lowMT_noMCT = WHLeptons>=1&&LeadingNonBJetPt_med<100&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>100&&ngoodbtags==2";
 
-  NamedFunc dilepton_looseLep_loose3jet_lowMT       = WHLeptons>=1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_loose3jet_lowMT_noMbb = WHLeptons>=1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_loose3jet_lowMT_noMCT = WHLeptons>=1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>100&&ngoodbtags==2";
-  NamedFunc dilepton_looseLep_loose3jet_lowMT_noMT  = WHLeptons>=1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT       = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT_noMbb = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT_MbbSide = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT_highMET_MbbSide = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>300&&mbb>150&&mct>200&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT_lowMT_MbbSide = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>150&&mct>150&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT_noMCT = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mt_met_lep>100&&ngoodbtags==2";
+  NamedFunc dilepton_looseLep_loose3jet_lowMT_noMT  = WHLeptons>=1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==2&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&ngoodbtags==2";
 
   NamedFunc dilepton_looseLep_nojet_lowMET       = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodbtags==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150";
   NamedFunc dilepton_looseLep_nojet_lowMET_noMbb = WHLeptons>=1&&"pass&&nvetoleps==2&&ngoodbtags==2&&pfmet>125&&mct>200&&mt_met_lep>150";
@@ -290,7 +307,10 @@ int main(){
   NamedFunc onelepton_3jet_lowMET_noMCT  = WHLeptons==1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&(mbb<90||mbb>150)&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
 
   NamedFunc onelepton_lowMET_noMCT_highmbb       = WHLeptons==1&&"pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
-  NamedFunc onelepton_3jet_lowMET_noMCT_highmbb  = WHLeptons==1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
+  NamedFunc onelepton_3jet_lowMET_noMCT_highmbb  = WHLeptons==1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mbb>150&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
+
+  NamedFunc onelepton_lowMET_highmbb       = WHLeptons==1&&"pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&mbb>150&&mt_met_lep>100&&mct>200&&mt_met_lep<150&&ngoodbtags==2";
+  NamedFunc onelepton_3jet_lowMET_highmbb  = WHLeptons==1&&LeadingNonBJetPt_med<300&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mbb>150&&mct>200&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
 
   NamedFunc onelepton_highMET_noMCT       = WHLeptons==1&&"pass&&nvetoleps==1&&ngoodjets==2&&pfmet>200&&(mbb<90||mbb>150)&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
   NamedFunc onelepton_3jet_highMET_noMCT  = WHLeptons==1&&LeadingNonBJetPt_med<200&&"pass&&nvetoleps==1&&ngoodjets==3&&pfmet>200&&(mbb<90||mbb>150)&&mt_met_lep>100&&mt_met_lep<150&&ngoodbtags==2";
@@ -310,6 +330,7 @@ int main(){
                               dilepton_looseLep_3jet_lowMET_noMT,
                               dilepton_looseLep_lowMT,
                               dilepton_looseLep_lowMT_noMbb,
+                              dilepton_looseLep_lowMT_MbbSide,
                               dilepton_looseLep_lowMT_noMCT,
                               dilepton_looseLep_3jet_lowMT,
                               dilepton_looseLep_3jet_lowMT_highMET,
@@ -318,6 +339,9 @@ int main(){
                               dilepton_looseLep_3jet_lowMT_noMCT,
                               dilepton_looseLep_loose3jet_lowMT,
                               dilepton_looseLep_loose3jet_lowMT_noMbb,
+                              dilepton_looseLep_loose3jet_lowMT_MbbSide,*/
+                              dilepton_looseLep_loose3jet_lowMT_highMET_MbbSide,
+                              dilepton_looseLep_loose3jet_lowMT_lowMT_MbbSide,/*
                               dilepton_looseLep_loose3jet_lowMT_noMCT,
                               dilepton_looseLep_loose3jet_lowMT_noMT,
                               dilepton_looseLep_no3jet_lowMT,
@@ -361,10 +385,12 @@ int main(){
                               onelepton_3jet_lowMET_noMCT,
                               onelepton_lowMET_noMCT_highmbb,
                               onelepton_3jet_lowMET_noMCT_highmbb,*/
+                              onelepton_lowMET_highmbb,
+                              onelepton_3jet_lowMET_highmbb/*,
                               onelepton_highMET_noMCT,
                               onelepton_3jet_highMET_noMCT,
                               onelepton_highMET_noMCT_highmbb,
-                              onelepton_3jet_highMET_noMCT_highmbb}; 
+                              onelepton_3jet_highMET_noMCT_highmbb*/}; 
   vector<string> sels_tags = {/*"_dilepton_looseLep_lowMET",
                               "_dilepton_looseLep_lowMET_noMbb",
                               "_dilepton_looseLep_lowMET_noMCT",
@@ -377,6 +403,7 @@ int main(){
                               "_dilepton_looseLep_3jet_lowMET_noMT",
                               "_dilepton_looseLep_lowMT",
                               "_dilepton_looseLep_lowMT_noMbb",
+                              "_dilepton_looseLep_lowMT_MbbSide",
                               "_dilepton_looseLep_lowMT_noMCT",
                               "_dilepton_looseLep_3jet_lowMT",
                               "_dilepton_looseLep_3jet_lowMT_highMET",
@@ -385,6 +412,9 @@ int main(){
                               "_dilepton_looseLep_3jet_lowMT_noMCT",
                               "_dilepton_looseLep_loose3jet_lowMT",
                               "_dilepton_looseLep_loose3jet_lowMT_noMbb",
+                              "_dilepton_looseLep_loose3jet_lowMT_MbbSide",*/
+                              "_dilepton_looseLep_loose3jet_lowMT_highMET_MbbSide",
+                              "_dilepton_looseLep_loose3jet_lowMT_lowMT_MbbSide",/*
                               "_dilepton_looseLep_loose3jet_lowMT_noMCT",
                               "_dilepton_looseLep_loose3jet_lowMT_noMT",
                               "_dilepton_looseLep_no3jet_lowMT",
@@ -428,14 +458,16 @@ int main(){
                               "_onelepton_3jet_lowMET_noMCT",
                               "_onelepton_lowMET_noMCT_highmbb",
                               "_onelepton_3jet_lowMET_noMCT_highmbb",*/
+                              "_onelepton_lowMET_highmbb",
+                              "_onelepton_3jet_lowMET_highmbb"/*,
                               "_onelepton_highMET_noMCT",
                               "_onelepton_3jet_highMET_noMCT",
                               "_onelepton_highMET_noMCT_highmbb",
-                              "_onelepton_3jet_highMET_noMCT_highmbb"}; 
-  vector<PlotMaker *> pms = {/*pm2016,pm2017,pm2018,pmComb,pm2016_signal,pm2017_signal,pm2018_signal,*/pmComb_signal};
-  vector<vector<shared_ptr<Process> > > samples_Run2 = {/*sample_list_2016,sample_list_2017,sample_list_2018,sample_list_Comb,sample_list_signal_2016,sample_list_signal_2017,sample_list_signal_2018,*/sample_list_signal_Comb};
-  vector<string> years = {/*"y2016","y2017","y2018","yAll","y2016_signal","y2017_signal","y2018_signal",*/"yAll_signal"};
-  vector<NamedFunc> weights = {"weight * w_pu"*yearWeight*mcHEMWeight};
+                              "_onelepton_3jet_highMET_noMCT_highmbb"*/}; 
+  vector<PlotMaker *> pms = {/*pm2016,pm2017,pm2018,pmComb,*/pm2016_signal,pm2017_signal,pm2018_signal,pmComb_signal};
+  vector<vector<shared_ptr<Process> > > samples_Run2 = {/*sample_list_2016,sample_list_2017,sample_list_2018,sample_list_Comb,*/sample_list_signal_2016,sample_list_signal_2017,sample_list_signal_2018,sample_list_signal_Comb};
+  vector<string> years = {/*"y2016","y2017","y2018","yAll",*/"y2016_signal","y2017_signal","y2018_signal","yAll_signal"};
+  vector<NamedFunc> weights = {"weight * w_pu"*yearWeight};
 
   for(uint isel=0;isel<sels.size();isel++){
     for(uint iyear=0;iyear<samples_Run2.size();iyear++){
@@ -452,20 +484,20 @@ int main(){
           pms[iyear]->Push<Hist1D>(Axis(10, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
             sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+sels_tags[isel]);
           pms[iyear]->Push<Hist1D>(Axis(10, 0, 10., nNonBTagJets, "N_jets"),
-            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+sels_tags[isel]); 
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag(years[iyear]+sels_tags[isel]); */
 
 
           pms[iyear]->Push<Hist1D>(Axis(5, 0, 500., "pfmet", "E_{T}^{miss} [GeV]"),
-            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);  */
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);
 
           pms[iyear]->Push<Hist1D>(Axis(5, 0, 500., "mct", "mct [GeV]"),
             sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);
 
-          /*pms[iyear]->Push<Hist1D>(Axis(5, 30, 330., "mbb", "mbb [GeV]"),
+          pms[iyear]->Push<Hist1D>(Axis(5, 30, 330., "mbb", "mbb [GeV]"),
             sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);
           pms[iyear]->Push<Hist1D>(Axis(5, 0, 500., "mt_met_lep", "mt [GeV]"),
             sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);
-          pms[iyear]->Push<Hist1D>(Axis(5, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
+          /*pms[iyear]->Push<Hist1D>(Axis(5, 0, 300., "leps_pt[0]", "Leading lepton p_{T} [GeV]"),
             sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);
           pms[iyear]->Push<Hist1D>(Axis(10, -2.5, 2.5, "leps_eta[0]", "Leading lepton #eta [GeV]"),
             sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("coarse_"+years[iyear]+sels_tags[isel]);
@@ -556,7 +588,7 @@ int main(){
   vector<PlotMaker *> SR_pms = {pmSR2016,pmSR2017,pmSR2018,pmSRComb};
   vector<vector<shared_ptr<Process> > > SR_samples_Run2 = {sample_list_nodata_2016,sample_list_nodata_2017,sample_list_nodata_2018,sample_list_nodata_Comb};
   vector<string> SR_years = {"y2016_nodata","y2017_nodata","y2018_nodata","yAll_nodata"};
-  vector<NamedFunc> SR_weights = {"weight * w_pu"*yearWeight*mcHEMWeight};
+  vector<NamedFunc> SR_weights = {"weight * w_pu"*yearWeight};
   for(uint isel=0;isel<SR_sels.size();isel++){
     for(uint iyear=0;iyear<SR_samples_Run2.size();iyear++){
       for(uint iweight=0;iweight<SR_weights.size();iweight++){
@@ -596,11 +628,11 @@ int main(){
   pm2016->MakePlots(lumi2016);
   pm2017->MakePlots(lumi2017);
   pm2018->MakePlots(lumi2018);
-  pmComb->MakePlots(lumicomb);
+  pmComb->MakePlots(lumicomb);*/
 
   pm2016_signal->MakePlots(lumi2016);
   pm2017_signal->MakePlots(lumi2017);
-  pm2018_signal->MakePlots(lumi2018);*/
+  pm2018_signal->MakePlots(lumi2018);
   pmComb_signal->MakePlots(lumicomb);
 
   /*pmSR2016->MakePlots(lumi2016);

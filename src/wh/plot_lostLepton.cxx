@@ -88,7 +88,7 @@ int main(){
   vector<PlotMaker *> pms = {/*pm2016,pm2017,pm2018,*/pmComb,pmlightortau,pmtt2lorst};
   vector<vector<shared_ptr<Process> > > samples_Run2 = {/*sample_list_2016,sample_list_2017,sample_list_2018,*/sample_list_Comb,sample_list_lightortau,sample_list_tt2lorst};
   vector<string> years = {/*"y2016","y2017","y2018",*/"yAll","yAll_lightortau","yAll_tt2lorst"};
-  vector<NamedFunc> weights = {"weight * w_pu"*yearWeight*mcHEMWeight};
+  vector<NamedFunc> weights = {"weight * w_pu"*yearWeight};
 
   for(uint isel=0;isel<sels.size();isel++){
     for(uint iyear=0;iyear<samples_Run2.size();iyear++){
