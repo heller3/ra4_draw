@@ -104,6 +104,7 @@ namespace WH_Functions{
   extern const NamedFunc sortedJetsCSV_subLeading;
   extern const NamedFunc sortedJetsCSV_deltaR;
   extern const NamedFunc nEventsGluonSplit;
+  extern const NamedFunc hasGenBs;
   extern const NamedFunc nGenBs;
   extern const NamedFunc nGenBsFromGluons;
   extern const NamedFunc nGenBs_ptG15;

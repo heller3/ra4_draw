@@ -4,24 +4,43 @@ int evt
 int year
 int run
 float mt_met_lep
+float mt_met_lep_jup
+float mt_met_lep_jdown
+float mt_met_lep_resup
+float mt_met_lep_resdown
 float pfmet
+float pfmet_jup
+float pfmet_jdown
+float pfmet_resup
+float pfmet_resdown
 float pfmet_uncorr
 float pfmet_phi
 float pfmet_uncorr_phi
 float genmet
 int ngoodjets
+int jup_ngoodjets
+int jdown_ngoodjets
 int ngoodbtags
+int jup_ngoodbtags
+int jdown_ngoodbtags
 int nloosebtags
 int nWHLeptons
 int nvtxs
 int nHiggs
+int jup_nHiggs
+int jdown_nHiggs
 
 float ak4_HT
 bool PassTrackVeto
 bool PassTauVeto
+bool hasNano
 float mbb
+float jup_mbb
+float jdown_mbb
 float ptbb
 float mct
+float jup_mct
+float jdown_mct
 float mass_stop
 float mass_lsp
 float weight
@@ -29,6 +48,10 @@ float w_lumi
 float w_pu
 float w_L1
 float w_noBtagSF
+float w_btagHFUp
+float w_btagHFDown
+float w_btagLFUp
+float w_btagLFDown
 
 int njets
 

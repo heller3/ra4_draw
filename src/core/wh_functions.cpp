@@ -1408,6 +1408,15 @@ float medDeepCSV2018 = 0.4184;
 
     });
 
+  const NamedFunc hasGenBs("hasGenBs",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nbquarks=0;
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if(abs(b.gen_id()->at(i))==5) nbquarks++;
+      }
+      if (nbquarks>0) return 1;
+      return 0;
+    });
+
   const NamedFunc nGenBs("nGenBs",[](const Baby &b) -> NamedFunc::ScalarType{
       int nbquarks=0;
       for(unsigned i(0); i<b.gen_id()->size(); i++){
