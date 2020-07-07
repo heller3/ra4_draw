@@ -75,6 +75,7 @@ void PlotMaker::GetYields(){
 
   auto babies = GetBabies();
   size_t num_threads = multithreaded_ ? min(babies.size(), static_cast<size_t>(thread::hardware_concurrency())) : 1;
+  if(num_threads >=9) num_threads=8;
   cout << "Processing " << babies.size() << " babies with " << num_threads << " threads." << endl;
 
   long num_entries = 0;
