@@ -89,6 +89,25 @@ float medDeepCSV2018 = 0.4184;
       else return 1.;
   });
 
+  const NamedFunc VV_up("VV_up",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
+      int nBoson = 0; 
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if( (abs(b.gen_id()->at(i)) == 23 || abs(b.gen_id()->at(i)) == 24) && (abs(b.gen_motherid()->at(i))!=6) ) nBoson++;
+      }
+      if(nBoson>=2) return 1.25;
+      else return 1.;
+  });
+  const NamedFunc VV_down("VV_down",[](const Baby &b) -> NamedFunc::ScalarType{
+      if(b.genmet()==-9999) return 1.; //data
+      int nBoson = 0; 
+      for(unsigned i(0); i<b.gen_id()->size(); i++){
+        if( (abs(b.gen_id()->at(i)) == 23 || abs(b.gen_id()->at(i)) == 24) && (abs(b.gen_motherid()->at(i))!=6) ) nBoson++;
+      }
+      if(nBoson>=2) return 0.75;
+      else return 1.;
+  });
+
     const NamedFunc ttbar_genmet_fix("ttbar_genmet_fix",[](const Baby &b) -> NamedFunc::ScalarType{
       if(b.genmet()==-9999) return 1.; //data
       //genmet 200=1

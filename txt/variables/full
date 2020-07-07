@@ -52,6 +52,9 @@ float w_btagHFUp
 float w_btagHFDown
 float w_btagLFUp
 float w_btagLFDown
+float w_higgsSF
+float w_higgsSFUp
+float w_higgsSFDown
 
 int njets
 

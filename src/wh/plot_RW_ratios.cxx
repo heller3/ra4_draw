@@ -146,8 +146,8 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
 
   //// Finding ytitle
   bool double_mode = false;
-  TString ytitle="R(m_{CT})";
-  if(indices[2].size()==4) {ytitle = "R(m_{CT}) Variation / Nominal"; double_mode=true;}
+  TString ytitle="R_{W}";
+  if(indices[2].size()==4) {ytitle = "R_{W} Variation / Nominal"; double_mode=true;}
   // if(indices[0].size()==2){
   //   size_t ind0=indices[0][0][1], ind1=indices[0][1][1];
   //   if((ind0==r3&&ind1==r1) || (ind0==r4&&ind1==r2)) ytitle = "R(m_{T})";
@@ -223,7 +223,7 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
 
   //// Drawing legend and TGraphs
   double legX(opts.LeftMargin()+0.023), legY(1-opts.TopMargin()-0.03), legSingle = 0.055;
-  double legW = 0.73/*0.19*ngraphs*/, legH = legSingle*(ngraphs+1)/2;
+  double legW = 0.73/*0.19*ngraphs*/, legH = legSingle*(ngraphs+1)/4;
   if(year_mode || data_mode) {legW =0.36; legH = legSingle*(ngraphs+1);}
 
   TLegend leg(legX, legY-legH, legX+legW, legY);
@@ -235,8 +235,8 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
 
   Palette colors("txt/colors.txt", "default");
   //vector<int> mcolors({kRed, kGreen+1, 4, kMagenta+2});
-  vector<int> mcolors({kGray+2,kRed,kRed, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange+2,kOrange+2,kBlue+2,kBlue+2,kGray,kGray});
-  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
+  vector<int> mcolors({kGray+2,kRed-4,kRed-4, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange,kOrange,kBlue+2,kBlue+2,kGray,kGray,kRed+2,kRed+2});
+  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
   if(data_mode){
     mcolors = {1,kRed+1};
     styles= {20,20};
@@ -260,7 +260,9 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
     graph[igraph].SetLineColor(mcolors[igraph]); graph[igraph].SetLineWidth(2);
     graph[igraph].Draw("p0 same");
 
-    if(!double_mode || igraph>0) leg.AddEntry(&graph[igraph], leglabels[igraph], "p");
+    if(!double_mode || igraph>0){
+        if (igraph%2==0) leg.AddEntry(&graph[igraph], leglabels[igraph], "p");
+    }
     else leg.AddEntry(&graph[igraph], "MC statistics", "lp");
     if(igraph==0 && systematic_mode) leg.AddEntry(&graph[igraph]," ","");
   } // Loop over TGraphs
@@ -378,7 +380,6 @@ int main(int argc, char *argv[]){
   NamedFunc resup_denominator   = METvariation(den_string, "resup");
   NamedFunc resdown_denominator = METvariation(den_string, "resdown");
 
-
   // Numerator definitaions
   string num_string = "pfmet>125&&mt_met_lep>150&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";
   NamedFunc numerator           = num_string;
@@ -416,56 +417,66 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> resdown_denominators = {resdown_denominator,resdown_denominator,resdown_denominator,resdown_denominator};
 
   vector<NamedFunc> numerators = {numerator,numerator,numerator,numerator};
+  vector<NamedFunc> numerators_0H = {numerator&&deepAK8bins[0],numerator&&deepAK8bins[0],numerator&&deepAK8bins[0],numerator&&deepAK8bins[0]};
   vector<NamedFunc> jup_numerators = {jup_numerator,jup_numerator,jup_numerator,jup_numerator};
+  vector<NamedFunc> jup_numerators_0H = {jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0]};
   vector<NamedFunc> jdown_numerators = {jdown_numerator,jdown_numerator,jdown_numerator,jdown_numerator};
+  vector<NamedFunc> jdown_numerators_0H = {jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0]};
   vector<NamedFunc> resup_numerators = {resup_numerator,resup_numerator,resup_numerator,resup_numerator};
+  vector<NamedFunc> resup_numerators_0H = {resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0]};
   vector<NamedFunc> resdown_numerators = {resdown_numerator,resdown_numerator,resdown_numerator,resdown_numerator};
+  vector<NamedFunc> resdown_numerators_0H = {resdown_numerator&&deepAK8bins[0],resdown_numerator&&deepAK8bins[0],resdown_numerator&&deepAK8bins[0],resdown_numerator&&deepAK8bins[0]};
 
   vector<NamedFunc> numerators_boosted = {numerator,numerator,numerator,numerator};
+  vector<NamedFunc> numerators_boosted_1H = {numerator&& deepAK8bins[1],numerator&& deepAK8bins[1],numerator&& deepAK8bins[1],numerator&& deepAK8bins[1]};
   vector<NamedFunc> jup_numerators_boosted = {jup_numerator,jup_numerator,jup_numerator,jup_numerator};
+  vector<NamedFunc> jup_numerators_boosted_1H = {jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1]};
   vector<NamedFunc> jdown_numerators_boosted = {jdown_numerator,jdown_numerator,jdown_numerator,jdown_numerator};
+  vector<NamedFunc> jdown_numerators_boosted_1H = {jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1]};
   vector<NamedFunc> resup_numerators_boosted = {resup_numerator,resup_numerator,resup_numerator,resup_numerator};
+  vector<NamedFunc> resup_numerators_boosted_1H = {resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1]};
   vector<NamedFunc> resdown_numerators_boosted = {resdown_numerator,resdown_numerator,resdown_numerator,resdown_numerator};
+  vector<NamedFunc> resdown_numerators_boosted_1H = {resdown_numerator&&deepAK8bins[1],resdown_numerator&&deepAK8bins[1],resdown_numerator&&deepAK8bins[1],resdown_numerator&&deepAK8bins[1]};
 
   // Makes a plot for each vector in plotcuts
   vector<oneplot> plotcuts({
-    {true, "pfmet_SR", "(1)"  && njetbins[0], metbins, denominators, numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[1], metbins, denominators, numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[0] && deepAK8bins[0], metbins, denominators, numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[1] && deepAK8bins[0], metbins, denominators, numerators},
-    {true,"pfmet_SR",  "(1)"  && deepAK8bins[1], metbins_boosted, metbins_boosted,numerators_boosted},
+    {true, "pfmet_SR", "(1)"      && njetbins[0], metbins,         denominators,    numerators},
+    {true, "pfmet_SR", "(1)"      && njetbins[1], metbins,         denominators,    numerators},
+    {true, "pfmet_SR_H0", "(1)"  && njetbins[0], metbins,          denominators,    numerators_0H}, //numerator and denominator are the same, except the higgs requirement
+    {true, "pfmet_SR_H0", "(1)"  && njetbins[1], metbins,          denominators,    numerators_0H},
+    {true, "pfmet_SR_H1", "(1)"  ,               metbins_boosted,  denominators,    numerators_boosted_1H},
   });
 
   vector<oneplot> jup_plotcuts({
-    {true, "pfmet_SR", "(1)"  && jup_njetbins[0], jup_metbins, jup_denominators, jup_numerators},
-    {true, "pfmet_SR", "(1)"  && jup_njetbins[1], jup_metbins, jup_denominators, jup_numerators},
-    {true, "pfmet_SR", "(1)"  && jup_njetbins[0] && jup_deepAK8bins[0], jup_metbins,            jup_denominators,            jup_numerators},
-    {true, "pfmet_SR", "(1)"  && jup_njetbins[1] && jup_deepAK8bins[0], jup_metbins,            jup_denominators,            jup_numerators},
-    {true,"pfmet_SR",  "(1)"  && jup_deepAK8bins[1],                    jup_metbins_boosted,    jup_metbins_boosted,    jup_numerators_boosted},
+    {true, "pfmet_SR", "(1)"      && jup_njetbins[0], jup_metbins,            jup_denominators,         jup_numerators},
+    {true, "pfmet_SR", "(1)"      && jup_njetbins[1], jup_metbins,            jup_denominators,         jup_numerators},
+    {true, "pfmet_SR_H0", "(1)"  && jup_njetbins[0], jup_metbins,            jup_denominators,           jup_numerators_0H},
+    {true, "pfmet_SR_H0", "(1)"  && jup_njetbins[1], jup_metbins,            jup_denominators,           jup_numerators_0H},
+    {true, "pfmet_SR_H1", "(1)"  ,                   jup_metbins_boosted,    jup_denominators,   jup_numerators_boosted_1H},
   });
 
   vector<oneplot> jdown_plotcuts({
-    {true, "pfmet_SR", "(1)"  && jdown_njetbins[0],                         jdown_metbins,          jdown_denominators,     jdown_numerators},
-    {true, "pfmet_SR", "(1)"  && jdown_njetbins[1],                         jdown_metbins,          jdown_denominators,     jdown_numerators},
-    {true, "pfmet_SR", "(1)"  && jdown_njetbins[0] && jdown_deepAK8bins[0], jdown_metbins,          jdown_denominators,     jdown_numerators},
-    {true, "pfmet_SR", "(1)"  && jdown_njetbins[1] && jdown_deepAK8bins[0], jdown_metbins,          jdown_denominators,     jdown_numerators},
-    {true,"pfmet_SR",  "(1)"  && jdown_deepAK8bins[1],                      jdown_metbins_boosted,  jdown_metbins_boosted,  jdown_numerators_boosted},
+    {true, "pfmet_SR", "(1)"      && jdown_njetbins[0], jdown_metbins,          jdown_denominators,         jdown_numerators},
+    {true, "pfmet_SR", "(1)"      && jdown_njetbins[1], jdown_metbins,          jdown_denominators,         jdown_numerators},
+    {true, "pfmet_SR_H0", "(1)"  && jdown_njetbins[0], jdown_metbins,          jdown_denominators,           jdown_numerators_0H},
+    {true, "pfmet_SR_H0", "(1)"  && jdown_njetbins[1], jdown_metbins,          jdown_denominators,           jdown_numerators_0H},
+    {true, "pfmet_SR_H1", "(1)"  ,                     jdown_metbins_boosted,  jdown_denominators,   jdown_numerators_boosted_1H},
   });
 
   vector<oneplot> resup_plotcuts({
-    {true, "pfmet_SR", "(1)"  && njetbins[0],                   resup_metbins,          resup_denominators,     resup_numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[1],                   resup_metbins,          resup_denominators,     resup_numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[0] && deepAK8bins[0], resup_metbins,          resup_denominators,     resup_numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[1] && deepAK8bins[0], resup_metbins,          resup_denominators,     resup_numerators},
-    {true,"pfmet_SR",  "(1)"  && deepAK8bins[1],                resup_metbins_boosted,  resup_metbins_boosted,  resup_numerators_boosted},
+    {true, "pfmet_SR", "(1)"      && njetbins[0], resup_metbins,          resup_denominators,       resup_numerators},
+    {true, "pfmet_SR", "(1)"      && njetbins[1], resup_metbins,          resup_denominators,       resup_numerators},
+    {true, "pfmet_SR_H0", "(1)"  && njetbins[0], resup_metbins,          resup_denominators,         resup_numerators_0H},
+    {true, "pfmet_SR_H0", "(1)"  && njetbins[1], resup_metbins,          resup_denominators,         resup_numerators_0H},
+    {true, "pfmet_SR_H1", "(1)"  ,               resup_metbins_boosted,  resup_denominators, resup_numerators_boosted_1H},
   });
 
   vector<oneplot> resdown_plotcuts({
-    {true, "pfmet_SR", "(1)"  && njetbins[0],                   resdown_metbins,          resdown_denominators,     resdown_numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[1],                   resdown_metbins,          resdown_denominators,     resdown_numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[0] && deepAK8bins[0], resdown_metbins,          resdown_denominators,     resdown_numerators},
-    {true, "pfmet_SR", "(1)"  && njetbins[1] && deepAK8bins[0], resdown_metbins,          resdown_denominators,     resdown_numerators},
-    {true,"pfmet_SR",  "(1)"  && deepAK8bins[1],                resdown_metbins_boosted,  resdown_metbins_boosted,  resdown_numerators_boosted},
+    {true, "pfmet_SR", "(1)"      && njetbins[0], resdown_metbins,          resdown_denominators,       resdown_numerators},
+    {true, "pfmet_SR", "(1)"      && njetbins[1], resdown_metbins,          resdown_denominators,       resdown_numerators},
+    {true, "pfmet_SR_H0", "(1)"  && njetbins[0], resdown_metbins,          resdown_denominators,         resdown_numerators_0H},
+    {true, "pfmet_SR_H0", "(1)"  && njetbins[1], resdown_metbins,          resdown_denominators,         resdown_numerators_0H},
+    {true, "pfmet_SR_H1", "(1)"  ,               resdown_metbins_boosted,  resdown_denominators, resdown_numerators_boosted_1H},
   });
 
 
@@ -491,22 +502,26 @@ int main(int argc, char *argv[]){
   vector<string> cuts;
   /////// Systematic weight mode //////
   if(systematic_mode){ // Same numerator and denominator, vary weights
-     weights= {  "weight " * yearWeight,
-                 "weight  * w_puUp" * yearWeight,
-                 "weight  * w_puDown" * yearWeight,
-                 "weight * w_btagLFUp" * yearWeight,
-                 "weight * w_btagLFDown" * yearWeight,
-                 "weight * w_btagHFUp" * yearWeight,
-                 "weight * w_btagHFDown" * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight * (1+0.2*hasGenBs),
-                 "weight " * yearWeight * (1-0.2*hasGenBs),
+     weights= {  "weight * w_higgsSF" * yearWeight,
+                 "weight * w_higgsSF * w_puUp" * yearWeight,
+                 "weight * w_higgsSF * w_puDown" * yearWeight,
+                 "weight * w_higgsSF* w_btagLFUp" * yearWeight,
+                 "weight * w_higgsSF* w_btagLFDown" * yearWeight,
+                 "weight * w_higgsSF* w_btagHFUp" * yearWeight,
+                 "weight * w_higgsSF* w_btagHFDown" * yearWeight,
+                 "weight * w_higgsSF" * yearWeight,
+                 "weight * w_higgsSF" * yearWeight,
+                 "weight * w_higgsSF" * yearWeight,
+                 "weight * w_higgsSF" * yearWeight,
+                 "weight * w_higgsSF" * yearWeight * (1+0.2*hasGenBs),
+                 "weight * w_higgsSF" * yearWeight * (1-0.2*hasGenBs),
+                 "weight * w_higgsSFUp" * yearWeight,
+                 "weight * w_higgsSFDown" * yearWeight,
+                 "weight * w_higgsSF" * VV_up * yearWeight,
+                 "weight * w_higgsSF" * VV_down * yearWeight,
                   };
      tag+="wjets1_";
-     leglabels = {"Nominal", "PU up", "PU down", "b-tag mistag up","b-tag mistag down","b-tag HF up","b-tag HF down", "JES up", "JES down", "MET res up", "MET res down", "true b up", "true b down"};
+     leglabels = {"Nominal", "PU up", "PU up/down", "b-tag mistag up","b-tag mistag up/down","b-tag HF up","b-tag HF up/down", "JES up", "JES up/down", "MET res up", "MET res up/down", "true b up", "true b up/down", "Higgs up", "Higgs up/down", "VV up", "VV up/down"};
 
     // theory uncertainties (q2, alpha_s, PDF, ISR) tbd.
 
@@ -521,6 +536,10 @@ int main(int argc, char *argv[]){
                 "jdown",
                 "resup",
                 "resdown",
+                "(1)",
+                "(1)",
+                "(1)",
+                "(1)",
                 "(1)",
                 "(1)",
             };
@@ -672,7 +691,7 @@ int main(int argc, char *argv[]){
         }
 
       }
-      TString tname = "rmct"; tname += iplot; tname += 2*ivar;
+      TString tname = "rw"; tname += iplot; tname += 2*ivar;
       pm.Push<Table>(tname.Data(),  table_cuts_den, all_procs, false, false);
       vector<TableRow> table_cuts_num;
 
@@ -711,7 +730,7 @@ int main(int argc, char *argv[]){
         //NamedFunc totcut=plotcuts[iplot].baseline && plotcuts[iplot].bincuts[ibin] && plotcuts[iplot].numSel[ibin] && cuts[ivar];
        // TString totcut=plotcuts[iplot].baseline+" && "+plotcuts[iplot].bincuts[ibin]+" && "+numerators[ivar];
       } // Loop over bins
-      tname = "rmct"; tname += iplot; tname += 2*ivar+1; 
+      tname = "rw"; tname += iplot; tname += 2*ivar+1; 
       pm.Push<Table>(tname.Data(),  table_cuts_num, all_procs, false, false);
     } // Loop over abcdcuts
   } // Loop over plots

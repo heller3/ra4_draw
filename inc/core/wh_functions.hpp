@@ -17,6 +17,8 @@ namespace WH_Functions{
   extern const NamedFunc ST_down;
   extern const NamedFunc fake_up;
   extern const NamedFunc fake_down;
+  extern const NamedFunc VV_up;
+  extern const NamedFunc VV_down;
   extern const NamedFunc ttbar_genmet_fix;
   extern const NamedFunc ttbar_genmet_antifix;
   extern const NamedFunc failTauVetos;
