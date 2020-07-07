@@ -41,10 +41,17 @@ namespace{
   bool discovery_mode=false;
   bool boosted =true;
   bool original_analysis=false;
-  enum Bkgs {bkg, top, w, other};
+  bool dilep_mode=false;
+  bool data_CR=true;
+  enum Bkgs {bkg, top, w, other, data};
 
 }
-
+void copy_file( const char* srce_file, const char* dest_file )
+{
+    std::ifstream srce( srce_file, std::ios::binary ) ;
+    std::ofstream dest( dest_file, std::ios::binary ) ;
+    dest << srce.rdbuf() ;
+}
 void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors,vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
 
 int main(){
@@ -61,57 +68,101 @@ int main(){
 
   // Cuts in baseline speed up the yield finding
   string baseline         = "";
-  NamedFunc baselinef     = "pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=3 &&pfmet>125&&mt_met_lep>150 && ngoodbtags==2 && nWHLeptons>=1";
+  NamedFunc baselinef     = " hasNano&&pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=3 &&pfmet>125&&mt_met_lep>150 && ngoodbtags==2 && nWHLeptons>=1";
   if (original_analysis) baselinef     = "pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=2 &&pfmet>125&&mt_met_lep>150 && ngoodbtags>=1 && nloosebtags==2 && nWHLeptons>=1";
   
   TString single_lep      = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&nWHLeptons==1";
   TString dilep           = "nvetoleps==2";
 
-  string mc2016_dir       = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/s16v3/";
-  string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/s16v3/";
+  // string data2016_dir = "/home/users/rheller/wh_babies/babies_v31_1_2019_10_05/";
+  // string data2017_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
+  // string data2018_dir = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_05/";
 
-  string mc2017_dir       = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/f17v2/";
-  string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/f17v2/";
+  // string mc2016_dir       = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/s16v3/";
+  // string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/s16v3/";
 
-  string mc2018_dir       = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/a18v1/";
-  string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_07/a18v1/";
+  // string mc2017_dir       = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/f17v2/";
+  // string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_05/f17v2/";
 
-  string signal_dir2016   = "/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2019_10_07/";
-  string signal_dir2017   = "/home/users/rheller/wh_babies/babies_signal_f17v2_v32_0_2019_10_07/";
-  string signal_dir2018   = "/home/users/rheller/wh_babies/babies_signal_a18v1_v32_0_2019_10_07/";
+  // string mc2018_dir       = "/home/users/rheller/wh_babies/babies_v31_2_2019_10_03/a18v1/";
+  // string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v30_9_2019_10_07/a18v1/";
+
+  // string signal_dir2016   = "/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2019_10_07/";
+  // string signal_dir2017   = "/home/users/rheller/wh_babies/babies_signal_f17v2_v32_0_2019_10_07/";
+  // string signal_dir2018   = "/home/users/rheller/wh_babies/babies_signal_a18v1_v32_0_2019_10_07/";
+
+
+  //Ryan v33 babies
+  // string signal_dir2016 = "/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2020_05_26/";
+  // string signal_dir2017 = "/home/users/rheller/wh_babies/babies_signal_f17v2_v32_0_2020_05_26/";
+  // string signal_dir2018 = "/home/users/rheller/wh_babies/babies_signal_a18v1_v32_0_2020_05_26/";
+
+  // string data2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  // string data2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+  // string data2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/";
+
+  // string mc2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+  // string mc2016_dir_ttmet = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+
+  // string mc2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+  // string mc2017_dir_ttmet = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+
+  // string mc2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+  // string mc2018_dir_ttmet = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+
+  //Daniel v33 babies
+  string signal_dir2016 = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/";
+  string signal_dir2017 = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/";
+  string signal_dir2018 = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/";
+
+  string data2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/";
+  string data2017_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/";
+  string data2018_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/";
+
+  string mc2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+  string mc2016_dir_ttmet = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+
+  string mc2017_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+  string mc2017_dir_ttmet = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+
+  string mc2018_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+  string mc2018_dir_ttmet = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+  string mc2018_dir_ttmet_2l = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_06_12/a18v1/";
 
 
 
-  auto all_top = {mc2016_dir+"*TTJets_1lep_top_s16v3*.root",mc2016_dir+"*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"*TTJets_1lep_*met150*.root",mc2017_dir+"*TTJets_1lep_top_f17v2*.root",mc2017_dir+"*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"*TTJets_1lep_*met150*.root",mc2018_dir+"*TTJets_1lep_top_a18v1*.root",mc2018_dir+"*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"*TTJets_1lep_*met80*.root",mc2016_dir+"*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2017_dir+"*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2018_dir+"*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet+"*TTJets_2lep_*met80*.root"};
+  auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2017_dir+"slim*TTJets_1lep_top_f17v2*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2018_dir+"slim*TTJets_1lep_top_a18v1*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"slim*TTJets_1lep_*met80*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2017_dir+"slim*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2018_dir+"slim*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet_2l+"slim_TTJets_2lep_*met80*.root"};
+  // auto all_top = {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2017_dir+"*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2018_dir+"*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet+"*TTJets_2lep_*met80*.root"};
 
 
-  auto all_other = {mc2016_dir+"*WW*.root", mc2016_dir+"*WZ*.root",mc2016_dir+"*ZZ*.root",mc2017_dir+"*WW*.root", mc2017_dir+"*WZ*.root",mc2017_dir+"*ZZ*.root",mc2018_dir+"*WW*.root", mc2018_dir+"*WZ*.root",mc2018_dir+"*ZZ*.root",mc2016_dir+"*_TTWJets*.root", mc2016_dir+"*_TTZ*.root",mc2017_dir+"*_TTWJets*.root", mc2017_dir+"*_TTZ*.root",mc2018_dir+"*_TTWJets*.root", mc2018_dir+"*_TTZ*.root"};
+  auto all_other = {mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root",mc2016_dir+"slim_TTWJets*.root", mc2016_dir+"slim_TTZ*.root",mc2017_dir+"slim_TTWJets*.root", mc2017_dir+"slim_TTZ*.root",mc2018_dir+"slim_TTWJets*.root", mc2018_dir+"slim_TTZ*.root"};
 
   //// Contributions
-  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"*slim_W*JetsToLNu_a18v1*",mc2018_dir+"*W*Jets_NuPt200_a18v1*.root"},"stitch&&evt!=74125994"&&baselinef);
+  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"),{data2016_dir+"slim*data_2016*singleel*.root",data2016_dir+"slim*data_2016*singlemu*.root",data2016_dir+"slim*data_2016*met*.root",data2017_dir+"slim*data_2017*singleel*.root",data2017_dir+"slim*data_2017*singlemu*.root",data2017_dir+"slim*data_2017*met*.root",data2018_dir+"slim*data_2018*singlemu*.root",data2018_dir+"slim*data_2018*met*.root",data2018_dir+"slim*data_2018*egamma*.root"},baselinef&&"mct<=200 && (HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"},"stitch&&evt!=74125994"&&baselinef);
   auto proc_top = Process::MakeShared<Baby_full>("top 2016-2018", Process::Type::background, kRed,all_top,"stitch"&&baselinef);
 
   auto proc_other = Process::MakeShared<Baby_full>("TTV and VV 2016-2018", Process::Type::background, kRed,all_other,baselinef);
 
   auto proc_sig = Process::MakeShared<Baby_full>("2016-2018 TChiWH(750,1)", Process::Type::signal, colors("t1tttt"),
-  {signal_dir2016+"*TChiWH*.root",signal_dir2017+"*TChiWH*.root",signal_dir2018+"*TChiWH*.root"},"mass_stop==750&&mass_lsp==1"&&baselinef);
+  {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},"mass_stop==750&&mass_lsp==1"&&baselinef);
 
   auto proc_sig_compress = Process::MakeShared<Baby_full>("2016-2018 TChiWH(225,75)", Process::Type::signal, colors("t1tttt"),
-  {signal_dir2016+"*TChiWH*.root",signal_dir2017+"*TChiWH*.root",signal_dir2018+"*TChiWH*.root"},"mass_stop==225&&mass_lsp==75"&&baselinef);
+  {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},"mass_stop==225&&mass_lsp==75"&&baselinef);
 
     auto proc_sig_medium = Process::MakeShared<Baby_full>("2016-2018 TChiWH(350,150)", Process::Type::signal, colors("t1tttt"),
-  {signal_dir2016+"*TChiWH*.root",signal_dir2017+"*TChiWH*.root",signal_dir2018+"*TChiWH*.root"},"mass_stop==350&&mass_lsp==150"&&baselinef);
+  {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},"mass_stop==350&&mass_lsp==150"&&baselinef);
 
   auto proc_sig_all = Process::MakeShared<Baby_full>("2016-2018 TChiWH", Process::Type::signal, colors("t1tttt"),
-  {signal_dir2016+"*TChiWH*.root",signal_dir2017+"*TChiWH*.root",signal_dir2018+"*TChiWH*.root"},baselinef);
+  {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},baselinef);
 
 
-  vector<shared_ptr<Process> > all_procs_bkg = {proc_top,proc_wjets,proc_other};
+  vector<shared_ptr<Process> > all_procs_bkg = {proc_data,proc_top,proc_wjets,proc_other};
   vector<shared_ptr<Process> > sig_procs = {proc_sig_all};//{proc_sig,proc_sig_medium,proc_sig_compress};
 
 
   TChain sig_tree("t");
-  sig_tree.Add("/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2019_10_07/slim_SMS_TChiWH_s16v3_0.root");
+  sig_tree.Add("~/wh_babies/babies_signal_s16v3_v32_2019_10_07/slim_SMS_TChiWH_s16v3_0.root");
 
   long nentries(sig_tree.GetEntries());
   cout<<"Got "<<nentries<<" entries."<<endl;
@@ -137,7 +188,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        if(mchi!=750) continue;
+         // if(mchi!=425 && mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -158,40 +209,55 @@ int main(){
   TString analysis_tag = "nominal";
   if(boosted) analysis_tag = "boosted";
   if(original_analysis) analysis_tag="original";
-
+  if(data_CR)analysis_tag+="dataCR";
 
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
   vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; analysis_tag+="_4metbins";
-  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; //analysis_tag+="2bin_boostedtest";
+  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; analysis_tag+="boosted2bins_300_mct100_3jet200_loosembbCR_danielbabies_newtagger_40percent";
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<450","pfmet>450"}; analysis_tag+="_4metbins_450";
  // if(original_analysis) vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200"}; 
 	//vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>350"};	analysis_tag+="_met350";
   // if(metbins.size()>3) analysis_tag+="_4metbins_450";
-	vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<100.};
+	vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<200.}; 
   if (original_analysis) njetbins = {"ngoodjets==2"};
-	vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
+  // vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
+	vector<NamedFunc> deepAK8bins = {"nHiggs==0","nHiggs>0"};
 
 	vector<string> metnames={"lowmet","medmet","highmet","vhighmet"};
 	vector<string> njetnames={"nj2","nj3"};
 	vector<string> htagnames={"res","boos"};
 
-    weights= { "weight * w_pu" * yearWeight};
+
+//FIX ME
+    // weights= { "weight * w_pu" * yearWeight};
+    weights= { "weight * trig_eff" * nanoWeight * yearWeight};
 
     leglabels = {"Nominal"};
 
 
-  gSystem->mkdir("statistics/"+analysis_tag);
-  gSystem->mkdir("statistics/"+analysis_tag+"/datacards/");
+
     // nsels = 2*weights.size();
 
+
+
     TString signal_region = single_lep+"&&mct>200&&mbb>90&&mbb<150";
-    TString mct_control_region = single_lep+"&&mct>150&&mct<=200&&mbb>90&&mbb<150";    
+    TString mct_control_region = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150";    
+    TString mct_control_region_highmet = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<300";    
+    if(dilep_mode) mct_control_region = dilep+"&&mct>200&&mbb>90&&mbb<150";    
+
+    // analysis_tag+="_tightmbbRes_loosemCTCR";
     if(original_analysis) { signal_region = single_lep+"&&mct>170&&mbb>90&&mbb<150";
                              mct_control_region = single_lep+"&&mct>120&&mct<=170&&mbb>90&&mbb<150";}
 
     TString signal_region_boost = single_lep+"&&mct>200&&mbb>90&&mbb<150";
+    // TString mct_control_region_boost = single_lep+"&&mct<=200&&mbb>90&&mbb<150";
     TString mct_control_region_boost = single_lep+"&&mct<=200&&mbb>90&&mbb<150";
+    TString mct_control_region_boost_highmet = single_lep+"&&mct<=200&&mbb>90&&mbb<300";
+     if(dilep_mode) mct_control_region_boost = dilep+"&&mct>200&&mbb>90&&mbb<150";
+     // analysis_tag+="_yieldtest";
+    gSystem->mkdir("statistics/"+analysis_tag);
+    gSystem->mkdir("statistics/"+analysis_tag+"/datacards/");
 
     // for(uint ivar=0;ivar<weights.size();ivar++){
     //   numerators.push_back(numerator);
@@ -248,8 +314,10 @@ int main(){
       }
 			
 			if(boosted){
-				if(ideepAK8==0) totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region;
-				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins[inj] && boosted_metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_boost;
+        if(ideepAK8==0 && imet<2) totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region;
+				else if(ideepAK8==0 && imet>=2) totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_highmet;
+        else if (ideepAK8>0 && imet<boosted_metbins.size() && imet==0) totcut = njetbins[inj] && boosted_metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_boost;
+				else if (ideepAK8>0 && imet<boosted_metbins.size() && imet>0) totcut = njetbins[inj] && boosted_metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_boost_highmet;
 				else if (ideepAK8>0 && imet>=boosted_metbins.size()) continue;
         bin_names.push_back("CR_lowmct_"+njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
 			}
@@ -273,6 +341,8 @@ int main(){
   /////////////////////////////////////////// Finding all yields ///////////////////////////////////////////////
   cout<<"Analysis tag is "<<analysis_tag<<endl;
   pm.min_print_ = true;
+  TString outpath = Form("statistics/%s/write_datacards_scan.cxx",analysis_tag.Data());
+  copy_file( "src/wh/write_datacards_scan.cxx", outpath );
   pm.MakePlots(lumi);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,17 +359,17 @@ int main(){
   sigyields = yield_table_sig->Yield(proc_sig_all.get(), lumi);
 
   for(size_t irow=0; irow<nrows_sig; irow++){ 
-    cout<<"signal, "<<bin_names_sig[irow]<<": "<<setw(7)<<RoundNumber(sigyields[irow].Yield(), 2)<<endl;
+    // cout<<"signal, "<<bin_names_sig[irow]<<": "<<setw(7)<<RoundNumber(sigyields[irow].Yield(), 2)<<endl;
     int bin_num = 2*(irow/nsig); //hack to skip CR bins
     int sig_num = irow - bin_num*nsig/2;
-    cout<<"bin_num, sig_num: "<<bin_num<<" "<<sig_num<<endl;
+    // cout<<"bin_num, sig_num: "<<bin_num<<" "<<sig_num<<endl;
     sig_by_mass[sig_num][bin_num] = sigyields[irow];
   }
 
   for(int isig =0;isig<nsig;isig++){
-    cout<<mass_tag[isig]<<endl;
+    // cout<<mass_tag[isig]<<endl;
     for(size_t ibin =0;ibin<nrows/2;ibin++){
-    cout<<bin_names[2*ibin]<<": "<<sig_by_mass[isig][2*ibin]<<endl;
+    // cout<<bin_names[2*ibin]<<": "<<sig_by_mass[isig][2*ibin]<<endl;
     }
   }
 
@@ -308,12 +378,13 @@ int main(){
 
   cout<<"Finished dumping yields"<<endl;
    //Extract yields
-    vector<vector<GammaParams> > allyields(4,vector<GammaParams> (nrows));
+    vector<vector<GammaParams> > allyields(5,vector<GammaParams> (nrows));
     Table * yield_table = static_cast<Table*>(pm.Figures()[1].get());
 	allyields[bkg] = yield_table->BackgroundYield(lumi);
 	allyields[top] = yield_table->Yield(proc_top.get(), lumi);
 	allyields[w] = yield_table->Yield(proc_wjets.get(), lumi);
-	allyields[other] = yield_table->Yield(proc_other.get(), lumi);
+  allyields[other] = yield_table->Yield(proc_other.get(), lumi);
+	allyields[data] = yield_table->DataYield();
 
 
 	// sigyields[1] = yield_table_sig->Yield(proc_sig_medium.get(), lumi);
@@ -326,7 +397,8 @@ int main(){
   // // sigyields[1] = yield_table_sig->Yield(proc_sig_medium.get(), lumi);
   // // sigyields[2] = yield_table_sig->Yield(proc_sig_compress.get(), lumi);
 
-	vector<vector<float> > mct_transfer_factors;
+  vector<vector<float> > mct_transfer_factors;
+  vector<float>  mct_transfer_errs;
 	float val(1.), valup(1.), valdown(1.);
     //calculate mct transfer factors
     for(size_t ibin=0; ibin<nrows; ibin+=2){ //NB iterating by 2
@@ -352,25 +424,34 @@ int main(){
 		 //if(igraph!=0)
 		 val = calcKappa(entries, sumweights, powers, valdown, valup);
 		 if(valdown<0) valdown = 0;
-		 mct_transfer_factors.push_back(vector<float>({val, valdown, valup}));
+     mct_transfer_factors.push_back(vector<float>({val, valdown, valup}));
+     float sym_error = 0;
+     // if (val>0) sym_error = val * 0.5 * (abs(val-valdown)/val + abs(val-valup)/val);
+     if (val>0) sym_error = 0.5 * (valdown + valup);
+		 mct_transfer_errs.push_back(sym_error);
 
       } // Loop over indices
 
 
 	  for(size_t irow=0; irow<nrows; irow++){ 
 	    // allyields[bkg] = yield_table->BackgroundYield(lumi);
-	    cout<<bin_names[irow]<<", MC: "    <<setw(7)<<RoundNumber(allyields[bkg][irow].Yield(),3)<<" pm "<<setw(7)<<RoundNumber(allyields[bkg][irow].Uncertainty(), 3);
+	    cout<<bin_names[irow]<<", MC: "    <<setw(7)<<RoundNumber(allyields[bkg][irow].Yield(),3)<<" +- "<<setw(7)<<RoundNumber(allyields[bkg][irow].Uncertainty(), 3);
 	    //cout<<"allyields "<<allyields[bkg]  [idens]<<endl;
 	    // allyields[top] = yield_table->Yield(proc_top.get(), lumi);
-		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3);
+		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3)<<" ";
 		  // cout<<", signal NC: "    <<setw(7)<<RoundNumber(sigyields[0][irow].Yield(), 3);
 		  // cout<<", signal medium: "    <<setw(7)<<RoundNumber(sigyields[1][irow].Yield(), 3);
 		  // cout<<", signal compressed: "    <<setw(7)<<RoundNumber(sigyields[2][irow].Yield(), 3)<<endl;
-		  if(irow%2==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/2][0],3)<<endl;	
+		
+      if(irow%2==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/2][0],3)<< " +- "<<setw(7)<<RoundNumber(mct_transfer_errs[(irow-1)/2],3)<<", tot stat unc, MC CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/2]/mct_transfer_factors[(irow-1)/2][0],2) + 1./allyields[bkg][irow].Yield()),3) << ", CR data: "<<setw(7)<<allyields[data][irow].Yield()<<" "<< ", prediction:" << setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/2][0] * allyields[data][irow].Yield() ,3)<<", tot stat unc, data CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/2]/mct_transfer_factors[(irow-1)/2][0],2) + 1./allyields[data][irow].Yield()),3) << endl;	
 	    // allyields[w] = yield_table->Yield(proc_wjets.get(), lumi);
 	    // allyields[other] = yield_table->Yield(proc_other.get(), lumi);
 
 	  } // Loop over rows
+
+
+
+
 
     for(int isig=0;isig<nsig;isig++){
        writeCard(bin_names,allyields,mct_transfer_factors,sig_by_mass[isig],mass_tag[isig],analysis_tag);
@@ -405,7 +486,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     wbin+=1;
     unsigned digit = 2;
     // if (unblind) digit = 0;
-    cout<<mct_transfer_factors[0][0]<<endl;
+    // cout<<mct_transfer_factors[0][0]<<endl;
     // --------- write header
     ofstream fcard(outpath);
     int nbg=3;
@@ -428,12 +509,17 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     fcard<<endl<<left<<setw(wname)<<"process"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<setw(wbin)<<"0"<<setw(wbin)<<"1"<<setw(wbin)<<"2"<<setw(wbin)<<"3";
     fcard<<endl<<left<<setw(wname)<<"rate"<<setw(wdist)<<" ";
-     for (size_t ibin(0); ibin<nbins; ibin+=2) 
-        fcard<<setw(wbin)<<Form("%.2f",sigyields[ibin].Yield())<<setw(wbin)<<Form("%.2f",allyields[1][ibin].Yield())<<setw(wbin)<<Form("%.2f",allyields[2][ibin].Yield())<<setw(wbin)<<Form("%.2f",allyields[3][ibin].Yield())<<setw(wbin);
-  
+     for (size_t ibin(0); ibin<nbins; ibin+=2){
+        float top_rate = allyields[1][ibin].Yield();
+        if(data_CR) top_rate = mct_transfer_factors[ibin/2][0] * allyields[data][ibin+1].Yield();
+
+        fcard<<setw(wbin)<<Form("%.2f",sigyields[ibin].Yield())<<setw(wbin)<<Form("%.2f",top_rate)<<setw(wbin)<<Form("%.2f",allyields[2][ibin].Yield())<<setw(wbin)<<Form("%.2f",allyields[3][ibin].Yield())<<setw(wbin);
+    }
+
+
     fcard<<endl;
     float sys_lumi = 1.05;
-    float sys_filler = 1.15;
+    float sys_filler = 1.40;
     float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
@@ -445,9 +531,11 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     
     //Control region stats
     for (size_t ibin(0); ibin<nbins; ibin+=2){
-    	fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[bkg][ibin+1].Yield())<<setw(wdist)<<" ";
+    	if(!data_CR) fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[bkg][ibin+1].Yield())<<setw(wdist)<<" ";
+      else fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[data][ibin+1].Yield())<<setw(wdist)<<" ";
+
     	for(size_t j(0);j<1+(nbg+1)*(ibin/2);j++) fcard<<left<<setw(wbin)<<"-";
-    	fcard<<left<<setw(wbin)<<Form("%.3f",mct_transfer_factors[ibin/2][0]);
+    	fcard<<left<<setw(wbin)<<Form("%.5f",mct_transfer_factors[ibin/2][0]);
     	for(size_t j(0);j<(nbg+1)*nbins/2 - (2+(nbg+1)*(ibin/2));j++) fcard<<left<<setw(wbin)<<"-";
     }
     //Uncorrelated BG systematics

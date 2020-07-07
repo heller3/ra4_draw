@@ -38,6 +38,7 @@
 *.fdb_latexmk
 *.fls
 run/
+tables/*
 !txt/variables/*
 !txt/colors.txt
 !txt/plot_styles.txt

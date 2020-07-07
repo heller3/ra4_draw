@@ -8,10 +8,21 @@
 namespace WH_Functions{
 
   // Miscellaneous
+  extern const NamedFunc pass_any_mt_variation;
+  extern const NamedFunc pass_any_met_variation;
+  extern const NamedFunc pass_any_njets_variation;
+  extern const NamedFunc pass_any_nb_variation;
   extern const NamedFunc nTightb;
+  extern const NamedFunc nTightb_jup;
+  extern const NamedFunc nTightb_jdown;
   extern const NamedFunc nMedb;
+  extern const NamedFunc nMedb_jup;
+  extern const NamedFunc nMedb_jdown;
   extern const NamedFunc nLooseb;
+  extern const NamedFunc nLooseb_jup;
+  extern const NamedFunc nLooseb_jdown;
   extern const NamedFunc genmct;
+  extern const NamedFunc mct_genpt;
   extern const NamedFunc ST_up;
   extern const NamedFunc ST_off;
   extern const NamedFunc ST_down;
@@ -21,6 +32,7 @@ namespace WH_Functions{
   extern const NamedFunc ttbar_genmet_antifix;
   extern const NamedFunc failTauVetos;
   extern const NamedFunc yearWeight;
+  extern const NamedFunc nanoWeight;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc nBTagInFat;
   extern const NamedFunc OneDoubleBFat;
@@ -72,7 +84,7 @@ namespace WH_Functions{
   extern const NamedFunc WHLeptons;
   extern const NamedFunc NBJets;
   extern const NamedFunc nRealBs;
-  extern const NamedFunc nRealBs2;
+  extern const NamedFunc nRealBsfromTop;
   extern const NamedFunc nRealBtags;
   extern const NamedFunc nGenLightLeps;
   extern const NamedFunc LostHadTaus;
@@ -132,7 +144,8 @@ namespace WH_Functions{
   extern const NamedFunc mt_met_lep_uncorr;
   extern const NamedFunc pfmet_uncorr_func;
 
-
+  extern const NamedFunc max_genjet_bquark_pt_ratio;
+  extern const NamedFunc dR_jet_bquark_max_pt_ratio;
 
 
   // Basic Jet Pt
@@ -148,6 +161,8 @@ namespace WH_Functions{
   extern const NamedFunc LeadingRealNonBJetPt;
   extern const NamedFunc LeadingNonBJetPt_med;
   extern const NamedFunc LeadingFakeNonBJetPt_med;
+  extern const NamedFunc LeadingNonBJetPt_med_jup;
+  extern const NamedFunc LeadingNonBJetPt_med_jdown;
   extern const NamedFunc LeadingRealNonBJetPt_med;
 
   // Funcs to look at number of B-tags which are fakes
