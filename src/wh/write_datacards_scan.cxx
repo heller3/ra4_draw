@@ -52,7 +52,7 @@ void copy_file( const char* srce_file, const char* dest_file )
     std::ofstream dest( dest_file, std::ios::binary ) ;
     dest << srce.rdbuf() ;
 }
-void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors,vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
+void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors,vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
 
 int main(){
   gErrorIgnoreLevel=6000; // Turns off ROOT errors due to missing branches
@@ -68,8 +68,8 @@ int main(){
 
   // Cuts in baseline speed up the yield finding
   string baseline         = "";
-  NamedFunc baselinef     = " hasNano&&pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=3 &&pfmet>125&&mt_met_lep>150 && ngoodbtags==2 && nWHLeptons>=1";
-  if (original_analysis) baselinef     = "pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=2 &&pfmet>125&&mt_met_lep>150 && ngoodbtags>=1 && nloosebtags==2 && nWHLeptons>=1";
+  NamedFunc baselinef     = " hasNano&&pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=3 &&pfmet>125&&mt_met_lep>150 && nWHLeptons>=1";
+  if (original_analysis) baselinef     = "pass&&nvetoleps>=1&&ngoodjets>=2 && ngoodjets<=2 &&pfmet>125&&mt_met_lep>150 && nloosebtags==2 && nWHLeptons>=1";
   
   TString single_lep      = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&nWHLeptons==1";
   TString dilep           = "nvetoleps==2";
@@ -132,14 +132,22 @@ int main(){
 
 
   auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2017_dir+"slim*TTJets_1lep_top_f17v2*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2018_dir+"slim*TTJets_1lep_top_a18v1*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"slim*TTJets_1lep_*met80*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2017_dir+"slim*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2018_dir+"slim*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet_2l+"slim_TTJets_2lep_*met80*.root"};
+  //auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root"};
   // auto all_top = {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2017_dir+"*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2018_dir+"*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet+"*TTJets_2lep_*met80*.root"};
 
 
   auto all_other = {mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root",mc2016_dir+"slim_TTWJets*.root", mc2016_dir+"slim_TTZ*.root",mc2017_dir+"slim_TTWJets*.root", mc2017_dir+"slim_TTZ*.root",mc2018_dir+"slim_TTWJets*.root", mc2018_dir+"slim_TTZ*.root"};
+  //auto all_other = {mc2016_dir+"slim*WW*.root"};
+
+  auto all_wjets = {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"};
+  //auto all_wjets = {mc2016_dir+"*slim*W*Jets_NuPt200_s16v*"};
+
+  auto all_data = {data2016_dir+"slim*data_2016*singleel*.root",data2016_dir+"slim*data_2016*singlemu*.root",data2016_dir+"slim*data_2016*met*.root",data2017_dir+"slim*data_2017*singleel*.root",data2017_dir+"slim*data_2017*singlemu*.root",data2017_dir+"slim*data_2017*met*.root",data2018_dir+"slim*data_2018*singlemu*.root",data2018_dir+"slim*data_2018*met*.root",data2018_dir+"slim*data_2018*egamma*.root"};
+  //auto all_data = {data2016_dir+"slim*data_2016*singleel*.root"};
 
   //// Contributions
-  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"),{data2016_dir+"slim*data_2016*singleel*.root",data2016_dir+"slim*data_2016*singlemu*.root",data2016_dir+"slim*data_2016*met*.root",data2017_dir+"slim*data_2017*singleel*.root",data2017_dir+"slim*data_2017*singlemu*.root",data2017_dir+"slim*data_2017*met*.root",data2018_dir+"slim*data_2018*singlemu*.root",data2018_dir+"slim*data_2018*met*.root",data2018_dir+"slim*data_2018*egamma*.root"},baselinef&&"mct<=200 && (HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
-  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"},"stitch&&evt!=74125994"&&baselinef);
+  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&"mct<=200 && (HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
   auto proc_top = Process::MakeShared<Baby_full>("top 2016-2018", Process::Type::background, kRed,all_top,"stitch"&&baselinef);
 
   auto proc_other = Process::MakeShared<Baby_full>("TTV and VV 2016-2018", Process::Type::background, kRed,all_other,baselinef);
@@ -162,7 +170,7 @@ int main(){
 
 
   TChain sig_tree("t");
-  sig_tree.Add("~/wh_babies/babies_signal_s16v3_v32_2019_10_07/slim_SMS_TChiWH_s16v3_0.root");
+  sig_tree.Add("/home/users/rheller/wh_babies/babies_signal_s16v3_v32_2019_10_07/slim_SMS_TChiWH_s16v3_0.root");
 
   long nentries(sig_tree.GetEntries());
   cout<<"Got "<<nentries<<" entries."<<endl;
@@ -188,7 +196,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-         // if(mchi!=425 && mchi!=800) continue;
+        if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -220,6 +228,7 @@ int main(){
 	//vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>350"};	analysis_tag+="_met350";
   // if(metbins.size()>3) analysis_tag+="_4metbins_450";
 	vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<200.}; 
+	vector<NamedFunc> njetbins_0b = {"ngoodjets==2","ngoodjets==3"}; // LeadingNonBJetPt_med doesn't make sense when there's only non b-jets 
   if (original_analysis) njetbins = {"ngoodjets==2"};
   // vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
 	vector<NamedFunc> deepAK8bins = {"nHiggs==0","nHiggs>0"};
@@ -241,20 +250,21 @@ int main(){
 
 
 
-    TString signal_region = single_lep+"&&mct>200&&mbb>90&&mbb<150";
-    TString mct_control_region = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150";    
-    TString mct_control_region_highmet = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<300";    
-    if(dilep_mode) mct_control_region = dilep+"&&mct>200&&mbb>90&&mbb<150";    
+    TString signal_region = single_lep+"&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";
+    TString mct_control_region = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150&&ngoodbtags==2";    
+    TString w_control_region = single_lep+"&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==0";
+    TString mct_control_region_highmet = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<300&&ngoodbtags==2";    
+    if(dilep_mode) mct_control_region = dilep+"&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";    
 
     // analysis_tag+="_tightmbbRes_loosemCTCR";
     if(original_analysis) { signal_region = single_lep+"&&mct>170&&mbb>90&&mbb<150";
                              mct_control_region = single_lep+"&&mct>120&&mct<=170&&mbb>90&&mbb<150";}
 
-    TString signal_region_boost = single_lep+"&&mct>200&&mbb>90&&mbb<150";
+    TString signal_region_boost = single_lep+"&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";
     // TString mct_control_region_boost = single_lep+"&&mct<=200&&mbb>90&&mbb<150";
-    TString mct_control_region_boost = single_lep+"&&mct<=200&&mbb>90&&mbb<150";
-    TString mct_control_region_boost_highmet = single_lep+"&&mct<=200&&mbb>90&&mbb<300";
-     if(dilep_mode) mct_control_region_boost = dilep+"&&mct>200&&mbb>90&&mbb<150";
+    TString mct_control_region_boost = single_lep+"&&mct<=200&&mbb>90&&mbb<150&&ngoodbtags==2";
+    TString mct_control_region_boost_highmet = single_lep+"&&mct<=200&&mbb>90&&mbb<300&&ngoodbtags==2";
+     if(dilep_mode) mct_control_region_boost = dilep+"&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";
      // analysis_tag+="_yieldtest";
     gSystem->mkdir("statistics/"+analysis_tag);
     gSystem->mkdir("statistics/"+analysis_tag+"/datacards/");
@@ -302,6 +312,7 @@ int main(){
 				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]);
 			}
 
+      // pushing the signal region cut to allcuts, tables and bin names
 			allcuts.push_back(totcut);
 			table_rows.push_back(TableRow("", totcut,0,0,weights[0]));
       bin_names.push_back(bin_name);
@@ -313,6 +324,7 @@ int main(){
         table_rows_sig.push_back(TableRow("", totcut_sig,0,0,weights[0]));
       }
 			
+      // now taking care of the MCT control region
 			if(boosted){
         if(ideepAK8==0 && imet<2) totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region;
 				else if(ideepAK8==0 && imet>=2) totcut= njetbins[inj] && metbins[imet] && deepAK8bins[ideepAK8] && mct_control_region_highmet;
@@ -328,6 +340,22 @@ int main(){
 			allcuts.push_back(totcut);
 			table_rows.push_back(TableRow("", totcut,0,0,weights[0]));
 			
+      // now take care of the 0b W+jets control region. no differentiation between boosted/resolved but the different met bin width
+			if(boosted){
+				if(ideepAK8==0) totcut = njetbins[inj] && metbins[imet] && w_control_region;
+				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins[inj] && boosted_metbins[imet] && w_control_region;
+        else if (ideepAK8>0 && imet>=boosted_metbins.size()) continue; // stop adding boosted case after all boosted_metbins have been added.
+        bin_name = "CR_0b_"+njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8];
+				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
+			}
+			else{ totcut = njetbins[inj] && metbins[imet] && w_control_region;
+        bin_name = "CR_0b_"+njetnames[inj]+"_"+metnames[imet];
+				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]);
+			}
+      //totcut = njetbins_0b[inj] && metbins[imet] && w_control_region; // this should be 0b
+      allcuts.push_back(totcut);
+      bin_names.push_back(bin_name);
+			table_rows.push_back(TableRow("", totcut,0,0,weights[0]));
 
 		}
   }
@@ -354,21 +382,21 @@ int main(){
     // allyields: [0] All bkg, [1] tt1l, [2] tt2l, [3] other
    
   vector<GammaParams>  sigyields;
-  vector<vector<GammaParams> > sig_by_mass(nsig,vector<GammaParams> (2*nbins));
+  vector<vector<GammaParams> > sig_by_mass(nsig,vector<GammaParams> (3*nbins));
   Table * yield_table_sig = static_cast<Table*>(pm.Figures()[0].get());
   sigyields = yield_table_sig->Yield(proc_sig_all.get(), lumi);
 
   for(size_t irow=0; irow<nrows_sig; irow++){ 
     // cout<<"signal, "<<bin_names_sig[irow]<<": "<<setw(7)<<RoundNumber(sigyields[irow].Yield(), 2)<<endl;
-    int bin_num = 2*(irow/nsig); //hack to skip CR bins
-    int sig_num = irow - bin_num*nsig/2;
+    int bin_num = 3*(irow/nsig); //hack to skip CR bins
+    int sig_num = irow - bin_num*nsig/3;
     // cout<<"bin_num, sig_num: "<<bin_num<<" "<<sig_num<<endl;
     sig_by_mass[sig_num][bin_num] = sigyields[irow];
   }
 
   for(int isig =0;isig<nsig;isig++){
     // cout<<mass_tag[isig]<<endl;
-    for(size_t ibin =0;ibin<nrows/2;ibin++){
+    for(size_t ibin =0;ibin<nrows/3;ibin++){
     // cout<<bin_names[2*ibin]<<": "<<sig_by_mass[isig][2*ibin]<<endl;
     }
   }
@@ -386,6 +414,7 @@ int main(){
   allyields[other] = yield_table->Yield(proc_other.get(), lumi);
 	allyields[data] = yield_table->DataYield();
 
+  cout<<"Finished accessing yields"<<endl;
 
 	// sigyields[1] = yield_table_sig->Yield(proc_sig_medium.get(), lumi);
 	// sigyields[2] = yield_table_sig->Yield(proc_sig_compress.get(), lumi);
@@ -399,21 +428,30 @@ int main(){
 
   vector<vector<float> > mct_transfer_factors;
   vector<float>  mct_transfer_errs;
+  vector<vector<float> > W_transfer_factors;
+  vector<float>  W_transfer_errs;
 	float val(1.), valup(1.), valdown(1.);
+	float val_W(1.), valup_W(1.), valdown_W(1.);
+  cout<<"Calculating transfer factors"<<endl;
     //calculate mct transfer factors
-    for(size_t ibin=0; ibin<nrows; ibin+=2){ //NB iterating by 2
+    for(size_t ibin=0; ibin<nrows; ibin+=3){ //NB iterating by 3
+    cout<<ibin<<endl;
 		vector<vector<float> > entries;
 		vector<vector<float> > sumweights;
 		vector<float> powers;
 
-		//Numerator
+		vector<vector<float> > entries_W;
+		vector<vector<float> > sumweights_W;
+		vector<float> powers_W;
+
+		//Numerator MCT
 		entries.push_back(vector<float>());
 		sumweights.push_back(vector<float>());
 		entries.back().push_back(allyields[top][ibin].NEffective()); //numerator includes top yield only
 		sumweights.back().push_back(allyields[top][ibin].Weight());
 		powers.push_back(1); //+1 indicates numerator
 
-		//Denominator
+		//Denominator MCT
 		entries.push_back(vector<float>());
 		sumweights.push_back(vector<float>());
 		entries.back().push_back(allyields[bkg][ibin+1].NEffective()); //denominator includes all processes
@@ -430,8 +468,30 @@ int main(){
      if (val>0) sym_error = 0.5 * (valdown + valup);
 		 mct_transfer_errs.push_back(sym_error);
 
+		//Numerator R_W
+		entries_W.push_back(vector<float>());
+		sumweights_W.push_back(vector<float>());
+		entries_W.back().push_back(allyields[w][ibin].NEffective()); //numerator includes W/VV yield only
+		sumweights_W.back().push_back(allyields[w][ibin].Weight());
+		powers_W.push_back(1); //+1 indicates numerator
+
+		//Denominator W
+		entries_W.push_back(vector<float>());
+		sumweights_W.push_back(vector<float>());
+		entries_W.back().push_back(allyields[w][ibin+2].NEffective());
+		sumweights_W.back().push_back(allyields[w][ibin+2].Weight());
+		powers_W.push_back(-1); //-1 indicates denominator
+
+		 val_W = calcKappa(entries_W, sumweights_W, powers_W, valdown_W, valup_W);
+		 if(valdown_W<0) valdown_W = 0;
+     W_transfer_factors.push_back(vector<float>({val_W, valdown_W, valup_W}));
+     float sym_error_W = 0;
+     if (val_W>0) sym_error_W = 0.5 * (valdown_W + valup_W);
+		 W_transfer_errs.push_back(sym_error_W);
+
       } // Loop over indices
 
+  cout<<"Done with transfer factors"<<endl;
 
 	  for(size_t irow=0; irow<nrows; irow++){ 
 	    // allyields[bkg] = yield_table->BackgroundYield(lumi);
@@ -439,11 +499,16 @@ int main(){
 	    //cout<<"allyields "<<allyields[bkg]  [idens]<<endl;
 	    // allyields[top] = yield_table->Yield(proc_top.get(), lumi);
 		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3)<<" ";
+		  cout<<", W: "    <<setw(7)<<RoundNumber(allyields[w][irow].Yield(), 3)<<endl;
 		  // cout<<", signal NC: "    <<setw(7)<<RoundNumber(sigyields[0][irow].Yield(), 3);
 		  // cout<<", signal medium: "    <<setw(7)<<RoundNumber(sigyields[1][irow].Yield(), 3);
 		  // cout<<", signal compressed: "    <<setw(7)<<RoundNumber(sigyields[2][irow].Yield(), 3)<<endl;
 		
-      if(irow%2==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/2][0],3)<< " +- "<<setw(7)<<RoundNumber(mct_transfer_errs[(irow-1)/2],3)<<", tot stat unc, MC CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/2]/mct_transfer_factors[(irow-1)/2][0],2) + 1./allyields[bkg][irow].Yield()),3) << ", CR data: "<<setw(7)<<allyields[data][irow].Yield()<<" "<< ", prediction:" << setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/2][0] * allyields[data][irow].Yield() ,3)<<", tot stat unc, data CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/2]/mct_transfer_factors[(irow-1)/2][0],2) + 1./allyields[data][irow].Yield()),3) << endl;	
+      if(irow%3==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0],3)<< " +- "<<setw(7)<<RoundNumber(mct_transfer_errs[(irow-1)/3],3)<<", tot stat unc, MC CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[bkg][irow].Yield()),3) << ", CR data: "<<setw(7)<<allyields[data][irow].Yield()<<" "<< ", prediction:" << setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0] * allyields[data][irow].Yield() ,3)<<", tot stat unc, data CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[data][irow].Yield()),3) << endl;	
+
+      vector<double> W_0b_data {349, 595, 246, 154, 250, 96, 245, 352, 108, 65, 103, 39}; //should be somewhere else, just for test
+      if(irow%3==0) cout<<"R_W ratio for bin  "<<(irow/3)<<": "<<setw(7)<<RoundNumber(W_transfer_factors[irow/3][0],3)<< " +- "<<setw(7)<<RoundNumber(W_transfer_errs[irow/3],3)<<", tot stat unc, prediction:" << setw(7)<<RoundNumber(W_transfer_factors[irow/3][0] * W_0b_data[irow/3] ,3) << endl;	// not sure why we wait for irow%3==1, but ok.
+
 	    // allyields[w] = yield_table->Yield(proc_wjets.get(), lumi);
 	    // allyields[other] = yield_table->Yield(proc_other.get(), lumi);
 
@@ -451,15 +516,15 @@ int main(){
 
 
 
-
+    cout<<"Now writing cards"<<endl;
 
     for(int isig=0;isig<nsig;isig++){
-       writeCard(bin_names,allyields,mct_transfer_factors,sig_by_mass[isig],mass_tag[isig],analysis_tag);
+       writeCard(bin_names,allyields,mct_transfer_factors, W_transfer_factors, sig_by_mass[isig],mass_tag[isig],analysis_tag);
     }
 	
-  double seconds = (chrono::duration<double>(chrono::high_resolution_clock::now() - begTime)).count();
-  TString hhmmss = HoursMinSec(seconds);
-  cout<<endl<<"Finding yields took "<<round(seconds)<<" seconds ("<<hhmmss<<")"<<endl<<endl;
+  //double seconds = (chrono::duration<double>(chrono::high_resolution_clock::now() - begTime)).count();
+  //TString hhmmss = HoursMinSec(seconds);
+  //cout<<endl<<"Finding yields took "<<round(seconds)<<" seconds ("<<hhmmss<<")"<<endl<<endl;
 
 } // main
 
@@ -468,7 +533,7 @@ int main(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors,vector<GammaParams> sigyields,TString mass_tag,TString analysis_tag){
+void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors, vector<GammaParams> sigyields,TString mass_tag,TString analysis_tag){
 
  	TString outpath = Form("statistics/%s/datacards/datacard_%s_.txt",analysis_tag.Data(),mass_tag.Data());
  	// if(boosted) outpath+="boosted_";
@@ -481,7 +546,8 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     uint nbins = bin_names.size();
 
     unsigned wname(21), wdist(2), wbin(12);
-    for (size_t ibin(0); ibin<nbins; ibin+=2) 
+    vector<double> W_0b_data {349, 595, 246, 154, 250, 96, 245, 352, 108, 65, 103, 39}; // has to be double later on
+    for (size_t ibin(0); ibin<nbins; ibin+=3) 
       if(bin_names[ibin].length() > wbin) wbin = bin_names[ibin].length();
     wbin+=1;
     unsigned digit = 2;
@@ -490,30 +556,32 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     // --------- write header
     ofstream fcard(outpath);
     int nbg=3;
-    int nsyst = 3 + nbins/2 + 3*nbins/2; //one nuisance for every met/njet bin + 3 per bin
-    fcard<<"imax "<<nbins/2<<"  number of channels\n";
+    int nsyst = 3 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
+    fcard<<"imax "<<nbins/3<<"  number of channels\n";
     fcard<<"jmax "<<nbg<<"  number of backgrounds\n";
     fcard<<"kmax "<<nsyst<<"  number of nuisance parameters\n";
     fcard<<"shapes * * FAKE\n";
     fcard<<endl<<left<<setw(wname)<<"bin"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<bin_names[ibin];
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<bin_names[ibin];
     fcard<<endl<<left<<setw(wname)<<"observation"<<setw(wdist)<<" ";
     
-    if(!discovery_mode) for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield(),digit);
- 	  else for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield()+sigyields[ibin].Yield(),digit);
+    if(!discovery_mode) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield(),digit);
+ 	  else for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield()+sigyields[ibin].Yield(),digit);
 
     fcard<<endl<<endl<<left<<setw(wname)<<"bin"<<setw(wdist)<<" ";
-     for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<bin_names[ibin]<<left<<setw(wbin)<<bin_names[ibin]<<left<<setw(wbin)<<bin_names[ibin]<<left<<setw(wbin)<<bin_names[ibin];
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<bin_names[ibin]<<left<<setw(wbin)<<bin_names[ibin]<<left<<setw(wbin)<<bin_names[ibin]<<left<<setw(wbin)<<bin_names[ibin];
     fcard<<endl<<left<<setw(wname)<<"process"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<"sig"<<left<<setw(wbin)<<"top"<<left<<setw(wbin)<<"wjets"<<left<<setw(wbin)<<"other";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"sig"<<left<<setw(wbin)<<"top"<<left<<setw(wbin)<<"wjets"<<left<<setw(wbin)<<"other";
     fcard<<endl<<left<<setw(wname)<<"process"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<setw(wbin)<<"0"<<setw(wbin)<<"1"<<setw(wbin)<<"2"<<setw(wbin)<<"3";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<setw(wbin)<<"0"<<setw(wbin)<<"1"<<setw(wbin)<<"2"<<setw(wbin)<<"3";
     fcard<<endl<<left<<setw(wname)<<"rate"<<setw(wdist)<<" ";
-     for (size_t ibin(0); ibin<nbins; ibin+=2){
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
         float top_rate = allyields[1][ibin].Yield();
-        if(data_CR) top_rate = mct_transfer_factors[ibin/2][0] * allyields[data][ibin+1].Yield();
+        if(data_CR) top_rate = mct_transfer_factors[ibin/3][0] * allyields[data][ibin+1].Yield();
+        float W_rate = allyields[w][ibin].Yield();
+        if(data_CR) W_rate = W_transfer_factors[ibin/3][0] * W_0b_data[ibin/3];
 
-        fcard<<setw(wbin)<<Form("%.2f",sigyields[ibin].Yield())<<setw(wbin)<<Form("%.2f",top_rate)<<setw(wbin)<<Form("%.2f",allyields[2][ibin].Yield())<<setw(wbin)<<Form("%.2f",allyields[3][ibin].Yield())<<setw(wbin);
+        fcard<<setw(wbin)<<Form("%.2f",sigyields[ibin].Yield())<<setw(wbin)<<Form("%.2f",top_rate)<<setw(wbin)<<Form("%.2f",W_rate)<<setw(wbin)<<Form("%.2f",allyields[3][ibin].Yield())<<setw(wbin);
     }
 
 
@@ -523,29 +591,40 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<Form("%.2f",sys_lumi);
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<Form("%.2f",sys_lumi);
     fcard<<endl<<left<<setw(wsyst)<<"bkg_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler);
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler);
     fcard<<endl<<left<<setw(wsyst)<<"sig_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=2) fcard<<left<<setw(wbin)<<Form("%.2f",sys_sig_filler)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_sig_filler)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-";
     
-    //Control region stats
-    for (size_t ibin(0); ibin<nbins; ibin+=2){
+    //MCT Control region stats
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
     	if(!data_CR) fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[bkg][ibin+1].Yield())<<setw(wdist)<<" ";
       else fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[data][ibin+1].Yield())<<setw(wdist)<<" ";
 
-    	for(size_t j(0);j<1+(nbg+1)*(ibin/2);j++) fcard<<left<<setw(wbin)<<"-";
-    	fcard<<left<<setw(wbin)<<Form("%.5f",mct_transfer_factors[ibin/2][0]);
-    	for(size_t j(0);j<(nbg+1)*nbins/2 - (2+(nbg+1)*(ibin/2));j++) fcard<<left<<setw(wbin)<<"-";
+    	for(size_t j(0);j<1+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+    	fcard<<left<<setw(wbin)<<Form("%.5f",mct_transfer_factors[ibin/3][0]);
+    	for(size_t j(0);j<(nbg+1)*nbins/3 - (2+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
+
+    //W CR stats
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+    	if(data_CR) fcard<<endl<<left<<setw(wname)<<Form("W_CR_stat%i gmN %.0f",static_cast<int>(ibin),W_0b_data[ibin/3])<<setw(wdist)<<" ";
+      else fcard<<endl<<left<<setw(wname)<<Form("W_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[w][ibin+2].Yield())<<setw(wdist)<<" ";
+
+    	for(size_t j(0);j<2+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+    	fcard<<left<<setw(wbin)<<Form("%.5f",W_transfer_factors[ibin/3][0]);
+    	for(size_t j(0);j<(nbg+1)*nbins/3 - (3+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    }
+
     //Uncorrelated BG systematics
-    for (size_t ibin(0); ibin<nbins; ibin+=2){
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
       for(int k(1);k<=nbg;k++){
       fcard<<endl<<left<<setw(wname)<<Form("bkg_flat%i_proc%i lnN",static_cast<int>(ibin),k)<<setw(wdist)<<" ";
       
-       for(size_t j(0);j<k+(nbg+1)*(ibin/2);j++) fcard<<left<<setw(wbin)<<"-";
+       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
        fcard<<left<<setw(wbin)<<Form("%.2f",sys_filler);
-       for(size_t j(0);j<(nbg+1)*nbins/2 - (k+1+(nbg+1)*(ibin/2));j++) fcard<<left<<setw(wbin)<<"-";
+       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
 
       }
     }

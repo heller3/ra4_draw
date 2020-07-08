@@ -24,16 +24,20 @@ float genmet
 int ngoodjets
 int jup_ngoodjets
 int jdown_ngoodjets
-
 int ngoodbtags
-
+int jup_ngoodbtags
+int jdown_ngoodbtags
 int nloosebtags
 int nWHLeptons
 int nvtxs
+int nHiggs
+int jup_nHiggs
+int jdown_nHiggs
 
 float ak4_HT
 bool PassTrackVeto
 bool PassTauVeto
+bool hasNano
 float mbb
 float jup_mbb
 float jdown_mbb
@@ -64,6 +68,13 @@ float w_lumi_scale1fb
 float w_pu
 float w_L1
 float w_noBtagSF
+float w_btagHFUp
+float w_btagHFDown
+float w_btagLFUp
+float w_btagLFDown
+float w_higgsSF
+float w_higgsSFUp
+float w_higgsSFDown
 
 int njets
 
@@ -115,16 +126,29 @@ std::vector<float> ak4pfjets_pt_jdown
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
 
+int nFatJet
+
 std::vector<float> FatJet_pt
 std::vector<float> FatJet_phi
 std::vector<float> FatJet_eta
 std::vector<float> FatJet_deepTag_H
 std::vector<float> FatJet_deepTagMD_HbbvsQCD
+std::vector<float> FatJet_deepTagMD_bbvsLight
 std::vector<float> FatJet_btagHbb
 std::vector<float> FatJet_msoftdrop
 std::vector<float> FatJet_mass
 std::vector<float> FatJet_btagDDBvL
 std::vector<float> FatJet_btagDDBvL_noMD
+std::vector<float> FatJet_subJetIdx1
+std::vector<float> FatJet_subJetIdx2
+
+int nSubJet
+
+std::vector<float> SubJet_pt
+std::vector<float> SubJet_phi
+std::vector<float> SubJet_eta
+std::vector<float> SubJet_btagDeepB
+
 
 std::vector<float> ak8pfjets_deepdisc_hbb
 std::vector<float> ak8pfjets_pt
