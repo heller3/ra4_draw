@@ -3,6 +3,10 @@ int nvetoleps
 int evt
 int year
 int run
+
+bool hasNano
+int nHiggs
+
 float mt_met_lep
 float mt_met_lep_jup
 float mt_met_lep_jdown
@@ -37,14 +41,30 @@ bool hasNano
 float mbb
 float jup_mbb
 float jdown_mbb
+float jer_mbb
+float jerup_mbb
+float jerdown_mbb
+float jercdown_mbb
 float ptbb
+float jup_ptbb
+float jdown_ptbb
+float jer_ptbb
+float jerup_ptbb
+float jerdown_ptbb
+float jercdown_ptbb
 float mct
 float jup_mct
 float jdown_mct
+float jer_mct
+float jerup_mct
+float jerdown_mct
+float jercdown_mct
+
 float mass_stop
 float mass_lsp
 float weight
 float w_lumi
+float w_lumi_scale1fb
 float w_pu
 float w_L1
 float w_noBtagSF
@@ -100,6 +120,9 @@ std::vector<float> ak4pfjets_deepCSV
 std::vector<float> ak4pfjets_deepCSVc
 std::vector<float> ak4pfjets_deepCSVl
 std::vector<float> ak4pfjets_pt
+std::vector<float> ak4pfjets_genpt
+std::vector<float> ak4pfjets_pt_jup
+std::vector<float> ak4pfjets_pt_jdown
 std::vector<float> ak4pfjets_eta
 std::vector<float> ak4pfjets_phi
 
@@ -138,6 +161,8 @@ std::vector<int> ak4pfjets_hadron_flavor
 std::vector<int> ak4pfjets_parton_flavor
 
 std::vector<float> ak8pfjets_pt
+std::vector<float> ak8pfjets_pt_jdown
+std::vector<float> ak8pfjets_pt_jup
 std::vector<float> ak8pfjets_deepdisc_hbb
 std::vector<float> ak8pfjets_deepdisc_top
 std::vector<float> ak8pfjets_m

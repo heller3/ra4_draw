@@ -351,8 +351,8 @@ int main(int argc, char *argv[]){
 
   auto  all_other = {mc2016_dir+"slim_*WW*.root"};
 
-  //auto all_wjets = {mc2016_dir+"slim_*WW*.root", mc2016_dir+"slim_*WZ*.root",mc2017_dir+"slim_*WW*.root", mc2017_dir+"slim_*WZ*.root",mc2018_dir+"slim_*WW*.root", mc2018_dir+"slim_*WZ*.root", mc2016_dir+"slim_*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_*slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
-  auto all_wjets = {mc2016_dir+"slim_*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_*slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
+  auto all_wjets = {mc2016_dir+"slim_*WW*.root", mc2016_dir+"slim_*WZ*.root",mc2017_dir+"slim_*WW*.root", mc2017_dir+"slim_*WZ*.root",mc2018_dir+"slim_*WW*.root", mc2018_dir+"slim_*WZ*.root", mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
+  //auto all_wjets = {mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
 
   //// Contributions
   auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch"&&baselinef); // evt!=74125994
