@@ -131,15 +131,18 @@ int main(){
 
 
 
-  auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2017_dir+"slim*TTJets_1lep_top_f17v2*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2018_dir+"slim*TTJets_1lep_top_a18v1*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"slim*TTJets_1lep_*met80*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2017_dir+"slim*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2018_dir+"slim*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet_2l+"slim_TTJets_2lep_*met80*.root"};
+  //auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2017_dir+"slim*TTJets_1lep_top_f17v2*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2018_dir+"slim*TTJets_1lep_top_a18v1*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"slim*TTJets_1lep_*met80*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2017_dir+"slim*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2018_dir+"slim*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet_2l+"slim_TTJets_2lep_*met80*.root"};
+  auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s16v3*",mc2016_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2017_dir+"slim*TTJets_1lep_top_f17v2*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f17v2*",mc2017_dir_ttmet+"slim*TTJets_1lep_*met150*.root",mc2018_dir+"slim*TTJets_1lep_top_a18v1*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a18v1*",mc2018_dir_ttmet+"slim*TTJets_1lep_*met80*.root",mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2017_dir+"slim*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"slim*TTJets_2lep_*met150*.root",mc2018_dir+"slim*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet_2l+"slim_TTJets_2lep_*met80*.root",mc2016_dir+"slim_TTWJets*.root", mc2016_dir+"slim_TTZ*.root",mc2017_dir+"slim_TTWJets*.root", mc2017_dir+"slim_TTZ*.root",mc2018_dir+"slim_TTWJets*.root", mc2018_dir+"slim_TTZ*.root"};
   //auto all_top = {mc2016_dir+"slim*TTJets_1lep_top_s16v3*.root"};
   // auto all_top = {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"*_ST_*.root",mc2018_dir+"*_ST_*.root",mc2016_dir+"*TTJets_2lep_s16v3*.root", mc2016_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2017_dir+"*TTJets_2lep_f17v2*.root", mc2017_dir_ttmet+"*TTJets_2lep_*met150*.root",mc2018_dir+"*TTJets_2lep_a18v1*.root",mc2018_dir_ttmet+"*TTJets_2lep_*met80*.root"};
 
 
-  auto all_other = {mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root",mc2016_dir+"slim_TTWJets*.root", mc2016_dir+"slim_TTZ*.root",mc2017_dir+"slim_TTWJets*.root", mc2017_dir+"slim_TTZ*.root",mc2018_dir+"slim_TTWJets*.root", mc2018_dir+"slim_TTZ*.root"};
+  //auto all_other = {mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root",mc2016_dir+"slim_TTWJets*.root", mc2016_dir+"slim_TTZ*.root",mc2017_dir+"slim_TTWJets*.root", mc2017_dir+"slim_TTZ*.root",mc2018_dir+"slim_TTWJets*.root", mc2018_dir+"slim_TTZ*.root"};
   //auto all_other = {mc2016_dir+"slim*WW*.root"};
+  auto all_other = {mc2016_dir+"slim_W*H_HToBB_WToLNu*.root", mc2017_dir+"slim_W*H_HToBB_WToLNu*.root", mc2018_dir+"slim_W*H_HToBB_WToLNu*.root"};
 
-  auto all_wjets = {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"};
+  //auto all_wjets = {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root"};
+  auto all_wjets = {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root",mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"};
   //auto all_wjets = {mc2016_dir+"*slim*W*Jets_NuPt200_s16v*"};
 
   auto all_data = {data2016_dir+"slim*data_2016*singleel*.root",data2016_dir+"slim*data_2016*singlemu*.root",data2016_dir+"slim*data_2016*met*.root",data2017_dir+"slim*data_2017*singleel*.root",data2017_dir+"slim*data_2017*singlemu*.root",data2017_dir+"slim*data_2017*met*.root",data2018_dir+"slim*data_2018*singlemu*.root",data2018_dir+"slim*data_2018*met*.root",data2018_dir+"slim*data_2018*egamma*.root"};
@@ -222,7 +225,7 @@ int main(){
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
   vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; analysis_tag+="_4metbins";
-  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; analysis_tag+="boosted2bins_300_mct100_3jet200_loosembbCR_danielbabies_newtagger_40percent";
+  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; analysis_tag+="boosted2bins_300_mct100_3jet200_loosembbCR_danielbabies_newtagger_40percent_small";
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<450","pfmet>450"}; analysis_tag+="_4metbins_450";
  // if(original_analysis) vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200"}; 
 	//vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>350"};	analysis_tag+="_met350";
@@ -556,7 +559,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     // --------- write header
     ofstream fcard(outpath);
     int nbg=3;
-    int nsyst = 3 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
+    int nsyst = 90;//3 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
     fcard<<"imax "<<nbins/3<<"  number of channels\n";
     fcard<<"jmax "<<nbg<<"  number of backgrounds\n";
     fcard<<"kmax "<<nsyst<<"  number of nuisance parameters\n";
@@ -586,21 +589,28 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
 
 
     fcard<<endl;
+    vector<double> sys_rmct {1.15, 1.28, 1.18, 1.78, 1.28, 1.28, 1.15, 1.28, 1.18, 1.78, 1.28, 1.28};
+    vector<double> stat_rmct {1.14, 1.24, 1.15, 1.15, 1.4, 1.9, 1.1, 1.2, 1.4, 1.3, 1.38, 1.75};
     float sys_lumi = 1.05;
-    float sys_filler = 1.40;
+    //float sys_filler = 1.40;
+    float w_filler = 1.20;
+    float sys_W_HF = 1.20;
+    float sys_VV_xsec = 1.10;
+    float sys_other_xsec = 1.25;
+    float sys_Higgs = 1.08;
     float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<Form("%.2f",sys_lumi);
-    fcard<<endl<<left<<setw(wsyst)<<"bkg_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler);
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_lumi);
+    //fcard<<endl<<left<<setw(wsyst)<<"bkg_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    //for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler);
     fcard<<endl<<left<<setw(wsyst)<<"sig_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_sig_filler)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-";
     
     //MCT Control region stats
     for (size_t ibin(0); ibin<nbins; ibin+=3){
-    	if(!data_CR) fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[bkg][ibin+1].Yield())<<setw(wdist)<<" ";
-      else fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[data][ibin+1].Yield())<<setw(wdist)<<" ";
+    	if(!data_CR) fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin/3),allyields[bkg][ibin+1].Yield())<<setw(wdist)<<" ";
+      else fcard<<endl<<left<<setw(wname)<<Form("mCT_CR_stat%i gmN %.0f",static_cast<int>(ibin/3),allyields[data][ibin+1].Yield())<<setw(wdist)<<" ";
 
     	for(size_t j(0);j<1+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
     	fcard<<left<<setw(wbin)<<Form("%.5f",mct_transfer_factors[ibin/3][0]);
@@ -609,23 +619,85 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
 
     //W CR stats
     for (size_t ibin(0); ibin<nbins; ibin+=3){
-    	if(data_CR) fcard<<endl<<left<<setw(wname)<<Form("W_CR_stat%i gmN %.0f",static_cast<int>(ibin),W_0b_data[ibin/3])<<setw(wdist)<<" ";
-      else fcard<<endl<<left<<setw(wname)<<Form("W_CR_stat%i gmN %.0f",static_cast<int>(ibin),allyields[w][ibin+2].Yield())<<setw(wdist)<<" ";
+    	if(data_CR) fcard<<endl<<left<<setw(wname)<<Form("W_CR_stat%i gmN %.0f",static_cast<int>(ibin/3),W_0b_data[ibin/3])<<setw(wdist)<<" ";
+      else fcard<<endl<<left<<setw(wname)<<Form("W_CR_stat%i gmN %.0f",static_cast<int>(ibin/3),allyields[w][ibin+2].Yield())<<setw(wdist)<<" ";
 
     	for(size_t j(0);j<2+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
     	fcard<<left<<setw(wbin)<<Form("%.5f",W_transfer_factors[ibin/3][0]);
     	for(size_t j(0);j<(nbg+1)*nbins/3 - (3+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
-    //Uncorrelated BG systematics
-    for (size_t ibin(0); ibin<nbins; ibin+=3){
-      for(int k(1);k<=nbg;k++){
-      fcard<<endl<<left<<setw(wname)<<Form("bkg_flat%i_proc%i lnN",static_cast<int>(ibin),k)<<setw(wdist)<<" ";
-      
-       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
-       fcard<<left<<setw(wbin)<<Form("%.2f",sys_filler);
-       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    ////Uncorrelated BG systematics
+    //for (size_t ibin(0); ibin<nbins; ibin+=3){
+    //  for(int k(1);k<=nbg;k++){
+    //  fcard<<endl<<left<<setw(wname)<<Form("bkg_flat%i_proc%i lnN",static_cast<int>(ibin),k)<<setw(wdist)<<" ";
+    //  
+    //   for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+    //   fcard<<left<<setw(wbin)<<Form("%.2f",sys_filler);
+    //   for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    //}
+    //}
 
+    //Uncorrelated R_W stat systematics
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+      int k=2;
+      fcard<<endl<<left<<setw(wname)<<Form("W_stat%i_proc%i lnN",static_cast<int>(ibin/3),k)<<setw(wdist)<<" ";
+       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+       fcard<<left<<setw(wbin)<<Form("%.2f",w_filler);
+       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    }
+
+    //Uncorrelated signal stat uncertainties
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+      int k=0;
+      fcard<<endl<<left<<setw(wname)<<Form("sig_stat%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
+       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+       fcard<<left<<setw(wbin)<<Form("%.2f",1+sigyields[ibin].Uncertainty());
+       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    }
+    // other stat allyields[3][ibin].Uncertainty()
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+      int k=3;
+      fcard<<endl<<left<<setw(wname)<<Form("other_stat%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
+       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+       fcard<<left<<setw(wbin)<<Form("%.2f",1+allyields[3][ibin].Uncertainty());
+       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    }
+
+    // R_mCT systematic
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+      int k=1;
+      fcard<<endl<<left<<setw(wname)<<Form("rmct_%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
+       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+       fcard<<left<<setw(wbin)<<Form("%.2f",sys_rmct[ibin]);
+       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    }
+
+    // R_mCT statistic
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+      int k=1;
+      fcard<<endl<<left<<setw(wname)<<Form("rmct_stat_%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
+       for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
+       fcard<<left<<setw(wbin)<<Form("%.2f",stat_rmct[ibin]);
+       for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
+    }
+
+    fcard<<endl<<left<<setw(wsyst)<<"W_HF"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_W_HF)<<left<<setw(wbin)<<'-';
+    
+    fcard<<endl<<left<<setw(wsyst)<<"VV_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_VV_xsec)<<left<<setw(wbin)<<'-';
+
+    fcard<<endl<<left<<setw(wsyst)<<"other_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_other_xsec);
+
+    fcard<<endl<<left<<setw(wsyst)<<"HiggsTag"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    for (size_t ibin(0); ibin<nbins; ibin+=3){
+      if ((ibin/3)==1||(ibin/3)==3||(ibin/3)==7||(ibin/3)==9){
+        fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_Higgs)<<left<<setw(wbin)<<'-';
+      }
+      else {
+        fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-';
       }
     }
 
