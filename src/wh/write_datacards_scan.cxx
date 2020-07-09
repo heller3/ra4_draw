@@ -199,7 +199,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        if (mchi!=800) continue;
+        // if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -225,12 +225,12 @@ int main(){
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
   vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; analysis_tag+="_4metbins";
-  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; analysis_tag+="boosted2bins_300_mct100_3jet200_loosembbCR_danielbabies_newtagger_40percent_small";
+  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; analysis_tag+="fix_top_systs";
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<450","pfmet>450"}; analysis_tag+="_4metbins_450";
  // if(original_analysis) vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200"}; 
 	//vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>350"};	analysis_tag+="_met350";
   // if(metbins.size()>3) analysis_tag+="_4metbins_450";
-	vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<200.}; 
+	vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
 	vector<NamedFunc> njetbins_0b = {"ngoodjets==2","ngoodjets==3"}; // LeadingNonBJetPt_med doesn't make sense when there's only non b-jets 
   if (original_analysis) njetbins = {"ngoodjets==2"};
   // vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
@@ -669,7 +669,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
       int k=1;
       fcard<<endl<<left<<setw(wname)<<Form("rmct_%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
        for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
-       fcard<<left<<setw(wbin)<<Form("%.2f",sys_rmct[ibin]);
+       fcard<<left<<setw(wbin)<<Form("%.2f",sys_rmct[ibin/3]);
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
@@ -678,7 +678,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
       int k=1;
       fcard<<endl<<left<<setw(wname)<<Form("rmct_stat_%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
        for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
-       fcard<<left<<setw(wbin)<<Form("%.2f",stat_rmct[ibin]);
+       fcard<<left<<setw(wbin)<<Form("%.2f",stat_rmct[ibin/3]);
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
