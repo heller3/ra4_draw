@@ -42,11 +42,11 @@ int main(){
   auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
   auto dataComb = Process::MakeShared<Baby_full>("Combined Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
 
-  // SM WH // use 'other' color for now, should have one named SM_WH (although it doesn't really matter for tables)
-//  auto SM_WH_2016 = Process::MakeShared<Baby_full>("SM WH 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim_WplusH*root",mc2016_dir+"slim_WminusH*root"});
-//  auto SM_WH_2017 = Process::MakeShared<Baby_full>("SM WH 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim_WplusH*root",mc2017_dir+"slim_WminusH*root"});
-//  auto SM_WH_2018 = Process::MakeShared<Baby_full>("SM WH 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim_WplusH*root",mc2018_dir+"slim_WminusH*root"});
-//  auto SM_WH_Comb = Process::MakeShared<Baby_full>("SM WH Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim_WplusH*root",mc2016_dir+"slim_WminusH*root",mc2017_dir+"slim_WplusH*root",mc2017_dir+"slim_WminusH*root",mc2018_dir+"slim_WplusH*root",mc2018_dir+"slim_WminusH*root"});
+  // SM WH
+  auto SM_WH_2016 = Process::MakeShared<Baby_full>("SM WH 2016", Process::Type::background, colors("SMWH"),{mc2016_dir+"slim_WplusH*root",mc2016_dir+"slim_WminusH*root"});
+  auto SM_WH_2017 = Process::MakeShared<Baby_full>("SM WH 2017", Process::Type::background, colors("SMWH"),{mc2017_dir+"slim_WplusH*root",mc2017_dir+"slim_WminusH*root"});
+  auto SM_WH_2018 = Process::MakeShared<Baby_full>("SM WH 2018", Process::Type::background, colors("SMWH"),{mc2018_dir+"slim_WplusH*root",mc2018_dir+"slim_WminusH*root"});
+  auto SM_WH_Comb = Process::MakeShared<Baby_full>("SM WH Combined", Process::Type::background, colors("SMWH"),{mc2016_dir+"slim_WplusH*root",mc2016_dir+"slim_WminusH*root",mc2017_dir+"slim_WplusH*root",mc2017_dir+"slim_WminusH*root",mc2018_dir+"slim_WplusH*root",mc2018_dir+"slim_WminusH*root"});
 
   // all ttbar
   auto tt_2016_all = Process::MakeShared<Baby_full>("t#bar{t} (1,2l) 2016", Process::Type::background, colors("t1tttt"),{mc2016_dir+"slim*TTJets*root"}, "stitch");
@@ -119,15 +119,15 @@ int main(){
 //  auto signal_comb_700_1 = Process::MakeShared<Baby_full>("Combined Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*s16v3*.root",signal2017_dir+"slim_*f17v2*.root",signal2018_dir+"slim_*a18v1*.root"},"pass&&mass_stop==700&&mass_lsp==1");
   
   // Column combinations by year
-  vector<shared_ptr<Process> > sample_list_2016 = {data2016,tt_2016_all,/*tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,*/single_t_2016,wjets_2016,ttV_2016,diboson_2016};
-  vector<shared_ptr<Process> > sample_list_2017 = {data2017,tt_2017_all,/*tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,*/single_t_2017,wjets_2017,ttV_2017,diboson_2017};
-  vector<shared_ptr<Process> > sample_list_2018 = {data2018,tt_2018_all,/*tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,*/single_t_2018,wjets_2018,ttV_2018,diboson_2018};
-  vector<shared_ptr<Process> > sample_list_2016_nodata = {tt_2016_all,/*tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,*/single_t_2016,wjets_2016,ttV_2016,diboson_2016};
-  vector<shared_ptr<Process> > sample_list_2017_nodata = {tt_2017_all,/*tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,*/single_t_2017,wjets_2017,ttV_2017,diboson_2017};
-  vector<shared_ptr<Process> > sample_list_2018_nodata = {tt_2018_all,/*tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,*/single_t_2018,wjets_2018,ttV_2018,diboson_2018};
+  vector<shared_ptr<Process> > sample_list_2016 = {data2016,tt_2016_all,/*tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,*/single_t_2016,wjets_2016,ttV_2016,SM_WH_2016,diboson_2016};
+  vector<shared_ptr<Process> > sample_list_2017 = {data2017,tt_2017_all,/*tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,*/single_t_2017,wjets_2017,ttV_2017,SM_WH_2017,diboson_2017};
+  vector<shared_ptr<Process> > sample_list_2018 = {data2018,tt_2018_all,/*tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,*/single_t_2018,wjets_2018,ttV_2018,SM_WH_2018,diboson_2018};
+  vector<shared_ptr<Process> > sample_list_2016_nodata = {tt_2016_all,/*tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,*/single_t_2016,wjets_2016,ttV_2016,SM_WH_2016,diboson_2016};
+  vector<shared_ptr<Process> > sample_list_2017_nodata = {tt_2017_all,/*tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,*/single_t_2017,wjets_2017,ttV_2017,SM_WH_2017,diboson_2017};
+  vector<shared_ptr<Process> > sample_list_2018_nodata = {tt_2018_all,/*tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,*/single_t_2018,wjets_2018,ttV_2018,SM_WH_2018,diboson_2018};
   // Column combinations all years
-  vector<shared_ptr<Process> > sample_list_comb = {dataComb, tt_comb_all, /*tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met,*/ single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb};
-  vector<shared_ptr<Process> > sample_list_comb_nodata = {tt_comb_all, /*tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met,*/ single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb};
+  vector<shared_ptr<Process> > sample_list_comb = {dataComb, tt_comb_all, /*tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met,*/ single_t_Comb, wjets_Comb, ttV_Comb, SM_WH_Comb, diboson_Comb};
+  vector<shared_ptr<Process> > sample_list_comb_nodata = {tt_comb_all, /*tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met,*/ single_t_Comb, wjets_Comb, ttV_Comb, SM_WH_Comb, diboson_Comb};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
@@ -343,7 +343,7 @@ int main(){
           "nvetoleps>=1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
 }
   */
-  string plotPath = "mistag/mT";
+  string plotPath = "mistag/mT/SM_WH";
   double lumi2016 = 35.9;
   pm2016->MakePlots(lumi2016, plotPath);
   double lumi2017 = 41.6;

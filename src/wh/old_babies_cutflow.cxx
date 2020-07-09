@@ -85,18 +85,29 @@ int main(){
   auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
   auto dataComb = Process::MakeShared<Baby_full>("Combined Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
 
-  //ttbar
-  auto tt1l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_*.root",mc2016_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
-  auto tt2l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2016", Process::Type::background, colors("tt_2l"),{mc2016_dir+"slim*TTJets_2lep_*.root"},"stitch");
+  //ttbar // separated high met // no stitch
+  auto tt1l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_s*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s*"});//,"stitch");
+  auto tt2l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2016", Process::Type::background, colors("tt_2l"),{mc2016_dir+"slim*TTJets_2lep_s*.root"});//,"stitch");
+ 
+  auto tt1l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2017", Process::Type::background, colors("tt_1l"),{mc2017_dir+"slim*TTJets_1lep_top_f*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f*"});//,"stitch");
+  auto tt2l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2017", Process::Type::background, colors("tt_2l"),{mc2017_dir+"slim*TTJets_2lep_f*.root"});//,"stitch");
+ 
+  auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),{mc2018_dir+"slim*TTJets_1lep_top_a*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a*"});//,"stitch");
+  auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),{mc2018_dir+"slim*TTJets_2lep_a*.root"});//,"stitch");
 
-  auto tt1l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2017", Process::Type::background, colors("tt_1l"),{mc2017_dir+"slim*TTJets_1lep_top_*.root",mc2017_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
-  auto tt2l_2017 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2017", Process::Type::background, colors("tt_2l"),{mc2017_dir+"slim*TTJets_2lep_*.root"},"stitch");
-
-  auto tt1l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018", Process::Type::background, colors("tt_1l"),{mc2018_dir+"slim*TTJets_1lep_top_*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
-  auto tt2l_2018 = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018", Process::Type::background, colors("tt_2l"),{mc2018_dir+"slim*TTJets_2lep_*.root"},"stitch");
-
-  auto tt1l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (1l) Combined", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_*.root",mc2016_dir+"slim*TTJets_1lep_tbar_*",mc2017_dir+"slim*TTJets_1lep_top_*.root",mc2017_dir+"slim*TTJets_1lep_tbar_*",mc2018_dir+"slim*TTJets_1lep_top_*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*"},"stitch");
-  auto tt2l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (2l) Combined", Process::Type::background, colors("tt_2l"),{mc2016_dir+"slim*TTJets_2lep_*.root",mc2017_dir+"slim*TTJets_2lep_*.root",mc2018_dir+"slim*TTJets_2lep_*.root"},"stitch");
+  auto tt1l_2016_met = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016 met", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_*met*.root",mc2016_dir+"slim*TTJets_1lep_tbar_*met*"});//,"stitch");
+  auto tt2l_2016_met = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2016 met", Process::Type::background, colors("tt_2l"),{mc2016_dir+"slim*TTJets_2lep_*met*.root"});//,"stitch");
+									 
+  auto tt1l_2017_met = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2017 met", Process::Type::background, colors("tt_1l"),{mc2017_dir+"slim*TTJets_1lep_top_*met*.root",mc2017_dir+"slim*TTJets_1lep_tbar_*met*"});//,"stitch");
+  auto tt2l_2017_met = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2017 met", Process::Type::background, colors("tt_2l"),{mc2017_dir+"slim*TTJets_2lep_*met*.root"});//,"stitch");
+									 
+  auto tt1l_2018_met = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2018 met", Process::Type::background, colors("tt_1l"),{mc2018_dir+"slim*TTJets_1lep_top_*met*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*met*"});//,"stitch");
+  auto tt2l_2018_met = Process::MakeShared<Baby_full>("t#bar{t} (2l) 2018 met", Process::Type::background, colors("tt_2l"),{mc2018_dir+"slim*TTJets_2lep_*met*.root"});//,"stitch");
+ 
+  auto tt1l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (1l) Combined", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_s*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s*",mc2017_dir+"slim*TTJets_1lep_top_f*.root",mc2017_dir+"slim*TTJets_1lep_tbar_f*",mc2018_dir+"slim*TTJets_1lep_top_a*.root",mc2018_dir+"slim*TTJets_1lep_tbar_a*"});//,"stitch");
+  auto tt2l_Comb = Process::MakeShared<Baby_full>("t#bar{t} (2l) Combined", Process::Type::background, colors("tt_2l"),{mc2016_dir+"slim*TTJets_2lep_s*.root",mc2017_dir+"slim*TTJets_2lep_f*.root",mc2018_dir+"slim*TTJets_2lep_a*.root"});//,"stitch");
+  auto tt1l_Comb_met = Process::MakeShared<Baby_full>("t#bar{t} (1l) Combined met", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_*met*.root",mc2016_dir+"slim*TTJets_1lep_tbar_*met*",mc2017_dir+"slim*TTJets_1lep_top_*met*.root",mc2017_dir+"slim*TTJets_1lep_tbar_*met*",mc2018_dir+"slim*TTJets_1lep_top_*met*.root",mc2018_dir+"slim*TTJets_1lep_tbar_*met*"});//,"stitch");
+  auto tt2l_Comb_met = Process::MakeShared<Baby_full>("t#bar{t} (2l) Combined met", Process::Type::background, colors("tt_2l"),{mc2016_dir+"slim*TTJets_2lep_*met*.root",mc2017_dir+"slim*TTJets_2lep_*met*.root",mc2018_dir+"slim*TTJets_2lep_*met*.root"});//,"stitch");
 
   //WJets
   auto wjets_2016 = Process::MakeShared<Baby_full>("W+jets 2016", Process::Type::background, colors("wjets"), {mc2016_dir+"slim*_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root"},"stitch");
@@ -110,17 +121,17 @@ int main(){
   auto single_t_2018 = Process::MakeShared<Baby_full>("Single t 2018", Process::Type::background, colors("single_t"), {mc2018_dir+"slim*_ST_*.root"});
   auto single_t_Comb = Process::MakeShared<Baby_full>("Single t Combined", Process::Type::background, colors("single_t"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"});
 
-  //diboson
-//  auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root"});
-//  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root"});
-//  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
-//  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
-
-  // ttV
-//  auto ttV_2016 = Process::MakeShared<Baby_full>("t#bar{t}V 2016", Process::Type::background, colors("ttv"),{mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root"});
-//  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root"});
-//  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
-//  auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V Combined", Process::Type::background, colors("ttv"), {mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root",mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
+  //diboson // excluding 2017 TTWZ // excluding all ZZ
+  auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root"});
+  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*_WZ*.root",mc2017_dir+"slim*ZZ*.root"});
+  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
+  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*_WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});
+ 
+  // ttV // excluding TTZToLL_
+  auto ttV_2016 = Process::MakeShared<Baby_full>("t#bar{t}V 2016", Process::Type::background, colors("ttv"),{mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root"});
+  auto ttV_2017 = Process::MakeShared<Baby_full>("t#bar{t}V 2017", Process::Type::background, colors("ttv"), {mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZToLLNuNu*.root", mc2017_dir+"slim*_TTZToQQ*.root"});
+  auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
+  auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V Combined", Process::Type::background, colors("ttv"), {mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root",mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZToLLNuNu*.root",mc2017_dir+"slim*_TTZToQQ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
 
   //signals
   auto signal_2016_225_75 = Process::MakeShared<Baby_full>("2016 Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root"},"pass&&mass_stop==225&&mass_lsp==75");
@@ -139,20 +150,20 @@ int main(){
   auto signal_comb_700_1 = Process::MakeShared<Baby_full>("Combined Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*.root",signal2017_dir+"slim_*.root",signal2018_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
   
   // Column combinations by year
-  vector<shared_ptr<Process> > sample_list_2016 = {tt2l_2016,tt1l_2016,single_t_2016,wjets_2016,/*ttV_2016,diboson_2016,*/signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
-  vector<shared_ptr<Process> > sample_list_2017 = {tt2l_2017,tt1l_2017,single_t_2017,wjets_2017,/*ttV_2017,diboson_2017,*/signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
-  vector<shared_ptr<Process> > sample_list_2018 = {tt2l_2018,tt1l_2018,single_t_2018,wjets_2018,/*ttV_2018,diboson_2018,*/signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
+  vector<shared_ptr<Process> > sample_list_2016 = {tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
+  vector<shared_ptr<Process> > sample_list_2017 = {tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
+  vector<shared_ptr<Process> > sample_list_2018 = {tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
   // include data for CR
-  vector<shared_ptr<Process> > CR_sample_list_2016 = {data2016, tt2l_2016,tt1l_2016,single_t_2016,wjets_2016,/*ttV_2016,diboson_2016,*/signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
-  vector<shared_ptr<Process> > CR_sample_list_2017 = {data2017, tt2l_2017,tt1l_2017,single_t_2017,wjets_2017,/*ttV_2017,diboson_2017,*/signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
-  vector<shared_ptr<Process> > CR_sample_list_2018 = {data2018, tt2l_2018,tt1l_2018,single_t_2018,wjets_2018,/*ttV_2018,diboson_2018,*/signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2016 = {data2016, tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2017 = {data2017, tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2018 = {data2018, tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
   //vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb,single_t_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
   //vector<shared_ptr<Process> > sample_list_all_comb = {dataComb,tt2l_Comb,tt1l_Comb,single_t_Comb,wjets_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 
   // Column combinations all years
-  vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb, tt1l_Comb, single_t_Comb, wjets_Comb, /*ttV_Comb, diboson_Comb,*/ signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
+  vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
   // include data for CR
-  vector<shared_ptr<Process> > CR_sample_list_comb = {dataComb, tt2l_Comb, tt1l_Comb, single_t_Comb, wjets_Comb, /*ttV_Comb, diboson_Comb,*/ signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_comb = {dataComb, tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
 //  vector<shared_ptr<Process> > sample_list_comb = {/*dataComb,*/tt2l_Comb,/*tt1l_Comb,*/single_t_Comb,/*wjets_Comb,ttV_Comb, diboson_Comb,*/signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 //  vector<shared_ptr<Process> > sample_list_tt1l_comb = {dataComb,tt1l_Comb,signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 
@@ -188,42 +199,42 @@ int main(){
 
   // Making tables. Adding rows. 
   Table & cutflow_SR_2016 = pm.Push<Table>("cutflow_SR_2016", vector<TableRow>{
-      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+      TableRow("", WHLeptons==1&&basic_cut, 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("125$<$MET", WHLeptons==1&&basic_cut&&"pfmet>125", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200", 0, 0, "w_noBtagSF*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "w_noBtagSF*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "w_noBtagSF*w_pu"*yearWeight), 
 	}, sample_list_2016, false);
   Table & cutflow_SR_2017 = pm.Push<Table>("cutflow_SR_2017", vector<TableRow>{
-      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+      TableRow("", WHLeptons==1&&basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", WHLeptons==1&&basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
 	}, sample_list_2017, false);
   Table & cutflow_SR_2018 = pm.Push<Table>("cutflow_SR_2018", vector<TableRow>{
-      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+      TableRow("", WHLeptons==1&&basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", WHLeptons==1&&basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
 	}, sample_list_2018, false);
   Table & cutflow_SR_all = pm.Push<Table>("cutflow_SR_all", vector<TableRow>{
-      TableRow("", basic_cut, 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET", basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
-	//	TableRow("200$<$mct", basic_cut&&"mct>200", 0, 0, "weight*w_pu"*yearWeight),
-	//	TableRow("150$<$mt MET lep", basic_cut&&"mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),	
-	//	TableRow("90$<$mbb$<$150", basic_cut&&"mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight),
-	//	TableRow("2 good b tags", basic_cut&&"ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct", basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
-	//	TableRow("125$<$MET, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
-	//	TableRow("200$<$mct, 150$<$mt MET lep", basic_cut&&"mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
-	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
+      TableRow("", WHLeptons==1&&basic_cut, 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET", WHLeptons==1&&basic_cut&&"pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("200$<$mct", WHLeptons==1&&basic_cut&&"mct>200", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("150$<$mt MET lep", WHLeptons==1&&basic_cut&&"mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),	
+	//	TableRow("90$<$mbb$<$150", WHLeptons==1&&basic_cut&&"mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("2 good b tags", WHLeptons==1&&basic_cut&&"ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200", 0, 0, "weight*w_pu"*yearWeight), 
+	//	TableRow("125$<$MET, 150$<$mt MET lep", WHLeptons==1&&basic_cut&&"pfmet>125&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	//	TableRow("200$<$mct, 150$<$mt MET lep", WHLeptons==1&&basic_cut&&"mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150", 0, 0, "weight*w_pu"*yearWeight),
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150", 0, 0, "weight*w_pu"*yearWeight), 
+	TableRow("125$<$MET, 200$<$mct, 150$<$mt MET lep, 90$<$mbb$<$150, 2 good b tags", WHLeptons==1&&basic_cut&&"pfmet>125&&mct>200&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2", 0, 0, "weight*w_pu"*yearWeight), 
 //	TableRow("_____________________________________________________________________", "mct>10000"), // empty row
 //	TableRow("", basic_cut),
 //	TableRow("200$<$mct", basic_cut&&"mct>200"),
@@ -236,10 +247,10 @@ int main(){
   // Control Region(s) tables
   // 1. 3 veto leps, 2 good jets
   Table & cutflow_CR_2GoodJets_2016 = pm.Push<Table>("cutflow_CR_2GoodJets_2016", vector<TableRow>{
-      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("3 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("3 veto leps, 2 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("3 veto leps, 2 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("3 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("3 veto leps, 2 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==3&&ngoodjets==2&&pfmet>125", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
 	}, CR_sample_list_2016, false);
   Table & cutflow_CR_2GoodJets_2017 = pm.Push<Table>("cutflow_CR_2GoodJets_2017", vector<TableRow>{
       TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
@@ -261,10 +272,10 @@ int main(){
 	}, CR_sample_list_comb, false);
   // 2. 2 veto leps, 4 or 5 good jets
   Table & cutflow_CR_4_5GoodJets_2016 = pm.Push<Table>("cutflow_CR_4_5GoodJets_2016", vector<TableRow>{
-      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("2 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("2 veto leps, 4, 5 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5", 0, 0, "weight*w_pu"*yearWeight),
-	TableRow("2 veto leps, 4, 5 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", 0, 0, "weight*w_pu"*yearWeight),
+      TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("2 veto leps", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
+	TableRow("2 veto leps, 4, 5 good jets, 125$<$MET", WHLeptons==1&&basic_cut_CR&&"nvetoleps==2&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", 0, 0, "w_noBtagSF*w_pu"*yearWeight),
 	}, CR_sample_list_2016, false);
   Table & cutflow_CR_4_5GoodJets_2017 = pm.Push<Table>("cutflow_CR_4_5GoodJets_2017", vector<TableRow>{
       TableRow("", WHLeptons==1&&basic_cut_CR, 0, 0, "weight*w_pu"*yearWeight),

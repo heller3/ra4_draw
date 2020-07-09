@@ -122,19 +122,14 @@ int main(){
   vector<shared_ptr<Process> > sample_list_2016 = {data2016,tt_2016_all,/*tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,*/single_t_2016,wjets_2016,ttV_2016,diboson_2016};
   vector<shared_ptr<Process> > sample_list_2017 = {data2017,tt_2017_all,/*tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,*/single_t_2017,wjets_2017,ttV_2017,diboson_2017};
   vector<shared_ptr<Process> > sample_list_2018 = {data2018,tt_2018_all,/*tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,*/single_t_2018,wjets_2018,ttV_2018,diboson_2018};
-  vector<shared_ptr<Process> > sample_list_2016_nodata = {tt_2016_all,/*tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,*/single_t_2016,wjets_2016,ttV_2016,diboson_2016};
-  vector<shared_ptr<Process> > sample_list_2017_nodata = {tt_2017_all,/*tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,*/single_t_2017,wjets_2017,ttV_2017,diboson_2017};
-  vector<shared_ptr<Process> > sample_list_2018_nodata = {tt_2018_all,/*tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,*/single_t_2018,wjets_2018,ttV_2018,diboson_2018};
   // Column combinations all years
   vector<shared_ptr<Process> > sample_list_comb = {dataComb, tt_comb_all, /*tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met,*/ single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb};
-  vector<shared_ptr<Process> > sample_list_comb_nodata = {tt_comb_all, /*tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met,*/ single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb};
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
   log_lumi.Title(TitleType::preliminary)
     //    .Bottom(BottomType::ratio)
     .YAxis(YAxisType::log)
-    //    .Stack(StackType::data_norm)
-    .Stack(StackType::lumi_shapes)
+    .Stack(StackType::data_norm)
     .RatioMinimum(0.5).RatioMaximum(1.5) //
     .FileExtensions({"pdf","root","png"}); //
   PlotOpt lin_lumi = log_lumi().YAxis(YAxisType::linear);
@@ -155,49 +150,25 @@ int main(){
   PlotMaker * pmComb = new PlotMaker();
 
   //Preselection
-  NamedFunc basic_cut_SR = "pfmet>125&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2&&nvetoleps==1&&pass&&PassTrackVeto&&PassTauVeto&&hasNano>0"&&WHLeptons==1; 
-//  NamedFunc jets2_Higgs1_mt150_b2 = basic_cut_SR&&"ngoodjets==2"&&nHiggsFatJet250b2>=1&&"mt_met_lep>150";
-//  NamedFunc jets2_All_mt150_b2    = basic_cut_SR&&"ngoodjets==2"&&nFatJet250b2>=1&&"mtxo_met_lep>150";
-//  NamedFunc jets2_Higgs1_mt150_b2 = basic_cut_SR&&"ngoodjets==2"&&nHiggsFatJet250b2>=1&&"mt_met_lep>150";
-//  NamedFunc jets2_All_mt150_b2    = basic_cut_SR&&"ngoodjets==2"&&nFatJet250b2>=1&&"mtxo_met_lep>150";
-//  NamedFunc jets2_Higgs1_mt150_b2 = basic_cut_SR&&"ngoodjets==2"&&nHiggsFatJet250b2>=1&&"mt_met_lep>150";
-//  NamedFunc jets2_All_mt150_b2    = basic_cut_SR&&"ngoodjets==2"&&nFatJet250b2>=1&&"mtxo_met_lep>150";
+  NamedFunc basic_cut_SR = "pfmet>125&&mt_met_lep>150&&mbb>90&&mbb<150&&ngoodbtags==2&&nvetoleps==1&&pass&&PassTrackVeto&&PassTauVeto&&hasNano>0"&&WHLeptons==1; 
 
-  //  vector<NamedFunc> sels = {jets2_Higgs1_mt150_b2, jets2_All_mt150_b2};
-  vector<NamedFunc> sels_nodata = 
-    {basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150"&&nFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150"&&nFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150"&&nFatJet250b2>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150"&&nHiggsFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150"&&nHiggsFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150"&&nHiggsFatJet250b2>=1,
-     
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>50&&mt_met_lep<150"&&nFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>50&&mt_met_lep<150"&&nFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>50&&mt_met_lep<150"&&nFatJet250b2>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>50&&mt_met_lep<150"&&nHiggsFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>50&&mt_met_lep<150"&&nHiggsFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==2&&mt_met_lep>50&&mt_met_lep<150"&&nHiggsFatJet250b2>=1, 
+  vector<NamedFunc> sels = 
+    {basic_cut_SR&&"ngoodjets==2&&mct<200"&&nFatJet250b0>=1,
+     basic_cut_SR&&"ngoodjets==2&&mct<200"&&nFatJet250b1>=1,
+     basic_cut_SR&&"ngoodjets==2&&mct<200"&&nFatJet250b2>=1,
+     basic_cut_SR&&"ngoodjets==2&&mct<200"&&nHiggsFatJet250b0>=1,
+     basic_cut_SR&&"ngoodjets==2&&mct<200"&&nHiggsFatJet250b1>=1,
+     basic_cut_SR&&"ngoodjets==2&&mct<200"&&nHiggsFatJet250b2>=1, 
 
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>150"&&nFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>150"&&nFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>150"&&nFatJet250b2>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>150"&&nHiggsFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>150"&&nHiggsFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>150"&&nHiggsFatJet250b2>=1,
-
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>50&&mt_met_lep<150"&&nFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>50&&mt_met_lep<150"&&nFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>50&&mt_met_lep<150"&&nFatJet250b2>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>50&&mt_met_lep<150"&&nHiggsFatJet250b0>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>50&&mt_met_lep<150"&&nHiggsFatJet250b1>=1,
-     basic_cut_SR&&"ngoodjets==3&&mt_met_lep>50&&mt_met_lep<150"&&nHiggsFatJet250b2>=1,
+     basic_cut_SR&&"ngoodjets==3&&mct<200"&&nFatJet250b0>=1,
+     basic_cut_SR&&"ngoodjets==3&&mct<200"&&nFatJet250b1>=1,
+     basic_cut_SR&&"ngoodjets==3&&mct<200"&&nFatJet250b2>=1,
+     basic_cut_SR&&"ngoodjets==3&&mct<200"&&nHiggsFatJet250b0>=1,
+     basic_cut_SR&&"ngoodjets==3&&mct<200"&&nHiggsFatJet250b1>=1,
+     basic_cut_SR&&"ngoodjets==3&&mct<200"&&nHiggsFatJet250b2>=1,
    };
-  vector<NamedFunc> sels;
-  for(int i = 6 ; i < 12 ; i++) {sels.push_back(sels_nodata[i]);}
-  for(int i = 18; i < 24; i++) {sels.push_back(sels_nodata[i]);}
   // Weights
-  NamedFunc weight_2016  = "w_noBtagSF"*yearWeight;
+  //  NamedFunc weight_2016  = "w_noBtagSF"*yearWeight;
   NamedFunc weight_other = "weight"*yearWeight;
   // Met bins
   vector<string> metbins = {"1","pfmet>200"};
@@ -205,43 +176,13 @@ int main(){
   vector<PlotMaker *> pms = {pm2016, pm2017, pm2018, pmComb};
   // all years
   vector<string> years = {"y2016", "y2017", "y2018", "yComb"};
-  //  vector<string> years_nodata = {"y2016", "y2017", "y2018", "yComb"};
   // all samples
   vector<vector<shared_ptr<Process> > > samples_Run2 = {sample_list_2016,
 							sample_list_2017,
 							sample_list_2018,
 							sample_list_comb};
-  vector<vector<shared_ptr<Process> > > samples_Run2_nodata = {sample_list_2016_nodata,
-							       sample_list_2017_nodata,
-							       sample_list_2018_nodata,
-							       sample_list_comb_nodata};
 
-
-//  pm2016->Push<Hist1D>(Axis(20, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels[0] && metbins[0], samples_Run2[0], all_plot_types).Weight(weight_2016).Tag(years[0]);
-//  pm2016->Push<Hist1D>(Axis(20, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150" && metbins[0], samples_Run2[0], all_plot_types).Weight(weight_2016).Tag(years[0]);
-//  pm2016->Push<Hist1D>(Axis(20, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels[0], samples_Run2[0], all_plot_types).Weight(weight_2016).Tag(years[0]);
-//  pm2016->Push<Hist1D>(Axis(20, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), basic_cut_SR&&"ngoodjets==2&&mt_met_lep>150", samples_Run2[0], all_plot_types).Weight(weight_2016).Tag(years[0]);
-
-
-  // sels_nodata is comprehensive in its selection (high mT)
-  // so we are NOT allowed to use data
-  //  for (uint iyear = 0; iyear < years_nodata.size(); iyear++) {
-  for (uint iyear = 0; iyear < years.size(); iyear++) {
-    for (uint isel = 0; isel < sels_nodata.size(); isel++) {
-      if((isel == 6 ) || (isel == 7 ) || (isel == 8 ) || 
-	 (isel == 9 ) || (isel == 10) || (isel == 11) || 
-	 (isel == 18) || (isel == 19) || (isel == 20) || 
-	 (isel == 21) || (isel == 22) || (isel == 23)) {continue;} // skip low mt since it is done below
-      pms[iyear]->Push<Hist1D>(Axis(80, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels_nodata[isel] && metbins[0], samples_Run2_nodata[iyear], all_plot_types).Weight(weight_other).Tag(years[iyear]);
-//      if(iyear == 0) {
-// 	pms[iyear]->Push<Hist1D>(Axis(80, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels_nodata[isel] && metbins[0], samples_Run2_nodata[iyear], all_plot_types).Weight(weight_2016).Tag(years_nodata[iyear]);
-//      } else {
-// 	pms[iyear]->Push<Hist1D>(Axis(80, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels_nodata[isel] && metbins[0], samples_Run2_nodata[iyear], all_plot_types).Weight(weight_other).Tag(years_nodata[iyear]);
-//      }
-    }
-  }
-
-  // sels is NOT comprehensive in its selection (only low mT)
+  // sels is NOT comprehensive in its selection (only low mCT)
   // so we can use data
   for (uint iyear = 0; iyear < years.size(); iyear++) {
     for (uint isel = 0; isel < sels.size(); isel++) {
@@ -249,101 +190,12 @@ int main(){
 //      if(iyear == 0) {
 // 	pms[iyear]->Push<Hist1D>(Axis(80, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels[isel] && metbins[0], samples_Run2[iyear], all_plot_types).Weight(weight_2016).Tag(years[iyear]);
 //      } else {
-// 	pms[iyear]->Push<Hist1D>(Axis(80, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels[isel] && metbins[0], samples_Run2[iyear], all_plot_types).Weight(weight_other).Tag(years[iyear]);
+//	pms[iyear]->Push<Hist1D>(Axis(80, 0, 2000., "pfmet", "E_{T}^{miss} [GeV]"), sels[isel] && metbins[0], samples_Run2[iyear], all_plot_types).Weight(weight_other).Tag(years[iyear]);
 //      }
     }
   }
-  
 
-  //  pm2018.Push<Hist1D>(Axis(50, 0, 500., "pfmet", "E_{T}^{miss}} [GeV]"), basic_cut_SR && metbins[0], sample_list_2018, all_plot_types).Weight(weights[0]).Tag("y2018");
-  
-  /*
-  NamedFunc preselection = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=2&&pfmet>125&&mt_met_lep>50&&ngoodbtags>=1&&nloosebtags>=2"&& WHLeptons==1;
-  NamedFunc preselection_true = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50&&ngoodbtags>=1&&nloosebtags>=2"&& WHLeptons==1;
-  NamedFunc ttbar_sel = "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125&&ngoodbtags>=1&&nloosebtags>=2" && WHLeptons==1;
-  vector<string> weights = {"w_noBtagSF","w_noBtagSF*w_BtagSF_WH"};
-  vector<string> tag_list = {"no_btagSF","whBtagSF"};
-
-  vector<NamedFunc> sels = {preselection,preselection_true,ttbar_sel}; 
-
-    for(uint j=0;j<weights.size();j++){
-
-      //Preselection, N-1
-    pm.Push<Hist1D>(Axis(30, 0, 300., "mt_met_lep", "mT [GeV]"),
-        "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&ngoodbtags>=1&&nloosebtags>=2"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]); 
-
-    pm.Push<Hist1D>(Axis(30, 0, 300., "mct", "m_{CT} [GeV]"),
-        preselection_true, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]); 
-
-    pm.Push<Hist1D>(Axis(30, 0, 300., "mbb", "m_{bb} [GeV]"),
-      preselection_true, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]); 
-
-    pm.Push<Hist1D>(Axis(25, 125, 500., "pfmet", " E_{T}^{miss}[GeV]"),
-      preselection_true, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);   
-
-    pm.Push<Hist1D>(Axis(25, 0, 100., "leps_pt[0]", "Lepton p_{T} [GeV]"),
-      preselection_true, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);  
-
-    pm.Push<Hist1D>(Axis(5, 2, 7., "ngoodjets", "N_{jets}"),
-        "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=2&&pfmet>125&&mt_met_lep>50&&ngoodbtags>=1&&nloosebtags>=2"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "ngoodbtags", "N_{med deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "ngoodbtags", "N_{med deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1, sample_list, all_plot_types).Weight("w_noBtagSF*w_BtagSF_medmed").Tag("medmed");
-
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "nloosebtags", "N_{loose deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-  
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "nloosebtags", "N_{loose deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&ngoodbtags>=1&&pfmet>125&&mt_met_lep>50"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-    
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., WHLeptons, "N_{leptons}"),
-          "nvetoleps>=1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2&&pfmet>125&&mt_met_lep>50", sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-
-
-    //ttbar selection
-    pm.Push<Hist1D>(Axis(30, 0, 300., "mt_met_lep", "mT [GeV]"),
-        "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125&&ngoodbtags>=1&&nloosebtags>=2"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]); 
-
-    pm.Push<Hist1D>(Axis(30, 0, 300., "mct", "m_{CT} [GeV]"),
-        ttbar_sel, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]); 
-
-    pm.Push<Hist1D>(Axis(30, 0, 300., "mbb", "m_{bb} [GeV]"),
-      ttbar_sel, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]); 
-
-    pm.Push<Hist1D>(Axis(25, 125, 500., "pfmet", " E_{T}^{miss}[GeV]"),
-      ttbar_sel, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);   
-
-    pm.Push<Hist1D>(Axis(25, 20, 120., "leps_pt[0]", "Lepton p_{T} [GeV]"),
-      ttbar_sel, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);  
-
-    pm.Push<Hist1D>(Axis(5, 2, 7., "ngoodjets", "N_{jets}"),
-        "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=2&&pfmet>125&&ngoodbtags>=1&&nloosebtags>=2"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "ngoodbtags", "N_{med deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "nloosebtags", "N_{loose deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-    
-    pm.Push<Hist1D>(Axis(4, 0, 4., "ngoodbtags", "N_{med deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125"&& WHLeptons==1, sample_list, all_plot_types).Weight("w_noBtagSF*w_BtagSF_medmed").Tag("medmed");
-
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., "nloosebtags", "N_{loose deepCSV btags}"),
-          "nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125&&ngoodbtags>=1"&& WHLeptons==1, sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-    
-
-    pm.Push<Hist1D>(Axis(4, 0, 4., WHLeptons, "N_{leptons}"),
-          "nvetoleps>=1&&PassTrackVeto&&PassTauVeto&&ngoodjets>=4&&ngoodjets<=5&&pfmet>125", sample_list, all_plot_types).Weight(weights[j]).Tag(tag_list[j]);
-}
-  */
-  string plotPath = "mistag/mT";
+  string plotPath = "mistag/mCT";
   double lumi2016 = 35.9;
   pm2016->MakePlots(lumi2016, plotPath);
   double lumi2017 = 41.6;

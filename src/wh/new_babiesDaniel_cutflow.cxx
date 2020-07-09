@@ -41,21 +41,21 @@ int main(){
   double lumi = 137.2;
 
   // paths, new babies
-  string mc2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/s16v3/";
-  string mc2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/f17v2/";
-  string mc2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/a18v1/";
+  string mc2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/s16v3/";
+  string mc2017_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/f17v2/";
+  string mc2018_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/a18v1/";
 
-  string data2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/"; // slim_data_2016*.root
-  string data2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/"; // slim_data_2017*.root
-  string data2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/"; // slim_data_2018*.root
+  string data2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/"; // slim_data_2016*.root
+  string data2017_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/"; // slim_data_2017*.root
+  string data2018_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/"; // slim_data_2018*.root
 
-  string signal2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/"; // slim*SMS*.root
-  string signal2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/"; // slim*SMS*.root
-  string signal2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_05_27/"; // slim*SMS*.root
+  string signal2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/"; // slim*SMS*.root
+  string signal2017_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/"; // slim*SMS*.root
+  string signal2018_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_05_27/"; // slim*SMS*.root
 
-  string ZZ2016_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_06_02/s16v3/";
-  string ZZ2017_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_06_02/f17v2/";
-  string ZZ2018_dir = "/home/users/rheller/wh_babies/babies_v33_4_2020_06_02/a18v1/";
+//  string ZZ2016_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_06_02/s16v3/";
+//  string ZZ2017_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_06_02/f17v2/";
+//  string ZZ2018_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_06_02/a18v1/";
 
   std::string basic_cut = "pass&&nvetoleps==1&&PassTrackVeto&&PassTauVeto&&ngoodjets==2";
   std::string basic_cut_CR = "PassTrackVeto&&PassTauVeto";
@@ -77,6 +77,12 @@ int main(){
   auto data2017 = Process::MakeShared<Baby_full>("2017 Data", Process::Type::data, colors("data"),{data2017_dir+"slim_data_2017*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto data2018 = Process::MakeShared<Baby_full>("2018 Data", Process::Type::data, colors("data"),{data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
   auto dataComb = Process::MakeShared<Baby_full>("Combined Data", Process::Type::data, colors("data"),{data2016_dir+"slim_data_2016*.root",data2017_dir+"slim_data_2017*.root",data2018_dir+"slim_data_2018*.root"},"pass&&(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)"&&HasHEMevent==0.&&HasHEMjet==0.);
+
+  // SM WH // use 'other' color for now, should have one named SM_WH (although it doesn't really matter for tables)
+  auto SM_WH_2016 = Process::MakeShared<Baby_full>("SM WH 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim_WplusH*root",mc2016_dir+"slim_WminusH*root"});
+  auto SM_WH_2017 = Process::MakeShared<Baby_full>("SM WH 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim_WplusH*root",mc2017_dir+"slim_WminusH*root"});
+  auto SM_WH_2018 = Process::MakeShared<Baby_full>("SM WH 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim_WplusH*root",mc2018_dir+"slim_WminusH*root"});
+  auto SM_WH_Comb = Process::MakeShared<Baby_full>("SM WH Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim_WplusH*root",mc2016_dir+"slim_WminusH*root",mc2017_dir+"slim_WplusH*root",mc2017_dir+"slim_WminusH*root",mc2018_dir+"slim_WplusH*root",mc2018_dir+"slim_WminusH*root"});
 
   //ttbar // separated high met // no stitch
   auto tt1l_2016 = Process::MakeShared<Baby_full>("t#bar{t} (1l) 2016", Process::Type::background, colors("tt_1l"),{mc2016_dir+"slim*TTJets_1lep_top_s*.root",mc2016_dir+"slim*TTJets_1lep_tbar_s*"});//,"stitch");
@@ -114,11 +120,11 @@ int main(){
   auto single_t_2018 = Process::MakeShared<Baby_full>("Single t 2018", Process::Type::background, colors("single_t"), {mc2018_dir+"slim*_ST_*.root"});
   auto single_t_Comb = Process::MakeShared<Baby_full>("Single t Combined", Process::Type::background, colors("single_t"), {mc2016_dir+"slim*_ST_*.root",mc2017_dir+"slim*_ST_*.root",mc2018_dir+"slim*_ST_*.root"});
 
-  //diboson // excluding 2017 TTWZ // excluding all ZZ
-  auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root" , ZZ2016_dir+"slim*ZZTo*L*root"});//,mc2016_dir+"slim*ZZ*.root"});
-  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*_WZ*.root", ZZ2017_dir+"slim*ZZ*root"});//,mc2017_dir+"slim*ZZ*.root"});
-  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root" , ZZ2018_dir+"slim*ZZ*root"});//,mc2018_dir+"slim*ZZ*.root"});
-  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",/*mc2016_dir+"slim*ZZ*.root",*/mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*_WZ*.root"/*,mc2017_dir+"slim*ZZ*.root"*/,mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root"/*,mc2018_dir+"slim*ZZ*.root"*/, ZZ2016_dir+"slim*ZZTo*L*root",ZZ2017_dir+"slim*ZZ*root",ZZ2018_dir+"slim*ZZ*root"});
+  //diboson // excluding 2017 TTWZ // excluding all ZZ // putting ZZ back in
+  auto diboson_2016 = Process::MakeShared<Baby_full>("Diboson 2016", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root" , mc2016_dir+"slim*ZZ*.root"});
+  auto diboson_2017 = Process::MakeShared<Baby_full>("Diboson 2017", Process::Type::background, colors("other"),{mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*_WZ*.root", mc2017_dir+"slim*ZZ*.root"});
+  auto diboson_2018 = Process::MakeShared<Baby_full>("Diboson 2018", Process::Type::background, colors("other"),{mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root" , mc2018_dir+"slim*ZZ*.root"});
+  auto diboson_Comb = Process::MakeShared<Baby_full>("Diboson Combined", Process::Type::background, colors("other"),{mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*_WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"});//, ZZ2016_dir+"slim*ZZTo*L*root",ZZ2017_dir+"slim*ZZ*root",ZZ2018_dir+"slim*ZZ*root"});
 
   // ttV // excluding TTZToLL_
   auto ttV_2016 = Process::MakeShared<Baby_full>("t#bar{t}V 2016", Process::Type::background, colors("ttv"),{mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root"});
@@ -143,20 +149,20 @@ int main(){
   auto signal_comb_700_1 = Process::MakeShared<Baby_full>("Combined Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal2016_dir+"slim_*s16v3*.root",signal2017_dir+"slim_*f17v2*.root",signal2018_dir+"slim_*a18v1*.root"},"pass&&mass_stop==700&&mass_lsp==1");
   
   // Column combinations by year
-  vector<shared_ptr<Process> > sample_list_2016 = {tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
-  vector<shared_ptr<Process> > sample_list_2017 = {tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
-  vector<shared_ptr<Process> > sample_list_2018 = {tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
+  vector<shared_ptr<Process> > sample_list_2016 = {SM_WH_2016,tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
+  vector<shared_ptr<Process> > sample_list_2017 = {SM_WH_2017,tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
+  vector<shared_ptr<Process> > sample_list_2018 = {SM_WH_2018,tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
   // include data for CR
-  vector<shared_ptr<Process> > CR_sample_list_2016 = {data2016, tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
-  vector<shared_ptr<Process> > CR_sample_list_2017 = {data2017, tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
-  vector<shared_ptr<Process> > CR_sample_list_2018 = {data2018, tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2016 = {data2016,SM_WH_2016,tt2l_2016,tt1l_2016,tt2l_2016_met,tt1l_2016_met,single_t_2016,wjets_2016,ttV_2016,diboson_2016,signal_2016_225_75,signal_2016_700_1,signal_2016_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2017 = {data2017,SM_WH_2017,tt2l_2017,tt1l_2017,tt2l_2017_met,tt1l_2017_met,single_t_2017,wjets_2017,ttV_2017,diboson_2017,signal_2017_225_75,signal_2017_700_1,signal_2017_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_2018 = {data2018,SM_WH_2018,tt2l_2018,tt1l_2018,tt2l_2018_met,tt1l_2018_met,single_t_2018,wjets_2018,ttV_2018,diboson_2018,signal_2018_225_75,signal_2018_700_1,signal_2018_650_300};
   //vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb,single_t_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
   //vector<shared_ptr<Process> > sample_list_all_comb = {dataComb,tt2l_Comb,tt1l_Comb,single_t_Comb,wjets_Comb,ttV_Comb, diboson_Comb, signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 
   // Column combinations all years
-  vector<shared_ptr<Process> > sample_list_comb = {tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
+  vector<shared_ptr<Process> > sample_list_comb = {SM_WH_Comb, tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
   // include data for CR
-  vector<shared_ptr<Process> > CR_sample_list_comb = {dataComb, tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
+  vector<shared_ptr<Process> > CR_sample_list_comb = {SM_WH_Comb, dataComb, tt2l_Comb, tt1l_Comb, tt2l_Comb_met, tt1l_Comb_met, single_t_Comb, wjets_Comb, ttV_Comb, diboson_Comb, signal_comb_225_75, signal_comb_700_1, signal_comb_650_300};
 //  vector<shared_ptr<Process> > sample_list_comb = {/*dataComb,*/tt2l_Comb,/*tt1l_Comb,*/single_t_Comb,/*wjets_Comb,ttV_Comb, diboson_Comb,*/signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 //  vector<shared_ptr<Process> > sample_list_tt1l_comb = {dataComb,tt1l_Comb,signal_comb_225_75,signal_comb_700_1,signal_comb_650_300};
 
