@@ -52,7 +52,7 @@ void copy_file( const char* srce_file, const char* dest_file )
     std::ofstream dest( dest_file, std::ios::binary ) ;
     dest << srce.rdbuf() ;
 }
-void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors,vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
+void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors, vector<float> W_transfer_errs, vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
 
 int main(){
   gErrorIgnoreLevel=6000; // Turns off ROOT errors due to missing branches
@@ -155,6 +155,9 @@ int main(){
 
   auto proc_other = Process::MakeShared<Baby_full>("TTV and VV 2016-2018", Process::Type::background, kRed,all_other,baselinef);
 
+  auto all_sig = {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"};
+  //auto all_sig = {signal_dir2016+"slim*TChiWH*s16v3_1.root"};
+
   auto proc_sig = Process::MakeShared<Baby_full>("2016-2018 TChiWH(750,1)", Process::Type::signal, colors("t1tttt"),
   {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},"mass_stop==750&&mass_lsp==1"&&baselinef);
 
@@ -164,8 +167,7 @@ int main(){
     auto proc_sig_medium = Process::MakeShared<Baby_full>("2016-2018 TChiWH(350,150)", Process::Type::signal, colors("t1tttt"),
   {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},"mass_stop==350&&mass_lsp==150"&&baselinef);
 
-  auto proc_sig_all = Process::MakeShared<Baby_full>("2016-2018 TChiWH", Process::Type::signal, colors("t1tttt"),
-  {signal_dir2016+"slim*TChiWH*s16v3*.root",signal_dir2017+"slim*TChiWH*f17v2*.root",signal_dir2018+"slim*TChiWH*a18v1*.root"},baselinef);
+  auto proc_sig_all = Process::MakeShared<Baby_full>("2016-2018 TChiWH", Process::Type::signal, colors("t1tttt"), all_sig, baselinef);
 
 
   vector<shared_ptr<Process> > all_procs_bkg = {proc_data,proc_top,proc_wjets,proc_other};
@@ -199,7 +201,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        // if (mchi!=800) continue;
+         if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -509,7 +511,7 @@ int main(){
 		
       if(irow%3==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0],3)<< " +- "<<setw(7)<<RoundNumber(mct_transfer_errs[(irow-1)/3],3)<<", tot stat unc, MC CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[bkg][irow].Yield()),3) << ", CR data: "<<setw(7)<<allyields[data][irow].Yield()<<" "<< ", prediction:" << setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0] * allyields[data][irow].Yield() ,3)<<", tot stat unc, data CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[data][irow].Yield()),3) << endl;	
 
-      vector<double> W_0b_data {349, 595, 246, 154, 250, 96, 245, 352, 108, 65, 103, 39}; //should be somewhere else, just for test
+      vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; //should be somewhere else, just for test
       if(irow%3==0) cout<<"R_W ratio for bin  "<<(irow/3)<<": "<<setw(7)<<RoundNumber(W_transfer_factors[irow/3][0],3)<< " +- "<<setw(7)<<RoundNumber(W_transfer_errs[irow/3],3)<<", tot stat unc, prediction:" << setw(7)<<RoundNumber(W_transfer_factors[irow/3][0] * W_0b_data[irow/3] ,3) << endl;	// not sure why we wait for irow%3==1, but ok.
 
 	    // allyields[w] = yield_table->Yield(proc_wjets.get(), lumi);
@@ -522,7 +524,7 @@ int main(){
     cout<<"Now writing cards"<<endl;
 
     for(int isig=0;isig<nsig;isig++){
-       writeCard(bin_names,allyields,mct_transfer_factors, W_transfer_factors, sig_by_mass[isig],mass_tag[isig],analysis_tag);
+       writeCard(bin_names,allyields,mct_transfer_factors, W_transfer_factors, W_transfer_errs, sig_by_mass[isig],mass_tag[isig],analysis_tag);
     }
 	
   //double seconds = (chrono::duration<double>(chrono::high_resolution_clock::now() - begTime)).count();
@@ -536,7 +538,7 @@ int main(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors, vector<GammaParams> sigyields,TString mass_tag,TString analysis_tag){
+void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors, vector<float> W_transfer_errs, vector<GammaParams> sigyields,TString mass_tag,TString analysis_tag){
 
  	TString outpath = Form("statistics/%s/datacards/datacard_%s_.txt",analysis_tag.Data(),mass_tag.Data());
  	// if(boosted) outpath+="boosted_";
@@ -549,7 +551,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     uint nbins = bin_names.size();
 
     unsigned wname(21), wdist(2), wbin(12);
-    vector<double> W_0b_data {349, 595, 246, 154, 250, 96, 245, 352, 108, 65, 103, 39}; // has to be double later on
+    vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; // has to be double later on
     for (size_t ibin(0); ibin<nbins; ibin+=3) 
       if(bin_names[ibin].length() > wbin) wbin = bin_names[ibin].length();
     wbin+=1;
@@ -593,7 +595,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     vector<double> stat_rmct {1.14, 1.24, 1.15, 1.15, 1.4, 1.9, 1.1, 1.2, 1.4, 1.3, 1.38, 1.75};
     float sys_lumi = 1.05;
     //float sys_filler = 1.40;
-    float w_filler = 1.20;
+    //float w_filler = 1.20;
     float sys_W_HF = 1.20;
     float sys_VV_xsec = 1.10;
     float sys_other_xsec = 1.25;
@@ -641,18 +643,24 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     //Uncorrelated R_W stat systematics
     for (size_t ibin(0); ibin<nbins; ibin+=3){
       int k=2;
+      float W_stat=0;
       fcard<<endl<<left<<setw(wname)<<Form("W_stat%i_proc%i lnN",static_cast<int>(ibin/3),k)<<setw(wdist)<<" ";
        for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
-       fcard<<left<<setw(wbin)<<Form("%.2f",w_filler);
+       if (W_transfer_factors[ibin/3][0]>0) W_stat = W_transfer_errs[ibin/3]/W_transfer_factors[ibin/3][0];
+       else W_stat = 0;
+       fcard<<left<<setw(wbin)<<Form("%.2f", 1+W_stat);
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
     //Uncorrelated signal stat uncertainties
     for (size_t ibin(0); ibin<nbins; ibin+=3){
       int k=0;
+      float sig_stat=0;
       fcard<<endl<<left<<setw(wname)<<Form("sig_stat%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
        for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
-       fcard<<left<<setw(wbin)<<Form("%.2f",1+sigyields[ibin].Uncertainty());
+       if (sigyields[ibin].Yield()>0) sig_stat=sigyields[ibin].Uncertainty()/sigyields[ibin].Yield();
+       else sig_stat=0;
+       fcard<<left<<setw(wbin)<<Form("%.2f",1+sig_stat);
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
     // other stat allyields[3][ibin].Uncertainty()
