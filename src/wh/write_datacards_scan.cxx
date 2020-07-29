@@ -201,7 +201,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-         if (mchi!=800) continue;
+        // if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -511,7 +511,8 @@ int main(){
 		
       if(irow%3==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0],3)<< " +- "<<setw(7)<<RoundNumber(mct_transfer_errs[(irow-1)/3],3)<<", tot stat unc, MC CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[bkg][irow].Yield()),3) << ", CR data: "<<setw(7)<<allyields[data][irow].Yield()<<" "<< ", prediction:" << setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0] * allyields[data][irow].Yield() ,3)<<", tot stat unc, data CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[data][irow].Yield()),3) << endl;	
 
-      vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; //should be somewhere else, just for test
+      vector<double> W_0b_data {384, 664, 280, 288, 181, 107, 262, 382, 120, 114, 74, 40}; // fixed triggers in 0b
+      //vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; //should be somewhere else, just for test
       if(irow%3==0) cout<<"R_W ratio for bin  "<<(irow/3)<<": "<<setw(7)<<RoundNumber(W_transfer_factors[irow/3][0],3)<< " +- "<<setw(7)<<RoundNumber(W_transfer_errs[irow/3],3)<<", tot stat unc, prediction:" << setw(7)<<RoundNumber(W_transfer_factors[irow/3][0] * W_0b_data[irow/3] ,3) << endl;	// not sure why we wait for irow%3==1, but ok.
 
 	    // allyields[w] = yield_table->Yield(proc_wjets.get(), lumi);
@@ -551,7 +552,8 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     uint nbins = bin_names.size();
 
     unsigned wname(21), wdist(2), wbin(12);
-    vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; // has to be double later on
+    vector<double> W_0b_data {384, 664, 280, 288, 181, 107, 262, 382, 120, 114, 74, 40}; // fixed triggers in 0b
+    //vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; // has to be double later on
     for (size_t ibin(0); ibin<nbins; ibin+=3) 
       if(bin_names[ibin].length() > wbin) wbin = bin_names[ibin].length();
     wbin+=1;

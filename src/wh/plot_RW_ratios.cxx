@@ -282,7 +282,7 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
   line.SetLineStyle(3); line.SetLineWidth(1);
   line.DrawLine(minx, 1, maxx, 1);
   string syst_tag = "";
-  if(systematic_mode) syst_tag = "syst_";
+  if(systematic_mode) syst_tag = "syst_withH_";
   string fname="plots/ratio_"+syst_tag+CodeToPlainText(tag.Data())+"_"+CodeToPlainText(ytitle.Data())+"_"+plotdef.name.Data()+"_"+CodeToPlainText(plotdef.baseline.Name())+".pdf";
   can.SaveAs(fname.c_str());
   cout<<endl<<" open "<<fname<<endl;
@@ -351,8 +351,8 @@ int main(int argc, char *argv[]){
 
   auto  all_other = {mc2016_dir+"slim_*WW*.root"};
 
-  //auto all_wjets = {mc2016_dir+"slim_*WW*.root", mc2016_dir+"slim_*WZ*.root",mc2017_dir+"slim_*WW*.root", mc2017_dir+"slim_*WZ*.root",mc2018_dir+"slim_*WW*.root", mc2018_dir+"slim_*WZ*.root", mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
-  auto all_wjets = {mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
+  auto all_wjets = {mc2016_dir+"slim_*WW*.root", mc2016_dir+"slim_*WZ*.root",mc2017_dir+"slim_*WW*.root", mc2017_dir+"slim_*WZ*.root",mc2018_dir+"slim_*WW*.root", mc2018_dir+"slim_*WZ*.root", mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
+  //auto all_wjets = {mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
 
   //// Contributions
   auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch"&&baselinef); // evt!=74125994
@@ -502,25 +502,25 @@ int main(int argc, char *argv[]){
   vector<string> cuts;
   /////// Systematic weight mode //////
   if(systematic_mode){ // Same numerator and denominator, vary weights
-     weights= {  "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF * w_puUp" * yearWeight,
-                 "weight * w_higgsSF * w_puDown" * yearWeight,
-                 "weight * w_higgsSF* w_btagLFUp" * yearWeight,
-                 "weight * w_higgsSF* w_btagLFDown" * yearWeight,
-                 "weight * w_higgsSF* w_btagHFUp" * yearWeight,
-                 "weight * w_higgsSF* w_btagHFDown" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight * (1+0.2*hasGenBs),
-                 "weight * w_higgsSF" * yearWeight * (1-0.2*hasGenBs),
-                 "weight * w_higgsSFUp" * yearWeight,
-                 "weight * w_higgsSFDown" * yearWeight,
-                 "weight * w_higgsSF" * VV_up * yearWeight,
-                 "weight * w_higgsSF" * VV_down * yearWeight,
+     weights= {  "weight " * yearWeight,
+                 "weight  * w_puUp" * yearWeight,
+                 "weight  * w_puDown" * yearWeight,
+                 "weight * w_btagLFUp" * yearWeight,
+                 "weight * w_btagLFDown" * yearWeight,
+                 "weight * w_btagHFUp" * yearWeight,
+                 "weight * w_btagHFDown" * yearWeight,
+                 "weight " * yearWeight,
+                 "weight " * yearWeight,
+                 "weight " * yearWeight,
+                 "weight " * yearWeight,
+                 "weight " * yearWeight * (1+0.2*hasGenBs),
+                 "weight " * yearWeight * (1-0.2*hasGenBs),
+                 "weight " * yearWeight * higgsMistagSFUp,
+                 "weight " * yearWeight * higgsMistagSFDown,
+                 "weight " * VV_up * yearWeight,
+                 "weight " * VV_down * yearWeight,
                   };
-     tag+="wjets1OnlyW_";
+     tag+="wjets1_";
      leglabels = {"Nominal", "PU up", "PU up/down", "b-tag mistag up","b-tag mistag up/down","b-tag HF up","b-tag HF up/down", "JES up", "JES up/down", "MET res up", "MET res up/down", "true b up", "true b up/down", "Higgs up", "Higgs up/down", "VV up", "VV up/down"};
 
     // theory uncertainties (q2, alpha_s, PDF, ISR) tbd.

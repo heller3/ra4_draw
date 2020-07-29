@@ -129,6 +129,7 @@ std::vector<float> ak4pfjets_phi
 int nFatJet
 
 std::vector<float> FatJet_pt
+std::vector<float> FatJet_pt_nom
 std::vector<float> FatJet_phi
 std::vector<float> FatJet_eta
 std::vector<float> FatJet_deepTag_H

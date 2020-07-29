@@ -37,6 +37,9 @@ namespace WH_Functions{
   extern const NamedFunc nanoWeight;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc nBTagInFat;
+  extern const NamedFunc higgsMistagSF;
+  extern const NamedFunc higgsMistagSFUp;
+  extern const NamedFunc higgsMistagSFDown;
   extern const NamedFunc OneDoubleBFat;
   extern const NamedFunc OneDoubleBFatNano;
   extern const NamedFunc OneDoubleBFatNanoV0;
