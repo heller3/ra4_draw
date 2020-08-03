@@ -8,22 +8,38 @@
 namespace WH_Functions{
 
   // Miscellaneous
+  extern const NamedFunc pass_any_mt_variation;
+  extern const NamedFunc pass_any_met_variation;
+  extern const NamedFunc pass_any_njets_variation;
+  extern const NamedFunc pass_any_nb_variation;
   extern const NamedFunc nTightb;
+  extern const NamedFunc nTightb_jup;
+  extern const NamedFunc nTightb_jdown;
   extern const NamedFunc nMedb;
+  extern const NamedFunc nMedb_jup;
+  extern const NamedFunc nMedb_jdown;
   extern const NamedFunc nLooseb;
+  extern const NamedFunc nLooseb_jup;
+  extern const NamedFunc nLooseb_jdown;
   extern const NamedFunc genmct;
+  extern const NamedFunc mct_genpt;
   extern const NamedFunc ST_up;
   extern const NamedFunc ST_off;
   extern const NamedFunc ST_down;
   extern const NamedFunc fake_up;
   extern const NamedFunc fake_down;
+  extern const NamedFunc VV_up;
+  extern const NamedFunc VV_down;
   extern const NamedFunc ttbar_genmet_fix;
   extern const NamedFunc ttbar_genmet_antifix;
   extern const NamedFunc failTauVetos;
   extern const NamedFunc yearWeight;
+  extern const NamedFunc nanoWeight;
   extern const NamedFunc HasMedLooseCSV;
   extern const NamedFunc nBTagInFat;
   extern const NamedFunc OneDoubleBFat;
+  extern const NamedFunc OneDoubleBFatNano;
+  extern const NamedFunc OneDoubleBFatNanoV0;
   extern const NamedFunc HasOnHiggsJet;
   extern const NamedFunc HasBoostedHiggs;
   extern const NamedFunc HasBoostedHiggsNoLepton;
@@ -64,6 +80,20 @@ namespace WH_Functions{
   extern const NamedFunc nDeepMedCvBTagged;
   extern const NamedFunc nDeepTightCTagged;
   extern const NamedFunc nDeepTightCvBTagged;
+  extern const NamedFunc MediumMDHiggsTag_msoftdrop;
+  extern const NamedFunc MediumMDHiggsTag_mass;
+  extern const NamedFunc LooseMDHiggsTag_msoftdrop;
+  extern const NamedFunc MediumMDHiggsTag_m;
+  extern const NamedFunc MediumMDHiggsTag_pt;
+  extern const NamedFunc MediumMDHiggsTag_MDHscore;
+  extern const NamedFunc MediumMDHiggsTag_Hscore;
+  extern const NamedFunc nMediumMDHiggsTag;
+  extern const NamedFunc HasMediumMDHiggsTag;
+  extern const NamedFunc HasMediumMDHiggsTag_medPt;
+  extern const NamedFunc HasMediumMDBBTag_medPt;
+  extern const NamedFunc nMediumHiggsTag;
+  extern const NamedFunc HasMediumHiggsTag;
+  extern const NamedFunc HasHbbTag;
   extern const NamedFunc nAK8jets;
   extern const NamedFunc nHiggsTag;
   extern const NamedFunc max_ak8pfjets_deepdisc_hbb;
@@ -74,7 +104,7 @@ namespace WH_Functions{
   extern const NamedFunc WHElSigEff;
   extern const NamedFunc NBJets;
   extern const NamedFunc nRealBs;
-  extern const NamedFunc nRealBs2;
+  extern const NamedFunc nRealBsfromTop;
   extern const NamedFunc nRealBtags;
   extern const NamedFunc nGenLightLeps;
   extern const NamedFunc LostHadTaus;
@@ -82,6 +112,7 @@ namespace WH_Functions{
   extern const NamedFunc etaLostLeps;
   extern const NamedFunc causeLostLeps;
   extern const NamedFunc FatJet_HighestHScore;
+  extern const NamedFunc FatJet_HighestMDHScore;
   extern const NamedFunc FatJet_ClosestMSD;
   extern const NamedFunc sortedJetsPt_Leading;
   extern const NamedFunc sortedJetsPt_subLeading;
@@ -89,6 +120,7 @@ namespace WH_Functions{
   extern const NamedFunc sortedJetsCSV_subLeading;
   extern const NamedFunc sortedJetsCSV_deltaR;
   extern const NamedFunc nEventsGluonSplit;
+  extern const NamedFunc hasGenBs;
   extern const NamedFunc nGenBs;
   extern const NamedFunc nGenBsFromGluons;
   extern const NamedFunc nGenBs_ptG15;
@@ -123,6 +155,7 @@ namespace WH_Functions{
   extern const NamedFunc W_pt_lep_mht;
   extern const NamedFunc mt_lep_mht;
   extern const NamedFunc mt_lep_met_rec;
+  extern const NamedFunc dijet_mass;
   extern const NamedFunc dilepton_mass;
   extern const NamedFunc dilepton_pt;
   extern const NamedFunc elPt;
@@ -156,6 +189,9 @@ namespace WH_Functions{
   extern const NamedFunc genPt_ak8_higgsTagger;
 
 
+  extern const NamedFunc max_genjet_bquark_pt_ratio;
+  extern const NamedFunc dR_jet_bquark_max_pt_ratio;
+
 
   // Basic Jet Pt
   extern const NamedFunc LeadingJetPt;
@@ -170,6 +206,8 @@ namespace WH_Functions{
   extern const NamedFunc LeadingRealNonBJetPt;
   extern const NamedFunc LeadingNonBJetPt_med;
   extern const NamedFunc LeadingFakeNonBJetPt_med;
+  extern const NamedFunc LeadingNonBJetPt_med_jup;
+  extern const NamedFunc LeadingNonBJetPt_med_jdown;
   extern const NamedFunc LeadingRealNonBJetPt_med;
 
   // Funcs to look at number of B-tags which are fakes
