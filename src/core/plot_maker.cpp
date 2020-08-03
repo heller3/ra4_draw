@@ -1,8 +1,6 @@
 /*! \class PlotMaker
-
   \brief Organizes efficient production of plots with single loop over each
   process
-
   \link HistoStack HistoStacks\endlink are added to the PlotMaker using
   PlotMaker::AddPlot(). Once all desired plots have been added, a call to
   PlotMaker::MakePlots() determines the full set of \link Process
@@ -48,7 +46,6 @@ PlotMaker::PlotMaker():
 }
 
 /*!\brief Prints all added plots with given luminosity
-
   \param[in] luminosity Integrated luminosity with which to draw plots
 */
 void PlotMaker::MakePlots(double luminosity,
@@ -75,6 +72,7 @@ void PlotMaker::GetYields(){
 
   auto babies = GetBabies();
   size_t num_threads = multithreaded_ ? min(babies.size(), static_cast<size_t>(thread::hardware_concurrency())) : 1;
+  if(num_threads >=9) num_threads=8;
   cout << "Processing " << babies.size() << " babies with " << num_threads << " threads." << endl;
 
   long num_entries = 0;

@@ -3,11 +3,24 @@ int nvetoleps
 int evt
 int year
 int run
+
+bool hasNano
+int nHiggs
+
 float mt_met_lep
+float mt_genmet_lep
+float mt_met_lep_resup
+float mt_met_lep_resdown
+float mt_met_lep_jup
+float mt_met_lep_jdown
 float pfmet
 float pfmet_uncorr
 float pfmet_phi
 float pfmet_uncorr_phi
+float pfmet_resup
+float pfmet_resdown
+float pfmet_jup
+float pfmet_jdown
 float genmet
 int ngoodjets
 int ngoodbtags
@@ -19,8 +32,18 @@ float ak4_HT
 bool PassTrackVeto
 bool PassTauVeto
 float mbb
+float jup_mbb
+float jdown_mbb
+float jer_mbb
+float jerup_mbb
+float jerdown_mbb
 float ptbb
 float mct
+float jup_mct
+float jdown_mct
+float jer_mct
+float jerup_mct
+float jerdown_mct
 float mass_stop
 float mass_lsp
 float weight
@@ -35,6 +58,39 @@ float w_BtagSF_medmed
 float w_BtagSF_medloose
 float w_BtagSF_WH
 float w_L1
+float w_ISRnjets
+
+
+float trig_eff
+float w_btagHFUp
+float w_btagHFDown
+float w_btagLFUp
+float w_btagLFDown
+float w_btagFSUp
+float w_btagFSDown
+float w_lepSFUp
+float w_lepSFDown
+float w_lepFSSFUp
+float w_lepFSSFDown
+float w_topPtSFUp
+float w_topPtSFDown
+float w_pdfUp
+float w_pdfDown
+float w_alphasUp
+float w_alphasDown
+float w_q2Up
+float w_q2Down
+float w_ISRUp
+float w_ISRDown
+float w_xsecUp
+float w_xsecDown
+float w_puUp
+float w_puDown
+float w_tauSFUp
+float w_tauSFDown
+float w_L1prefireUp
+float w_L1prefireDown
+float w_lumi_scale1fb
 
 std::vector<float> ak4pfjets_CSV
 std::vector<float> ak4pfjets_deepCSV
@@ -54,6 +110,8 @@ std::vector<float> FatJet_msoftdrop
 std::vector<float> FatJet_mass
 std::vector<float> FatJet_btagDDBvL
 std::vector<float> FatJet_btagDDBvL_noMD
+std::vector<float> FatJet_genPt
+std::vector<float> FatJet_pt_nom
 
 std::vector<float> ak8pfjets_deepdisc_hbb
 std::vector<float> ak8pfjets_pt
