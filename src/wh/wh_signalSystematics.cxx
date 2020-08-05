@@ -88,7 +88,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        //if(mchi!=750) continue;
+        //if(mchi!=175) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -502,12 +502,22 @@ if(single_thread) pmcomb->multithreaded_ = false;
 
         Table * yield_table = static_cast<Table*>(pmcomb->Figures()[iTable].get());
         yields[iProc] = yield_table->Yield(sample_list_comb[iProc].get(), lumicomb);
-        resultYield = (yields[iProc][iVar].Yield()-yields[iProc][0].Yield())/(yields[iProc][0].Yield());
+        resultYield = 1.0+((yields[iProc][iVar].Yield()-yields[iProc][0].Yield())/(yields[iProc][0].Yield()));
+
+        if(resultYield>2.0){
+          resultYield = 2;
+        }else if(resultYield<0.0){
+          resultYield = 0;
+        }else if(resultYield!=resultYield){
+          resultYield = 0;
+        }
 
         outFile << resultYield << " ";
 
       }//for loop over variations/rows
+      outFile << endl;
     }//for loop over 12 signal regions
+    outFile << endl;
   }//for loop over signal mass points
 
   outFile.close();
