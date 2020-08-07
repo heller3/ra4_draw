@@ -503,7 +503,7 @@ int main(){
 	    cout<<bin_names[irow]<<", MC: "    <<setw(7)<<RoundNumber(allyields[bkg][irow].Yield(),3)<<" +- "<<setw(7)<<RoundNumber(allyields[bkg][irow].Uncertainty(), 3);
 	    //cout<<"allyields "<<allyields[bkg]  [idens]<<endl;
 	    // allyields[top] = yield_table->Yield(proc_top.get(), lumi);
-		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3)<<" ";
+		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3)<<" +- "<<setw(7)<<RoundNumber(allyields[top][irow].Uncertainty(), 3);;
 		  cout<<", W: "    <<setw(7)<<RoundNumber(allyields[w][irow].Yield(), 3)<<endl;
 		  // cout<<", signal NC: "    <<setw(7)<<RoundNumber(sigyields[0][irow].Yield(), 3);
 		  // cout<<", signal medium: "    <<setw(7)<<RoundNumber(sigyields[1][irow].Yield(), 3);
@@ -591,7 +591,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
 
 
     fcard<<endl;
-    vector<double> sys_rmct {1.15, 1.28, 1.18, 1.78, 1.28, 1.28, 1.15, 1.28, 1.18, 1.78, 1.28, 1.28};
+    vector<double> sys_rmct {1.15, 1.28, 1.18, 1.80, 1.35, 1.35, 1.15, 1.28, 1.18, 1.80, 1.35, 1.35};
     vector<double> stat_rmct {1.14, 1.24, 1.15, 1.15, 1.4, 1.9, 1.1, 1.2, 1.4, 1.3, 1.38, 1.75};
     float sys_lumi = 1.05;
     //float sys_filler = 1.40;
