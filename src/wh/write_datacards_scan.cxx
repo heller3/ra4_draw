@@ -43,6 +43,7 @@ namespace{
   bool original_analysis=false;
   bool dilep_mode=false;
   bool data_CR=true;
+  bool blind=true;
   enum Bkgs {bkg, top, w, other, data};
 
 }
@@ -149,7 +150,9 @@ int main(){
   //auto all_data = {data2016_dir+"slim*data_2016*singleel*.root"};
 
   //// Contributions
-  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&"mct<=200 && (HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  NamedFunc data_blind_sel = "mct<=200&&";
+  if(!blind) data_blind_sel ="1";
+  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&data_blind_sel&&"(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
   auto proc_top = Process::MakeShared<Baby_full>("top 2016-2018", Process::Type::background, kRed,all_top,"stitch"&&baselinef);
 
@@ -570,7 +573,8 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<bin_names[ibin];
     fcard<<endl<<left<<setw(wname)<<"observation"<<setw(wdist)<<" ";
     
-    if(!discovery_mode) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield(),digit);
+    if(!blind) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[data][ibin].Yield(),digit);
+    else if(!discovery_mode) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield(),digit);
  	  else for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield()+sigyields[ibin].Yield(),digit);
 
     fcard<<endl<<endl<<left<<setw(wname)<<"bin"<<setw(wdist)<<" ";
