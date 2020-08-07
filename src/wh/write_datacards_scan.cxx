@@ -601,7 +601,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     float sys_W_HF = 1.20;
     float sys_VV_xsec = 1.10;
     float sys_other_xsec = 1.25;
-    float sys_Higgs = 1.08;
+    float sys_Higgs = 1.15;
     float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
@@ -703,7 +703,8 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
 
     fcard<<endl<<left<<setw(wsyst)<<"HiggsTag"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3){
-      if ((ibin/3)==1||(ibin/3)==3||(ibin/3)==7||(ibin/3)==9){
+      //if ((ibin/3)==1||(ibin/3)==3||(ibin/3)==7||(ibin/3)==9){
+      if (true){
         fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_Higgs)<<left<<setw(wbin)<<'-';
       }
       else {
