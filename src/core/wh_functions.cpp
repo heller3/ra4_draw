@@ -1086,6 +1086,68 @@ float deepTag2018 = 0.8365;
       return nwhleptons;
     });
 
+  const NamedFunc WHMuonSigEff("WHMuonSigEff",[](const Baby &b) -> NamedFunc::VectorType{
+      double nMuonsBarrel = 0;
+      double nMuonsEndcap = 0;
+      double nMuons = 0;
+
+      vector< double > muonEtaCountsVector;
+      
+      if (abs(b.lep1_pdgid())==13&&b.leps_pt()->at(0)>25&&b.lep1_relIso()*b.leps_pt()->at(0)<5){
+        nMuons++;
+        if(abs(b.leps_eta()->at(0))<=1.442) nMuonsBarrel++;
+        if(abs(b.leps_eta()->at(0))>1.442) nMuonsEndcap++;
+      }
+
+      if (b.leps_pt()->size()==2){
+	       //if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>30&&b.lep2_relIso()*b.leps_pt()->at(1)<5) nwhleptons++;
+	       //if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>25&&b.lep2_relIso()*b.leps_pt()->at(1)<5&&abs(b.leps_eta()->at(1))<2.1) nwhleptons++;
+	       
+         if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>25&&b.lep2_relIso()*b.leps_pt()->at(1)<5){
+           nMuons++;
+           if(abs(b.leps_eta()->at(0))<=1.442) nMuonsBarrel++;
+           if(abs(b.leps_eta()->at(0))>1.442) nMuonsEndcap++;
+         }
+      }
+
+      muonEtaCountsVector.push_back(nMuons);
+      muonEtaCountsVector.push_back(nMuonsBarrel);
+      muonEtaCountsVector.push_back(nMuonsEndcap);
+      
+      return muonEtaCountsVector;
+    });
+
+  const NamedFunc WHElSigEff("WHElSigEff",[](const Baby &b) -> NamedFunc::VectorType{
+      double nElesBarrel = 0;
+      double nElesEndcap = 0;
+      double nEles = 0;
+
+      vector< double > EleEtaCountsVector;
+      
+      if (abs(b.lep1_pdgid())==11&&b.leps_pt()->at(0)>30&&b.lep1_relIso()*b.leps_pt()->at(0)<5){
+        nEles++;
+        if(abs(b.leps_eta()->at(0))<=1.442) nElesBarrel++;
+        if(abs(b.leps_eta()->at(0))>1.442) nElesEndcap++;
+      }
+
+      if (b.leps_pt()->size()==2){
+	       //if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>30&&b.lep2_relIso()*b.leps_pt()->at(1)<5) nwhleptons++;
+	       //if (abs(b.lep2_pdgid())==13&&b.leps_pt()->at(1)>25&&b.lep2_relIso()*b.leps_pt()->at(1)<5&&abs(b.leps_eta()->at(1))<2.1) nwhleptons++;
+	       
+         if (abs(b.lep2_pdgid())==11&&b.leps_pt()->at(1)>30&&b.lep2_relIso()*b.leps_pt()->at(1)<5){
+           nEles++;
+           if(abs(b.leps_eta()->at(0))<=1.442) nElesBarrel++;
+           if(abs(b.leps_eta()->at(0))>1.442) nElesEndcap++;
+         }
+      }
+
+      EleEtaCountsVector.push_back(nEles);
+      EleEtaCountsVector.push_back(nElesBarrel);
+      EleEtaCountsVector.push_back(nElesEndcap);
+      
+      return EleEtaCountsVector;
+    });
+
   const NamedFunc nRealBs("nRealBs",[](const Baby &b) -> NamedFunc::ScalarType{
       int nbquarks=0;
       for(unsigned i(0); i<b.ak4pfjets_parton_flavor()->size(); i++){
@@ -3086,6 +3148,212 @@ float deepTag2018 = 0.8365;
     }//Close if
     return pt;
 
+    });
+
+  const NamedFunc pfmet_div_genmet("pfmet_div_genmet",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet()/b.genmet();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_resup_div_genmet("pfmet_resup_div_genmet",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet_resup()/b.genmet();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_resdown_div_genmet("pfmet_resdown_div_genmet",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet_resdown()/b.genmet();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_subt_resup("pfmet_subt_resup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet()-b.pfmet_resup();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_subt_resdown("pfmet_subt_resdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet()-b.pfmet_resdown();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_subt_genmet("pfmet_subt_genmet",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet()-b.genmet();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_subt_genmet_subt_lepPt("pfmet_subt_genmet_subt_lepPt",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+      float pt_var1=0.;
+      float pt_var2=0.;
+
+    for (unsigned i(0); i<b.gen_id()->size(); i++){
+        if ((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&b.gen_pt()->at(i)>pt_var1){
+          pt_var2 = pt_var1;
+          pt_var1 = b.gen_pt()->at(i);
+        }else if((abs(b.gen_id()->at(i))==11||abs(b.gen_id()->at(i))==13||abs(b.gen_id()->at(i))==15)&&b.gen_pt()->at(i)>pt_var2){
+          pt_var2 = b.gen_pt()->at(i);
+        }
+      }
+
+      met_var = b.pfmet()-b.genmet()-pt_var2;
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_subt_jup("pfmet_subt_jup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet()-b.pfmet_jup();
+
+      return met_var;
+
+  });
+
+  const NamedFunc pfmet_subt_jdown("pfmet_subt_jdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0.;
+
+      met_var = b.pfmet()-b.pfmet_jdown();
+
+      return met_var;
+
+  });
+
+  const NamedFunc mt_subt_jup("mt_subt_jup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mt_var=0.;
+
+      mt_var = b.mt_met_lep()-b.mt_met_lep_jup();
+
+      return mt_var;
+
+  });
+
+  const NamedFunc mt_subt_jdown("mt_subt_jdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mt_var=0.;
+
+      mt_var = b.mt_met_lep()-b.mt_met_lep_jdown();
+
+      return mt_var;
+
+  });
+
+  const NamedFunc mct_subt_jup("mct_subt_jup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mct_var=0.;
+
+      mct_var = b.mct()-b.jup_mct();
+
+      return mct_var;
+
+  });
+
+  const NamedFunc mct_subt_jdown("mct_subt_jdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mct_var=0.;
+
+      mct_var = b.mct()-b.jdown_mct();
+
+      return mct_var;
+
+  });
+
+  const NamedFunc mbb_subt_jup("mbb_subt_jup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mbb_var=0.;
+
+      mbb_var = b.mbb()-b.jup_mbb();
+
+      return mbb_var;
+
+  });
+
+  const NamedFunc mbb_subt_jdown("mbb_subt_jdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mbb_var=0.;
+
+      mbb_var = b.mbb()-b.jdown_mbb();
+
+      return mbb_var;
+
+  });
+
+  const NamedFunc mct_subt_jerup("mct_subt_jerup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mct_var=0.;
+
+      mct_var = b.mct()-b.jerup_mct();
+
+      return mct_var;
+
+  });
+
+  const NamedFunc mct_subt_jerdown("mct_subt_jerdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mct_var=0.;
+
+      mct_var = b.mct()-b.jerdown_mct();
+
+      return mct_var;
+
+  });
+
+  const NamedFunc mbb_subt_jerup("mbb_subt_jerup",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mbb_var=0.;
+
+      mbb_var = b.mbb()-b.jerup_mbb();
+
+      return mbb_var;
+
+  });
+
+  const NamedFunc mbb_subt_jerdown("mbb_subt_jerdown",[](const Baby &b) -> NamedFunc::ScalarType{
+      float mbb_var=0.;
+
+      mbb_var = b.mbb()-b.jerdown_mbb();
+
+      return mbb_var;
+
+  });
+
+   const NamedFunc genPt_ak8_higgsTagger("genPt_ak8_higgsTagger",[](const Baby &b) -> NamedFunc::ScalarType{
+      float nHiggs=0;
+      int year = b.year();
+      float higgsWP = 0;
+
+      if(year==2016){
+        higgsWP = 0.8945;
+      }else if(year==2017){
+        higgsWP = 0.8695;
+      }else if(year==2018){
+        higgsWP = 0.8365;
+      }
+
+      for (unsigned i(0); i<b.FatJet_deepTagMD_HbbvsQCD()->size(); i++){
+        if (b.FatJet_deepTagMD_HbbvsQCD()->at(i)>=higgsWP&&b.FatJet_genPt()->at(i)>250){
+           nHiggs++;
+        }else if(b.FatJet_genPt()->at(i)<0.&&b.FatJet_deepTagMD_HbbvsQCD()->at(i)>=higgsWP&&b.FatJet_pt_nom()->at(i)>250){
+          nHiggs++;
+        }
+      }
+
+      return nHiggs;
     });
 
 

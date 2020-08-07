@@ -36,9 +36,9 @@ using namespace WH_Functions;
 
 namespace{
   //only one of these three can be true:
-  bool systematic_mode=true;
+  bool systematic_mode=false;
   bool year_mode = false;
-  bool data_mode=false;
+  bool data_mode=true;
 
   bool debug = true;
   float lumi=137.;
@@ -135,6 +135,7 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
   float minx = 0.5, maxx = nbins+0.5, miny = minr*0.55, maxy = maxr*1.45;
   miny=0;
   if(maxy>5) maxy = 5;
+  if(maxy<3.5 && double_mode) maxy=3.5;
   TH1D histo("histo", "", nbins, minx, maxx);
   histo.SetMinimum(miny);
   histo.SetMaximum(maxy);
@@ -417,16 +418,21 @@ int main(int argc, char *argv[]){
   TString numerator = single_lep+"&&mct>200&&mbb>90&&mbb<150";
 
   TString denominator_highmbb = single_lep+"&&mct>100&&mct<=200&&mbb>150"; //Lowered from mbb 200
+  TString denominator_highmbb_highmet = single_lep+"&&mct>100&&mct<=200&&mbb>300"; //Lowered from mbb 200
   TString numerator_highmbb = single_lep+"&&mct>200&&mbb>150";
+
   // TString denominator_highmbb_boosted = single_lep+"&&mct>100&&mct<=200&&mbb>200";
   TString denominator_highmbb_boosted = single_lep+"&&mct<=200&&mbb>150";
+  TString denominator_highmbb_boosted_highmet = single_lep+"&&mct<=200&&mbb>300";
   TString numerator_highmbb_boosted = single_lep+"&&mct>200&&mbb>150";
 
   TString denominator_dilep = dilep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150";
   TString denominator_dilep_highmet = dilep+"&&mct>100&&mct<=200&&mbb>90&&mbb<300";
   TString numerator_dilep = dilep+"&&mct>200&&mbb>90&&mbb<150";
-  TString denominator_dilep_boosted = dilep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150";
-  TString denominator_dilep_boosted_highmet = dilep+"&&mct>100&&mct<=200&&mbb>90&&mbb<300";
+  // TString denominator_dilep_boosted = dilep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150";
+  TString denominator_dilep_boosted = dilep+"&&mct<=200&&mbb>90&&mbb<150";
+  // TString denominator_dilep_boosted_highmet = dilep+"&&mct>100&&mct<=200&&mbb>90&&mbb<300";
+  TString denominator_dilep_boosted_highmet = dilep+"&&mct<=200&&mbb>90&&mbb<300";
   TString numerator_dilep_boosted = dilep+"&&mct>200&&mbb>90&&mbb<150";
  
 
@@ -543,10 +549,10 @@ int main(int argc, char *argv[]){
 
   // vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
   vector<NamedFunc> deepAK8bins = {"nHiggs==0","nHiggs>0"};
-  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<200.,"ngoodjets>=2 &&ngoodjets<=3"&&LeadingNonBJetPt_med<200.}; 
-  vector<NamedFunc> njetbins_old = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<200.}; 
-  vector<NamedFunc> njetbins_jup = {"jup_ngoodjets==2","jup_ngoodjets==3"&&LeadingNonBJetPt_med_jup<200.}; 
-  vector<NamedFunc> njetbins_jdown = {"jdown_ngoodjets==2","jdown_ngoodjets==3"&&LeadingNonBJetPt_med_jdown<200.}; 
+  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300.,"ngoodjets>=2 &&ngoodjets<=3"&&LeadingNonBJetPt_med<300.}; 
+  vector<NamedFunc> njetbins_old = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
+  vector<NamedFunc> njetbins_jup = {"jup_ngoodjets==2","jup_ngoodjets==3"&&LeadingNonBJetPt_med_jup<300.}; 
+  vector<NamedFunc> njetbins_jdown = {"jdown_ngoodjets==2","jdown_ngoodjets==3"&&LeadingNonBJetPt_med_jdown<300.}; 
  
   vector<TString> string_metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<=400","pfmet>400"/*,"pfmet>200"*/};
   vector<NamedFunc> metbins; for(uint ib=0;ib<string_metbins.size();ib++) metbins.push_back(string_metbins[ib]);
@@ -622,36 +628,40 @@ int main(int argc, char *argv[]){
     // {true,"pfmet", "ngoodbtags==2" && njetbins[1] && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
     {true,"pfmet_SR", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
 
-
-    // {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[0] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
-    // {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[1] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
-    // {false,"pfmet", nTightb==1. && nLooseb==1.  && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
-    // // {false,"pfmet", nTightb==1. && nLooseb==1.  && njetbins[1] && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted}
-
+/*
+    {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[0] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
+    {false,"pfmet", nTightb==1. && nLooseb==1. && njetbins[1] && deepAK8bins[0], metbins_validation, metbin_denominators_validation,numerators},
+    {false,"pfmet", nTightb==1. && nLooseb==1.  && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted},
+    // {false,"pfmet", nTightb==1. && nLooseb==1.  && njetbins[1] && deepAK8bins[1], metbins_boosted, metbin_denominators_boosted,numerators_boosted}
+*/
     {false,"pfmet_highmbb", "ngoodbtags==2" && njetbins[0] && deepAK8bins[0], metbins_validation, {denominator_highmbb,denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb,numerator_highmbb}},
     {false,"pfmet_highmbb", "ngoodbtags==2" && njetbins[1] && deepAK8bins[0], metbins_validation, {denominator_highmbb,denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb,numerator_highmbb}},
     {false,"pfmet_highmbb", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, {denominator_highmbb_boosted,denominator_highmbb_boosted,denominator_highmbb_boosted,denominator_highmbb_boosted},{numerator_highmbb_boosted,numerator_highmbb_boosted,numerator_highmbb_boosted,numerator_highmbb_boosted}},
     
     {false,"pfmet_highmbb_mergenjets", "ngoodbtags==2" && njetbins[2] && deepAK8bins[0], metbins_validation, {denominator_highmbb,denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb,numerator_highmbb}},
     {false,"pfmet_highmbb_mergenjets", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted_mergednjets, {denominator_highmbb_boosted,denominator_highmbb_boosted,denominator_highmbb_boosted,denominator_highmbb_boosted},{numerator_highmbb_boosted,numerator_highmbb_boosted,numerator_highmbb_boosted,numerator_highmbb_boosted}},
-    {false,"pfmet_highmbb_mergenjets_allmet", "ngoodbtags==2" && njetbins[2] && deepAK8bins[0], metbins, {denominator_highmbb,denominator_highmbb,denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb,numerator_highmbb,numerator_highmbb}},
+    // {false,"pfmet_highmbb_mergenjets_allmet", "ngoodbtags==2" && njetbins[2] && deepAK8bins[0], metbins, {denominator_highmbb,denominator_highmbb,denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb,numerator_highmbb,numerator_highmbb}},
 
+  	{false,"pfmet_highmbb_orthogonal", "ngoodbtags==2" && njetbins[2] && deepAK8bins[0], metbins, {denominator_highmbb,denominator_highmbb,denominator_highmbb_highmet,denominator_highmbb_highmet},{numerator_highmbb,numerator_highmbb,numerator_highmbb,numerator_highmbb}},
+    {false,"pfmet_highmbb_orthogonal", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted_mergednjets, {denominator_highmbb_boosted,denominator_highmbb_boosted_highmet},{numerator_highmbb_boosted,numerator_highmbb_boosted}},
 
-    {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>125" && deepAK8bins[0], njetbins_old, {denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb}},
-    {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>125" && deepAK8bins[1], njetbins_old, {denominator_highmbb_boosted,denominator_highmbb_boosted},{numerator_highmbb_boosted,numerator_highmbb_boosted}},
+      	{false,"pfmet_highmbb_orthogonal_final", "ngoodbtags==2" && njetbins[2] && deepAK8bins[0], metbins_validation, {denominator_highmbb,denominator_highmbb,denominator_highmbb_highmet},{numerator_highmbb,numerator_highmbb,numerator_highmbb}},
 
-    {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>200" && deepAK8bins[0], njetbins_old, {denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb}},
-    {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>200" && deepAK8bins[1], njetbins_old, {denominator_highmbb_boosted,denominator_highmbb_boosted},{numerator_highmbb_boosted,numerator_highmbb_boosted}},
+    // {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>125" && deepAK8bins[0], njetbins_old, {denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb}},
+    // {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>125" && deepAK8bins[1], njetbins_old, {denominator_highmbb_boosted,denominator_highmbb_boosted},{numerator_highmbb_boosted,numerator_highmbb_boosted}},
 
+    // {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>200" && deepAK8bins[0], njetbins_old, {denominator_highmbb,denominator_highmbb},{numerator_highmbb,numerator_highmbb}},
+    // {false,"pfmet_highmbb_mergemet", "ngoodbtags==2 && pfmet>200" && deepAK8bins[1], njetbins_old, {denominator_highmbb_boosted,denominator_highmbb_boosted},{numerator_highmbb_boosted,numerator_highmbb_boosted}},
 
-    // {false,"pfmet_dilep", "ngoodbtags==2" && njetbins[0] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
-    // {false,"pfmet_dilep", "ngoodbtags==2" && njetbins[1] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
-    // {false,"pfmet_dilep", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, {denominator_dilep_boosted,denominator_dilep_boosted_highmet,denominator_dilep_boosted,denominator_dilep_boosted_highmet},{numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted}},
+/*
+    {false,"pfmet_dilep", "ngoodbtags==2" && njetbins[0] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
+    {false,"pfmet_dilep", "ngoodbtags==2" && njetbins[1] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
+    {false,"pfmet_dilep", "ngoodbtags==2" && deepAK8bins[1], metbins_boosted, {denominator_dilep_boosted,denominator_dilep_boosted_highmet,denominator_dilep_boosted,denominator_dilep_boosted_highmet},{numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted}},
 
-    // {false,"pfmet_dilep", nTightb==2. && njetbins[0] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
-    // {false,"pfmet_dilep", nTightb==2. && njetbins[1] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
-    // {false,"pfmet_dilep", nTightb==2. && deepAK8bins[1], metbins_boosted, {denominator_dilep_boosted,denominator_dilep_boosted_highmet,denominator_dilep_boosted,denominator_dilep_boosted_highmet},{numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted}},
-
+    {false,"pfmet_dilep", nTightb==2. && njetbins[0] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
+    {false,"pfmet_dilep", nTightb==2. && njetbins[1] && deepAK8bins[0], metbins_validation, {denominator_dilep,denominator_dilep,denominator_dilep_highmet},{numerator_dilep,numerator_dilep,numerator_dilep}},
+    {false,"pfmet_dilep", nTightb==2. && deepAK8bins[1], metbins_boosted, {denominator_dilep_boosted,denominator_dilep_boosted_highmet,denominator_dilep_boosted,denominator_dilep_boosted_highmet},{numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted,numerator_dilep_boosted}},
+*/
 });
 
 
@@ -846,7 +856,7 @@ int main(int argc, char *argv[]){
 // });
     string tag = "";
     if(year_mode) tag += "year_";
-    if(data_mode) tag += "data_newtagger_expandmbbdenominator_mbb150_correctpaths_newbabies_yesHasNano";
+    if(data_mode) tag += "data_newtagger_expandmbbdenominator_mbb150_correctpaths_newbabies_yesHasNano_jet300";
 
   vector<NamedFunc> weights; size_t nsels; //vector<NamedFunc> numerators,denominators;
   vector<TString> leglabels;
@@ -892,13 +902,20 @@ int main(int argc, char *argv[]){
     //             "weight * trig_eff * w_q2Up" * nanoWeight * yearWeight ,
     //             "weight * trig_eff * w_q2Down" * nanoWeight * yearWeight 
     //              };
-      // for(uint ivar=0;ivar<weights.size();ivar++){
-      //   cuts.push_back("1");
-      // }
+    //   for(uint ivar=0;ivar<weights.size();ivar++){
+    //     cuts.push_back("1");
+    //   }
     // tag+="realistic2_";
     // leglabels = {"Nominal","Lepton SF up","Lepton SF down","Tau SF up","Tau SF down","L1 prefire up","L1 prefire down","ISR njets up","ISR njets down","PDF up","PDF down",
     //             "alphas up","alphas down","q2 up","q2 down"};
 
+    //best variations
+      //jes
+      //jer
+    //btag hf
+    //btag lf
+    //st
+    //PU
 
     // weights={ "weight * trig_eff " * nanoWeight * yearWeight,
     //           "weight * trig_eff " * nanoWeight * yearWeight,

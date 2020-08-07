@@ -118,12 +118,14 @@ int main(){
   // auto proc_top_0realb = Process::MakeShared<Baby_full>("top, 0 real b-jets 2016-2018", Process::Type::background, kOrange+7,all_top,"stitch"&&baselinef&&nRealBs==0.);
 
 
+
+  //NB switch to "nRealBtags"
   // auto proc_top_2realb = Process::MakeShared<Baby_full>("top, 2 real b-jets 2016-2018", Process::Type::background, kGreen-3,all_top,"stitch"&&baselinef&&nRealBtags==2.);
-  auto proc_tt_2realb_from_top = Process::MakeShared<Baby_full>("ttbar, 2 real b-tags from tops", Process::Type::background, kGreen-3,all_tt,"stitch"&&baselinef&&nRealBtags==2.&&nRealBsfromTop>=2.);
-  auto proc_tt_2realb_extra_bs = Process::MakeShared<Baby_full>("ttbar, 2 real b-tags with extra b", Process::Type::background, kMagenta+3,all_tt,"stitch"&&baselinef&&nRealBtags==2.&&nRealBsfromTop<2.);
-  auto proc_st_2realb = Process::MakeShared<Baby_full>("ST, 2 real b-tags", Process::Type::background,  kRed+1,all_ST,"stitch"&&baselinef&&nRealBtags==2.);
-  auto proc_top_1realb = Process::MakeShared<Baby_full>("top, 1 real b-tags", Process::Type::background, kBlue+1,all_top,"stitch"&&baselinef&&nRealBtags==1.);
-  auto proc_top_0realb = Process::MakeShared<Baby_full>("top, 0 real b-tags", Process::Type::background, kOrange+7,all_top,"stitch"&&baselinef&&nRealBtags==0.);
+  auto proc_tt_2realb_from_top = Process::MakeShared<Baby_full>("ttbar, 2 b-tags from tops", Process::Type::background, kGreen-3,all_tt,"stitch"&&baselinef&&nRealBs==2.&&nRealBsfromTop>=2.);
+  auto proc_tt_2realb_extra_bs = Process::MakeShared<Baby_full>("ttbar, extra b", Process::Type::background, kOrange ,all_tt,"stitch"&&baselinef&&nRealBs==2.&&nRealBsfromTop<2.);
+  auto proc_st_2realb = Process::MakeShared<Baby_full>("ST, 2 real b-tags", Process::Type::background,  kCyan-3,all_ST,"stitch"&&baselinef&&nRealBs==2.);
+  auto proc_top_1realb = Process::MakeShared<Baby_full>("top, fake b + lost b", Process::Type::background, kRed-4,all_top,"stitch"&&baselinef&&nRealBs==1.);
+  auto proc_top_0realb = Process::MakeShared<Baby_full>("top, 2 fakes", Process::Type::background, kMagenta+2,all_top,"stitch"&&baselinef&&nRealBs==0.);
 
 
   auto proc_top_2realb_tt_highmct = Process::MakeShared<Baby_full>("ttbar, 2 real b-jets, m_{CT} > 200", Process::Type::background, kGreen-3,all_tt,"stitch &&mct>200 "&&baselinef&&nRealBs==2.);
@@ -216,6 +218,7 @@ int main(){
   vector<shared_ptr<Process> > lost_b_sample_list_simplified ={proc_top_1realb_forward,proc_top_1realb_soft,proc_top_1realb_other};
   vector<shared_ptr<Process> > lepton_sample_list ={proc_top_lost_lep,proc_top_lost_htau,proc_top_1l};
   vector<shared_ptr<Process> > met_sample_list ={proc_top_met0,proc_top_met1,proc_top_met2,proc_top_met3};
+  vector<shared_ptr<Process> > simple_tt_list = {proc_tt};
   vector<shared_ptr<Process> > lep_sample_list ={proc_top_1lep,proc_top_2lep};
 
 //  vector<string> tag_list = {"tt1l","tt2l"};
@@ -225,7 +228,8 @@ int main(){
   log_lumi.Title(TitleType::preliminary)
     .Bottom(BottomType::off)
     .YAxis(YAxisType::log)
-    .Stack(StackType::lumi_shapes);
+    .Stack(StackType::lumi_shapes)
+    .FileExtensions({"pdf","C"});
     // .RatioMinimum(0.5).RatioMaximum(1.5);
   PlotOpt lin_lumi = log_lumi().YAxis(YAxisType::linear);
   PlotOpt log_shapes = log_lumi().Stack(StackType::shapes)
@@ -287,17 +291,17 @@ int main(){
   TString dilep           = "nvetoleps==2 && ngoodbtags==2";
   vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200",/*"pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400",*/"pfmet>200"};
   vector<TString> metNames = {"low_MET",/*"medium_MET","high_MET","vhigh_MET",*/"inclu_highmet"};
-  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300","pfmet>125"};
+  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=200 && mbb<150","pfmet>200","pfmet>125"};
   // vector<NamedFunc> boosted_metbins = {"pfmet>125"};
-  vector<TString> boosted_metNames = {"low MET","high MET"};
+  vector<TString> boosted_metNames = {"low MET","high MET","all MET"};
 
-  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
-  vector<TString> njetNames = {"2 jets","3 jets"};
+  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300., "ngoodjets>=2 &&ngoodjets<=3"&&LeadingNonBJetPt_med<300.}; 
+  vector<TString> njetNames = {"2 jets","3 jets", "2-3 jets"};
 
   // vector<NamedFunc> deepAK8bins = {max_ak8pfjets_deepdisc_hbb<=0.8,max_ak8pfjets_deepdisc_hbb>0.8};
   vector<NamedFunc> deepAK8bins = {"nHiggs==0","nHiggs>0"};
   TString signal_region = single_lep+"&&mct>200&&mbb>90&&mbb<150";
-  TString mct_control_region = single_lep+"&&mct>150&&mct<=200&&mbb>90&&mbb<150";    
+  TString mct_control_region = single_lep+"&&mct>100&&mct<=200&&mbb>90&&mbb<150";    
   // if(dilep_mode) mct_control_region = dilep+"&&mct>200&&mbb>90&&mbb<150";    
 
   TString signal_region_boost = single_lep+"&&mct>200&&mbb>90&&mbb<150";
@@ -372,9 +376,12 @@ int main(){
 
   vector<TableRow> signal_table_cuts;
   vector<TableRow> tightveto_table_cuts;
+  vector<TableRow> tightveto_lowmct_table_cuts;
   vector<TableRow> highmbb_table_cuts;
+  vector<TableRow> highmbb_lowmct_table_cuts;
   vector<TableRow> dilep_table_cuts;
   vector<TableRow> dilep_tighttight_table_cuts;
+  vector<TableRow> dilep_tighttight_lowmct_table_cuts;
   vector<TableRow> lowMCT_table_cuts;
   // vector<TableRow> mbbside_table_cuts;
 
@@ -385,17 +392,21 @@ int main(){
 
       signal_table_cuts.push_back(TableRow(Form("SR, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), signal_region && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
       tightveto_table_cuts.push_back(TableRow(Form("tight+veto, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), single_lep_tightnothing && "mct>200&&mbb>90&&mbb<150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
-      highmbb_table_cuts.push_back(TableRow(Form("highmbb_medmed, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), single_lep_alt && "mct>200&&mbb>200" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
+      highmbb_table_cuts.push_back(TableRow(Form("highmbb_medmed, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), single_lep_alt && "mct>200&&mbb>150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
       dilep_table_cuts.push_back(TableRow(Form("dilep_medmed, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), dilep_medmed && "mct>200&&mbb>90&&mbb<150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
       dilep_tighttight_table_cuts.push_back(TableRow(Form("dilep_tightight, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), dilep_tighttight && "mct>200&&mbb>90&&mbb<150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
 
       lowMCT_table_cuts.push_back(TableRow(Form("low mCT CR %s %s",njetNames[ijet].Data(),metNames[imet].Data()), mct_control_region && njetbins[ijet] && metbins[imet] && deepAK8bins[0] ,0,0, full_weight)); 
-   
+      tightveto_lowmct_table_cuts.push_back(TableRow(Form("tight+veto low mCT, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), single_lep_tightnothing && "mct>100&&mct<=200&&mbb>90&&mbb<150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
+      highmbb_lowmct_table_cuts.push_back(TableRow(Form("highmbb_medmed low mCT, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), single_lep_alt && "mct>100&&mct<=200&&mbb>150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
+      dilep_tighttight_lowmct_table_cuts.push_back(TableRow(Form("dilep_tightight low mCT, %s %s",njetNames[ijet].Data(),metNames[imet].Data()), dilep_tighttight && "mct>100&&mct<=200&&mbb>90&&mbb<150" && njetbins[ijet] && metbins[imet] && deepAK8bins[0],0,0, full_weight)); 
+
     }
     cout<<"Finished defining cuts"<<endl;
     for(uint imet_boos=0;imet_boos<boosted_metbins.size();imet_boos++){
      signal_table_cuts.push_back(TableRow(Form("SR, %s %s",njetNames[ijet].Data(),boosted_metNames[imet_boos].Data()), signal_region_boost && njetbins[ijet] && boosted_metbins[imet_boos] && deepAK8bins[1],0,0, full_weight)); 
      lowMCT_table_cuts.push_back(TableRow(Form("low mCT CR %s %s",njetNames[ijet].Data(),boosted_metNames[imet_boos].Data()), mct_control_region_boost && njetbins[ijet] && boosted_metbins[imet_boos] && deepAK8bins[1],0,0, full_weight)); 
+
     }  
   
 
@@ -438,6 +449,7 @@ int main(){
 */
 
 if(false){
+
       pm.Push<Hist1D>(Axis(25, 0, 4., max_genjet_bquark_pt_ratio, "Max b-genjet / b-quark pT ratio [GeV]"), single_lep_alt&&nRealBs==2.&&nRealBsfromTop==2.&&"mbb>90&&mbb<150" && njetbins[ijet], met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
       pm.Push<Hist1D>(Axis(25, 0, 4., max_genjet_bquark_pt_ratio, "Max b-genjet / b-quark pT ratio [GeV]"), single_lep_alt&&nRealBs==2.&&nRealBsfromTop==2.&&"mbb>90&&mbb<150 && mct >200" && njetbins[ijet], met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
 
@@ -449,22 +461,44 @@ if(false){
 
 
 
-      pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt&&nRealBs==2.&&"mbb>90&&mbb<150" && njetbins[ijet], met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      // pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      // pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt&&nRealBs==2.&&"mbb>90&&mbb<150" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150&&pfmet>125&&pfmet<200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt&&nRealBsfromTop==2.&&mct_genpt>0.&&"mbb>90&&mbb<150&&pfmet>125&&pfmet<200" && njetbins[ijet], simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      // pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      // pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150&&pfmet>125&&pfmet<200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt&&nRealBsfromTop==2.&&mct_genpt>0.&&"mbb>90&&mbb<150&&pfmet>125&&pfmet<200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
 
 
-      pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&nRealBs==2.&&"mbb>90&&mbb<150" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      // pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150&&pfmet>125&&pfmet<200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&nRealBsfromTop==2.&&mct_genpt>0.&&"mbb>90&&mbb<150&&pfmet>125&&pfmet<200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
 
 
-// if(false){
+      pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150&&pfmet>200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt&&nRealBsfromTop==2.&&mct_genpt>0.&&"mbb>90&&mbb<150&&pfmet>200" && njetbins[ijet], simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      // pm.Push<Hist1D>(Axis(15, 0, 300., genmct, "gen m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      // pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150&&pfmet>200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., mct_genpt, "gen jet m_{CT} [GeV]"), single_lep_alt&&nRealBsfromTop==2.&&mct_genpt>0.&&"mbb>90&&mbb<150&&pfmet>200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+
+
+      pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150&&pfmet>200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+      pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&nRealBsfromTop==2.&&mct_genpt>0.&&"mbb>90&&mbb<150&&pfmet>200" && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("simple");
+
+
+      pm.Push<Hist1D>(Axis(10, 100, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mct>100&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>125 && pfmet<200" , real_bs_sample_list_short, all_plot_types).Weight(full_weight).Tag("medmed");;
+      pm.Push<Hist1D>(Axis(10, 100, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mct>100&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>200" , real_bs_sample_list_short, all_plot_types).Weight(full_weight).Tag("medmed");
+
+      pm.Push<Hist1D>(Axis(10, 100, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mct>100&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>300" , real_bs_sample_list_short, all_plot_types).Weight(full_weight).Tag("medmed");
+
+}
+
+
+      // pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt && njetbins[ijet] , simple_tt_list, all_plot_types).Weight(full_weight).Tag("metbin");
+
+
+ 
       //Lepton binned
-
+if(false){
       pm.Push<Hist1D>(Axis(6, 0, 300., "mct", "m_{CT} [GeV]"), "ngoodbtags==2&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>125 && pfmet<200"  , lep_sample_list, all_plot_types).Weight(full_weight).Tag("lepbin");
        pm.Push<Hist1D>(Axis(6, 0, 300., "mct", "m_{CT} [GeV]"), "ngoodbtags==2" && njetbins[ijet]  && "pfmet>125 && pfmet<200" , lep_sample_list, all_plot_types).Weight(full_weight).Tag("lepbin");
          
@@ -480,30 +514,29 @@ if(false){
   
        ///
 
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mbb>50&&mbb<410" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb<=0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb>0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mbb>50&&mbb<410" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      // pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb<=0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      // pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb>0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
 
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200&&mbb>50&&mbb<410" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mct<200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb<=0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mct<200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb>0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200&&mbb>50&&mbb<410" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      // pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mct<200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb<=0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      // pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100&&mct<200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb>0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
 
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>200&&mbb>50&&mbb<410" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb<=0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
-      pm.Push<Hist1D>(Axis(18,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb>0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>200&&mbb>50&&mbb<410" && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      // pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb<=0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
+      // pm.Push<Hist1D>(Axis(9,50,410, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>200&&mbb>50&&mbb<410" && max_ak8pfjets_deepdisc_hbb>0.8 && njetbins[ijet] , met_sample_list, all_plot_types).Weight(full_weight).Tag("metbin");
 
+}
 
-          pm.Push<Hist1D>(Axis(10, 100, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mct>100&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>125 && pfmet<200" , real_bs_sample_list_short, all_plot_types).Weight(full_weight).Tag("medmed");;
-      pm.Push<Hist1D>(Axis(10, 100, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mct>100&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>200" , real_bs_sample_list_short, all_plot_types).Weight(full_weight).Tag("medmed");
+      pm.Push<Hist1D>(Axis(26,40,300, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200 && mbb > 40 && mbb <300" && njetbins[ijet] && "pfmet>125 && pfmet<200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed");;
+      pm.Push<Hist1D>(Axis(26,40,300, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200 && mbb > 40 && mbb <300" && njetbins[ijet] && "pfmet>200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed");
+      pm.Push<Hist1D>(Axis(26,40,300, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200 && mbb > 40 && mbb <300" && njetbins[ijet] && "pfmet>300" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed");
 
-      pm.Push<Hist1D>(Axis(10, 100, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mct>100&&mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>300" , real_bs_sample_list_short, all_plot_types).Weight(full_weight).Tag("medmed");
+      pm.Push<Hist1D>(Axis({90,150,300}, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200 && mbb > 90 && mbb <300" && njetbins[ijet] && "pfmet>125 && pfmet<200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed_coarse");;
+      pm.Push<Hist1D>(Axis({90,150,300}, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200 && mbb > 90 && mbb <300" && njetbins[ijet] && "pfmet>200 && pfmet<300" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed_coarse");
+      pm.Push<Hist1D>(Axis({90,150,300}, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mct<200 && mbb > 90 && mbb <300" && njetbins[ijet] && "pfmet>300" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed_coarse");
 
-
-      pm.Push<Hist1D>(Axis(26,40,300, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mbb > 40 && mbb <300" && njetbins[ijet] && "pfmet>125 && pfmet<200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed");;
-      pm.Push<Hist1D>(Axis(26,40,300, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mbb > 40 && mbb <300" && njetbins[ijet] && "pfmet>200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed");
-
-      pm.Push<Hist1D>(Axis(26,40,300, "mbb", "m_{bb} [GeV]"), single_lep_alt&&"mct>100 && mbb > 40 && mbb <300" && njetbins[ijet] && "pfmet>300" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("medmed");
-
+if(false){
 
       pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>125 && pfmet<200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("simple_medmed");;
       pm.Push<Hist1D>(Axis(15, 0, 300., "mct", "m_{CT} [GeV]"), single_lep_alt&&"mbb>90&&mbb<150" && njetbins[ijet] && "pfmet>200" , simple_sample_list, all_plot_types).Weight(full_weight).Tag("simple_medmed");
@@ -581,15 +614,18 @@ if(false){
 
   for(auto &ipr: categories_Bs) pm.Push<Table>("chart_SIGNAL_"+ipr.first,  signal_table_cuts, ipr.second, true, true, true, false);
   for(auto &ipr: categories_2realBs ) pm.Push<Table>("chart_SIGNAL_"+ipr.first,  signal_table_cuts, ipr.second, true, true, true, false);
-  // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_tightnothing_"+ipr.first,  tightveto_table_cuts, ipr.second, true, true, true, false);
-  // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_highmbbL_"+ipr.first,  highmbb_table_cuts, ipr.second, true, true, true, false);
-  // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_dilep_"+ipr.first,  dilep_table_cuts, ipr.second, true, true, true, false);
-  // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_dilep_tighttight_"+ipr.first,  dilep_tighttight_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: categories_Bs) pm.Push<Table>("chart_tightnothing_"+ipr.first,  tightveto_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: categories_Bs) pm.Push<Table>("chart_highmbb_"+ipr.first,  highmbb_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: categories_Bs) pm.Push<Table>("chart_dilep_"+ipr.first,  dilep_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: categories_Bs) pm.Push<Table>("chart_dilep_tighttight_"+ipr.first,  dilep_tighttight_table_cuts, ipr.second, true, true, true, false);
  
 
   // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_MBBSIDE_"+ipr.first,  mbbside_table_cuts, ipr.second, true, true, true, false);
   // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_DILEP_"+ipr.first,  dilep_table_cuts, ipr.second, true, true, true, false);
-  // for(auto &ipr: categories_Bs) pm.Push<Table>("chart_LOW_MCT_"+ipr.first,  lowMCT_table_cuts, ipr.second, true, true, true, false);
+   for(auto &ipr: categories_Bs) pm.Push<Table>("chart_LOW_MCT_"+ipr.first,  lowMCT_table_cuts, ipr.second, true, true, true, false);
+   for(auto &ipr: categories_Bs) pm.Push<Table>("chart_tightnothing_lowmct"+ipr.first,  tightveto_lowmct_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: categories_Bs) pm.Push<Table>("chart_highmbb_lowmct"+ipr.first,  highmbb_lowmct_table_cuts, ipr.second, true, true, true, false);
+  for(auto &ipr: categories_Bs) pm.Push<Table>("chart_dilep_tighttight_lowmct_"+ipr.first,  dilep_tighttight_lowmct_table_cuts, ipr.second, true, true, true, false);
 
  // for(auto &ipr: categories_lost_Bs) pm.Push<Table>("chart_SIGNAL_lostb"+ipr.first,  signal_table_cuts, ipr.second, true, true, true, false);
  
@@ -614,6 +650,7 @@ if(false){
   // for(auto &ipr: categories_split_Bs) pm.Push<Table>("chart_SIGNAL_MEDMED_"+ipr.first,  signal_medmed_table_cuts, ipr.second, true, true, true, false);
 
  Table & signal_chart = pm.Push<Table>("signal_chart", signal_table_cuts, real_bs_sample_list, false); 
+ Table & lowmct_chart = pm.Push<Table>("lowmct_chart", lowMCT_table_cuts, real_bs_sample_list, false); 
  Table & signal_chart_2realb = pm.Push<Table>("signal_chart_2realb", signal_table_cuts, two_real_bs_sample_list, false); 
 
 
@@ -660,6 +697,10 @@ if(false){
   cout<<"Finished making plots."<<endl;
   vector<GammaParams> yields_signal = signal_chart.BackgroundYield(lumi);
   for(const auto &yield: yields_signal){
+    cout << yield << endl;
+  }
+  vector<GammaParams> yields_lowmct = lowmct_chart.BackgroundYield(lumi);
+  for(const auto &yield: yields_lowmct){
     cout << yield << endl;
   }
   vector<GammaParams> yields_signal_2realb = signal_chart_2realb.BackgroundYield(lumi);

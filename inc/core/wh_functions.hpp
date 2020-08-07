@@ -103,6 +103,8 @@ namespace WH_Functions{
   extern const NamedFunc bJetPt;
   extern const NamedFunc HasNoBs;
   extern const NamedFunc WHLeptons;
+  extern const NamedFunc WHMuonSigEff;
+  extern const NamedFunc WHElSigEff;
   extern const NamedFunc NBJets;
   extern const NamedFunc nRealBs;
   extern const NamedFunc nRealBsfromTop;
@@ -167,6 +169,28 @@ namespace WH_Functions{
   extern const NamedFunc noPrefireWeight;
   extern const NamedFunc mt_met_lep_uncorr;
   extern const NamedFunc pfmet_uncorr_func;
+  extern const NamedFunc pfmet_div_genmet;
+  extern const NamedFunc pfmet_resup_div_genmet;
+  extern const NamedFunc pfmet_resdown_div_genmet;  
+  extern const NamedFunc pfmet_subt_resup;
+  extern const NamedFunc pfmet_subt_resdown;
+  extern const NamedFunc pfmet_subt_genmet;
+  extern const NamedFunc pfmet_subt_genmet_subt_lepPt; 
+  extern const NamedFunc pfmet_subt_jup;
+  extern const NamedFunc pfmet_subt_jdown;  
+  extern const NamedFunc mt_subt_jup;
+  extern const NamedFunc mt_subt_jdown;  
+  extern const NamedFunc mbb_subt_jup;
+  extern const NamedFunc mbb_subt_jdown;  
+  extern const NamedFunc mct_subt_jup;
+  extern const NamedFunc mct_subt_jdown;  
+  extern const NamedFunc mbb_subt_jerup;
+  extern const NamedFunc mbb_subt_jerdown;  
+  extern const NamedFunc mct_subt_jerup;
+  extern const NamedFunc mct_subt_jerdown;
+  extern const NamedFunc nanoWeight;
+  extern const NamedFunc genPt_ak8_higgsTagger;
+
 
   extern const NamedFunc max_genjet_bquark_pt_ratio;
   extern const NamedFunc dR_jet_bquark_max_pt_ratio;

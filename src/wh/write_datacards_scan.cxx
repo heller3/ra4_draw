@@ -43,6 +43,7 @@ namespace{
   bool original_analysis=false;
   bool dilep_mode=false;
   bool data_CR=true;
+  bool blind=true;
   enum Bkgs {bkg, top, w, other, data};
 
 }
@@ -149,7 +150,9 @@ int main(){
   //auto all_data = {data2016_dir+"slim*data_2016*singleel*.root"};
 
   //// Contributions
-  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&"mct<=200 && (HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
+  NamedFunc data_blind_sel = "mct<=200&&";
+  if(!blind) data_blind_sel ="1";
+  auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&data_blind_sel&&"(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
   auto proc_top = Process::MakeShared<Baby_full>("top 2016-2018", Process::Type::background, kRed,all_top,"stitch"&&baselinef);
 
@@ -503,7 +506,7 @@ int main(){
 	    cout<<bin_names[irow]<<", MC: "    <<setw(7)<<RoundNumber(allyields[bkg][irow].Yield(),3)<<" +- "<<setw(7)<<RoundNumber(allyields[bkg][irow].Uncertainty(), 3);
 	    //cout<<"allyields "<<allyields[bkg]  [idens]<<endl;
 	    // allyields[top] = yield_table->Yield(proc_top.get(), lumi);
-		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3)<<" ";
+		  cout<<", top: "    <<setw(7)<<RoundNumber(allyields[top][irow].Yield(), 3)<<" +- "<<setw(7)<<RoundNumber(allyields[top][irow].Uncertainty(), 3);;
 		  cout<<", W: "    <<setw(7)<<RoundNumber(allyields[w][irow].Yield(), 3)<<endl;
 		  // cout<<", signal NC: "    <<setw(7)<<RoundNumber(sigyields[0][irow].Yield(), 3);
 		  // cout<<", signal medium: "    <<setw(7)<<RoundNumber(sigyields[1][irow].Yield(), 3);
@@ -572,7 +575,8 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<bin_names[ibin];
     fcard<<endl<<left<<setw(wname)<<"observation"<<setw(wdist)<<" ";
     
-    if(!discovery_mode) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield(),digit);
+    if(!blind) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[data][ibin].Yield(),digit);
+    else if(!discovery_mode) for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield(),digit);
  	  else for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<RoundNumber(allyields[bkg][ibin].Yield()+sigyields[ibin].Yield(),digit);
 
     fcard<<endl<<endl<<left<<setw(wname)<<"bin"<<setw(wdist)<<" ";
@@ -593,7 +597,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
 
 
     fcard<<endl;
-    vector<double> sys_rmct {1.15, 1.28, 1.18, 1.78, 1.28, 1.28, 1.15, 1.28, 1.18, 1.78, 1.28, 1.28};
+    vector<double> sys_rmct {1.15, 1.28, 1.18, 1.80, 1.35, 1.35, 1.15, 1.28, 1.18, 1.80, 1.35, 1.35};
     vector<double> stat_rmct {1.14, 1.24, 1.15, 1.15, 1.4, 1.9, 1.1, 1.2, 1.4, 1.3, 1.38, 1.75};
     float sys_lumi = 1.05;
     //float sys_filler = 1.40;

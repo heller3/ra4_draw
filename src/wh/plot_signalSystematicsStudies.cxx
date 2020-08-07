@@ -36,7 +36,7 @@ int main(){
   string mc2018_ttbar_ext_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_06_12/a18v1/";
   
   string signal_dir = "/home/users/dspitzba/wh_babies/babies_v33_4_2020_07_09/";
-
+  string FullSim_signal_dir = "/home/users/dspitzba/wh_babies/babies_v33_8_2020_07_16/";
 
   Palette colors("txt/colors.txt", "default");
 
@@ -87,7 +87,6 @@ int main(){
   auto ttV_2018 = Process::MakeShared<Baby_full>("t#bar{t}V 2018", Process::Type::background, colors("ttv"), {mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
   auto ttV_Comb = Process::MakeShared<Baby_full>("t#bar{t}V 2016-2018", Process::Type::background, colors("ttv"), {mc2016_dir+"slim*_TTWJets*.root", mc2016_dir+"slim*_TTZ*.root",mc2017_dir+"slim*_TTWJets*.root", mc2017_dir+"slim*_TTZ*.root",mc2018_dir+"slim*_TTWJets*.root", mc2018_dir+"slim*_TTZ*.root"});
 
-
   //signals
   auto signal_comb_225_75 = Process::MakeShared<Baby_full>("2016-2018 Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal_dir+"slim_*.root"},"pass&&mass_stop==225&&mass_lsp==75");
     signal_comb_225_75->SetLineStyle(2);
@@ -97,9 +96,17 @@ int main(){
 
   auto signal_comb_700_1 = Process::MakeShared<Baby_full>("2016-2018 Signal (700,1)", Process::Type::signal, colors("t1tttt"),{signal_dir+"slim_*.root"},"pass&&mass_stop==700&&mass_lsp==1");
 
+  auto signal_comb_750_1_2016 = Process::MakeShared<Baby_full>("2016 Signal (750,1)", Process::Type::signal, colors("t1tttt"),{FullSim_signal_dir+"SMS_TChiWH_mCh750_mLSP1_s16v3/slim_*.root"},"pass&&mass_stop==750&&mass_lsp==1");
+  auto signal_comb_750_1_2018 = Process::MakeShared<Baby_full>("2018 Signal (750,1)", Process::Type::signal, colors("t1tttt"),{FullSim_signal_dir+"SMS_TChiWH_mCh750_mLSP1_a18v1/slim_*.root"},"pass&&mass_stop==750&&mass_lsp==1");
+  auto signal_comb_350_100_2016 = Process::MakeShared<Baby_full>("2016 Signal (350,100)", Process::Type::signal, colors("t1tttt"),{FullSim_signal_dir+"SMS_TChiWH_mCh350_mLSP100_s16v3/slim_*.root"},"pass&&mass_stop==350&&mass_lsp==100");
+  auto signal_comb_350_100_2018 = Process::MakeShared<Baby_full>("2018 Signal (350,100)", Process::Type::signal, colors("t1tttt"),{FullSim_signal_dir+"SMS_TChiWH_mCh350_mLSP100_a18v1/slim_*.root"},"pass&&mass_stop==350&&mass_lsp==100");
+
   //List of processes
 
-  vector<shared_ptr<Process> > sample_list_Comb = {tt2l_Comb,tt1l_Comb,ttV_Comb,wjets_Comb,diboson_Comb,signal_comb_700_1,signal_comb_650_300,signal_comb_225_75};
+  vector<shared_ptr<Process> > sample_list_Comb = {signal_comb_700_1,signal_comb_650_300,signal_comb_225_75};
+  vector<shared_ptr<Process> > FullSim_sample_list_Comb = {signal_comb_350_100_2016,signal_comb_350_100_2018,signal_comb_750_1_2016,signal_comb_750_1_2018};
+  vector<shared_ptr<Process> > FullSim2016_sample_list_Comb = {tt1l_2016, tt2l_2016, wjets_2016,single_t_2016, diboson_2016, ttV_2016, signal_comb_350_100_2016,signal_comb_750_1_2016};
+  vector<shared_ptr<Process> > FullSim2018_sample_list_Comb = {tt1l_2018, tt2l_2018, wjets_2018,single_t_2018, diboson_2018, ttV_2018, signal_comb_350_100_2018,signal_comb_750_1_2018};
 
 
   PlotOpt log_lumi("txt/plot_styles.txt", "CMSPaper");
@@ -125,36 +132,53 @@ int main(){
     //For some reason, they needed to be pointers to go into vector later on..
 
   PlotMaker * pmComb = new PlotMaker();
+  PlotMaker * pm2016 = new PlotMaker();
+  PlotMaker * pm2018 = new PlotMaker();
 
   //Selections
   NamedFunc signalRegion       = "hasNano&&pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto" && WHLeptons==1;
   NamedFunc signalRegion_3jet  = "hasNano&&pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mbb>90&&mbb<150&&mct>200&&mt_met_lep>150&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto" && WHLeptons==1 && LeadingNonBJetPt_med<300;
   NamedFunc signalRegion_noMbb       = "hasNano&&pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto" && WHLeptons==1;
   NamedFunc signalRegion_3jet_noMbb  = "hasNano&&pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto" && WHLeptons==1 && LeadingNonBJetPt_med<300;
-  NamedFunc signalRegion_boosted       = "hasNano&&pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto&&nHiggs==1" && WHLeptons==1;
-  NamedFunc signalRegion_boosted_3jet  = "hasNano&&pass&&nvetoleps==1&&ngoodjets==3&&pfmet>125&&mct>200&&mt_met_lep>150&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto&&nHiggs==1" && WHLeptons==1 && LeadingNonBJetPt_med<300;
-  
+
   NamedFunc looseSignalRegion       = "hasNano&&pass&&nvetoleps==1&&ngoodjets==2&&pfmet>125&&ngoodbtags==2&&PassTrackVeto&&PassTauVeto" && WHLeptons==1;
 
-  vector<NamedFunc> sels   = {signalRegion_boosted,signalRegion_boosted_3jet}; 
-  vector<string> sels_tags = {"_signalRegion_boosted","_signalRegion_boosted_3jet"}; 
-  vector<PlotMaker *> pms = {pmComb};
-  vector<vector<shared_ptr<Process> > > samples_Run2 = {sample_list_Comb};
-  vector<string> years = {"yAll"};
+  vector<NamedFunc> sels   = {signalRegion}; 
+  vector<string> sels_tags = {"_signalRegion"}; 
+  vector<PlotMaker *> pms = {pmComb,pm2016,pm2018};
+  vector<vector<shared_ptr<Process> > > samples_Run2 = {sample_list_Comb,FullSim2016_sample_list_Comb,FullSim2018_sample_list_Comb};
+  vector<string> years = {"yAll","y2016_FullSim","y2018_FullSim"};
   vector<NamedFunc> weights = {"weight * trig_eff"*nanoWeight*yearWeight};
 
   for(uint isel=0;isel<sels.size();isel++){
     for(uint iyear=0;iyear<samples_Run2.size();iyear++){
       for(uint iweight=0;iweight<weights.size();iweight++){
 
-          pms[iyear]->Push<Hist1D>(Axis(25, 50., 300., "mbb", "mbb"),
-            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("test_"+years[iyear]+sels_tags[isel]);
+          pms[iyear]->Push<Hist1D>(Axis(10, 0., 500., "FatJet_pt_nom", "FatJet_pt_nom [GeV]"),
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("FatJetStudy_"+years[iyear]+sels_tags[isel]);
           
+          pms[iyear]->Push<Hist1D>(Axis(10, 0., 500., "FatJet_genPt", "FatJet_genPt"),
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("FatJetStudy_"+years[iyear]+sels_tags[isel]);
+          
+          pms[iyear]->Push<Hist1D>(Axis(5, 0., 500., "pfmet", "pfmet"),
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("FullSimStudy_"+years[iyear]+sels_tags[isel]);
+          
+          pms[iyear]->Push<Hist1D>(Axis(5, 0., 500., "mct", "mct"),
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("FullSimStudy_"+years[iyear]+sels_tags[isel]);
+          
+          pms[iyear]->Push<Hist1D>(Axis(5, 0., 500., "mt_met_lep", "mt_met_lep"),
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("FullSimStudy_"+years[iyear]+sels_tags[isel]);
+          
+          pms[iyear]->Push<Hist1D>(Axis(5, 30., 330., "mbb", "mbb"),
+            sels[isel], samples_Run2[iyear], all_plot_types).Weight(weights[iweight]).Tag("FullSimStudy_"+years[iyear]+sels_tags[isel]);
+
       }
     }
   }
 
   pmComb->MakePlots(lumicomb);
+  pm2016->MakePlots(lumicomb);
+  pm2018->MakePlots(lumicomb);
 
 
 }

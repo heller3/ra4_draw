@@ -8,10 +8,11 @@ bool hasNano
 int nHiggs
 
 float mt_met_lep
-float mt_met_lep_jup
-float mt_met_lep_jdown
+float mt_genmet_lep
 float mt_met_lep_resup
 float mt_met_lep_resdown
+float mt_met_lep_jup
+float mt_met_lep_jdown
 float pfmet
 float pfmet_jup
 float pfmet_jdown
@@ -20,6 +21,10 @@ float pfmet_resdown
 float pfmet_uncorr
 float pfmet_phi
 float pfmet_uncorr_phi
+float pfmet_resup
+float pfmet_resdown
+float pfmet_jup
+float pfmet_jdown
 float genmet
 int ngoodjets
 int jup_ngoodjets
@@ -140,6 +145,8 @@ std::vector<float> FatJet_msoftdrop
 std::vector<float> FatJet_mass
 std::vector<float> FatJet_btagDDBvL
 std::vector<float> FatJet_btagDDBvL_noMD
+std::vector<float> FatJet_genPt
+std::vector<float> FatJet_pt_nom
 std::vector<float> FatJet_subJetIdx1
 std::vector<float> FatJet_subJetIdx2
 
