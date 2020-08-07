@@ -82,6 +82,9 @@ int main(){
   //load all pairs as cuts into vector
   vector<TString> pair_cuts;
   vector<TString> mass_tag;
+  vector<float> v_mchi;
+  vector<float> v_mlsp;
+
   int Npoints=0;
   for(int iy=ini_y; iy<=last_y; iy++){
     for(int ix=ini_x; ix<=last_x; ix++){
@@ -91,6 +94,8 @@ int main(){
         //if(mchi!=175) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
+        v_mchi.push_back(mchi);
+        v_mlsp.push_back(mlsp);
         cout<<"Found mass point "<<mass_tag.back()<<endl;
   Npoints++;
       }
@@ -496,8 +501,9 @@ if(single_thread) pmcomb->multithreaded_ = false;
   for(int iProc = 0; iProc < nSignals; iProc++){
     for(unsigned iTable(0); iTable < 12; iTable++){
       vector< vector<GammaParams>  > yields(nSignals,vector<GammaParams> (25));
+      outFile << v_mchi[iProc] << " " << v_mlsp[iProc] << " ";
       for(unsigned iVar(0); iVar < 25; iVar++){
-
+    
         double resultYield = 0;
 
         Table * yield_table = static_cast<Table*>(pmcomb->Figures()[iTable].get());
@@ -512,7 +518,11 @@ if(single_thread) pmcomb->multithreaded_ = false;
           resultYield = 0;
         }
 
-        outFile << resultYield << " ";
+        outFile << resultYield;
+
+        if(iVar!=24){
+          outFile << " ";
+        }
 
       }//for loop over variations/rows
       outFile << endl;
