@@ -150,7 +150,7 @@ int main(){
   //auto all_data = {data2016_dir+"slim*data_2016*singleel*.root"};
 
   //// Contributions
-  NamedFunc data_blind_sel = "mct<=200&&";
+  NamedFunc data_blind_sel = "mct<=200";
   if(!blind) data_blind_sel ="1";
   auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&data_blind_sel&&"(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
@@ -204,7 +204,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-         if (mchi!=800) continue;
+         if (mchi!=800 && mlsp!=100) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
