@@ -534,12 +534,12 @@ if(single_thread) pmcomb->multithreaded_ = false;
         yields[iProc] = yield_table->Yield(sample_list_comb[iProc].get(), lumicomb);
         resultYield = 1.0+((yields[iProc][iVar].Yield()-yields[iProc][0].Yield())/(yields[iProc][0].Yield()));
 
-        if(resultYield>2.0){
+        if(resultYield>=2.0){
           resultYield = 2;
-        }else if(resultYield<0.0){
-          resultYield = 0;
+        }else if(resultYield<=0.0){
+          resultYield = 0.01;
         }else if(resultYield!=resultYield){
-          resultYield = 0;
+          resultYield = 1;
         }
 
         outFile << resultYield;
