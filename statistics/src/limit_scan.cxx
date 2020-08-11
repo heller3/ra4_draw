@@ -72,16 +72,17 @@ void ReadPoints(vector<double> &vmx,
   ifstream infile(filename_);
   string line;
 
-  TFile * f_sig_xsec = new TFile("xsec_tchi_13TeV.root","read");
-  TH1D * h_sig_xsec = static_cast<TH1D*>(f_sig_xsec->Get("h_xsec_c1n2"));
+  // TFile * f_sig_xsec = new TFile("xsec_tchi_13TeV.root","read");
+  // TH1D * h_sig_xsec = static_cast<TH1D*>(f_sig_xsec->Get("h_xsec_c1n2"));
 
   while(getline(infile, line)){
     istringstream iss(line);
     double pmx, pmy, pxsec, pobs, pobsup, pobsdown, pexp, pup, pdown, sigobs, sigexp;
     iss >> pmx >> pmy >> pxsec >> pobs >> pobsup >> pobsdown >> pexp >> pup >> pdown >> sigobs >> sigexp;
 
-    float xsec = h_sig_xsec->GetBinContent(h_sig_xsec->FindBin(pmx));
-    //float exsec = h_sig_xsec->GetBinError(h_sig_xsec->FindBin(pmx));
+    // float xsec = h_sig_xsec->GetBinContent(h_sig_xsec->FindBin(pmx));
+    // float exsec = h_sig_xsec->GetBinError(h_sig_xsec->FindBin(pmx));
+    // cout<<"xsec, err: "<<xsec<<" pm "<<exsec<<endl;
   //  xsec::signalCrossSection(mglu, xsec, exsec);
     // int factor(50), mlsp(pmy);
     // if((mglu%factor!=0 || mlsp%factor!=0) && mglu-mlsp!=225 && mlsp!=1450) continue;
@@ -89,7 +90,7 @@ void ReadPoints(vector<double> &vmx,
     if(pmy>400 || pmx>900) continue;
     vmx.push_back(pmx);
     vmy.push_back(pmy);
-    vxsec.push_back(xsec);
+    vxsec.push_back(pxsec);
     //else vxsec.push_back(pxsec);
     vobs.push_back(pobs);
     vobsup.push_back(pobsup);
