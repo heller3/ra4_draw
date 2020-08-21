@@ -79,6 +79,27 @@ df_sigSys.columns = variations
 df_sigSys = df_sigSys.transpose()
 df_sigSys = df_sigSys.round(3)
 print("parsed signal systematics...")
+#print(df_sigSys.iloc[17,:])
+#print(df_sigSys.iloc[18,:])
+
+#find high, low, mean, median, mode of each row
+# df_dup = df_sigSys
+# maxValues = df_dup.max(axis=1)
+# minValues = df_dup.min(axis=1)
+# meanValues = df_dup.mean(axis=1)
+# medValues = df_dup.median(axis=1)
+# modeValues = df_dup.mode(axis=1)
+
+# print("maximums: ")
+# print(maxValues)
+# print("minimums: ")
+# print(minValues)
+# print("means: ")
+# print(meanValues)
+# print("medians: ")
+# print(medValues)
+# print("modes: ")
+# print(modeValues)
 
 #open the datacard and append
 for iFile in range(len(datacards)):

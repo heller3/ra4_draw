@@ -59,7 +59,6 @@ int main(){
   auto signal_comb_400_150 = Process::MakeShared<Baby_full>("2016-2018 Signal (450,150)", Process::Type::signal, colors("t1tttt"),{signal_dir+"slim_SMS_TChiWH*.root"},"pass&&mass_stop==400&&mass_lsp==150");
   auto signal_comb_225_75 = Process::MakeShared<Baby_full>("2016-2018 Signal (225,75)", Process::Type::signal, colors("t1tttt"),{signal_dir+"slim_SMS_TChiWH*.root"},"pass&&mass_stop==225&&mass_lsp==75");
 */
-
   //FIND ALL SIGNAL MASS POINTS
   TChain sig_tree("t");
   sig_tree.Add("/home/users/dspitzba/wh_babies/babies_v33_4_2020_07_09/slim_SMS_TChiWH_s16v3_0.root");
