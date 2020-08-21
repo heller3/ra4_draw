@@ -150,7 +150,7 @@ int main(){
   //auto all_data = {data2016_dir+"slim*data_2016*singleel*.root"};
 
   //// Contributions
-  NamedFunc data_blind_sel = "mct<=200&&";
+  NamedFunc data_blind_sel = "mct<=200";
   if(!blind) data_blind_sel ="1";
   auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"), all_data ,baselinef&&data_blind_sel&&"(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
   auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
@@ -204,7 +204,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        // if (mchi!=800) continue;
+        if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -350,13 +350,13 @@ int main(){
 			
       // now take care of the 0b W+jets control region. no differentiation between boosted/resolved but the different met bin width
 			if(boosted){
-				if(ideepAK8==0) totcut = njetbins[inj] && metbins[imet] && w_control_region;
-				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins[inj] && boosted_metbins[imet] && w_control_region;
+				if(ideepAK8==0) totcut = njetbins_0b[inj] && metbins[imet] && w_control_region;
+				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins_0b[inj] && boosted_metbins[imet] && w_control_region;
         else if (ideepAK8>0 && imet>=boosted_metbins.size()) continue; // stop adding boosted case after all boosted_metbins have been added.
         bin_name = "CR_0b_"+njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8];
 				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
 			}
-			else{ totcut = njetbins[inj] && metbins[imet] && w_control_region;
+			else{ totcut = njetbins_0b[inj] && metbins[imet] && w_control_region;
         bin_name = "CR_0b_"+njetnames[inj]+"_"+metnames[imet];
 				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]);
 			}

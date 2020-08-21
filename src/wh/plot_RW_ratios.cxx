@@ -351,11 +351,12 @@ int main(int argc, char *argv[]){
 
   auto  all_other = {mc2016_dir+"slim_*WW*.root"};
 
-  auto all_wjets = {mc2016_dir+"slim_*WW*.root", mc2016_dir+"slim_*WZ*.root",mc2017_dir+"slim_*WW*.root", mc2017_dir+"slim_*WZ*.root",mc2018_dir+"slim_*WW*.root", mc2018_dir+"slim_*WZ*.root", mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
+
+  auto all_wjets = {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root",mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"};
   //auto all_wjets = {mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
 
   //// Contributions
-  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch"&&baselinef); // evt!=74125994
+  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
   auto proc_top = Process::MakeShared<Baby_full>("top 2016-2018", Process::Type::background, kRed,all_top,"stitch"&&baselinef);
   auto proc_other = Process::MakeShared<Baby_full>("TTV and VV 2016-2018", Process::Type::background, kRed,all_other,baselinef);
   auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"),{data2016_dir+"slim_*data_2016*.root",data2017_dir+"slim_*data_2017*.root",data2018_dir+"slim_*data_2018*.root"},baselinef&&"(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
@@ -382,11 +383,11 @@ int main(int argc, char *argv[]){
 
   // Numerator definitaions
   string num_string = "pfmet>125&&mt_met_lep>150&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";
-  NamedFunc numerator           = num_string;
-  NamedFunc jdown_numerator     = JMEvariation(num_string, "jdown");
-  NamedFunc jup_numerator       = JMEvariation(num_string, "jup");
-  NamedFunc resup_numerator     = METvariation(num_string, "resup");
-  NamedFunc resdown_numerator   = METvariation(num_string, "resdown");
+  NamedFunc numerator           = num_string && LeadingNonBJetPt_med<300.;
+  NamedFunc jdown_numerator     = JMEvariation(num_string, "jdown")&&LeadingNonBJetPt_med<300.;
+  NamedFunc jup_numerator       = JMEvariation(num_string, "jup")&&LeadingNonBJetPt_med<300.;
+  NamedFunc resup_numerator     = METvariation(num_string, "resup")&&LeadingNonBJetPt_med<300.;
+  NamedFunc resdown_numerator   = METvariation(num_string, "resdown")&&LeadingNonBJetPt_med<300.;
   
 
   vector<NamedFunc> deepAK8bins = {"nHiggs==0","nHiggs>=1"};
@@ -394,9 +395,9 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> jdown_deepAK8bins = {"jdown_nHiggs==0","jdown_nHiggs>=1"};
 
   // variations for 3rd jet missing - small effect?
-  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
-  vector<NamedFunc> jup_njetbins = {"jup_ngoodjets==2","jup_ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
-  vector<NamedFunc> jdown_njetbins = {"jdown_ngoodjets==2","jdown_ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
+  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"}; 
+  vector<NamedFunc> jup_njetbins = {"jup_ngoodjets==2","jup_ngoodjets==3"}; 
+  vector<NamedFunc> jdown_njetbins = {"jdown_ngoodjets==2","jdown_ngoodjets==3"}; 
  
   vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<=400","pfmet>400"};
   vector<NamedFunc> jup_metbins = {"pfmet_jup>125&&pfmet_jup<=200","pfmet_jup>200&&pfmet_jup<=300","pfmet_jup>300&&pfmet_jup<=400","pfmet_jup>400"};
@@ -502,24 +503,24 @@ int main(int argc, char *argv[]){
   vector<string> cuts;
   /////// Systematic weight mode //////
   if(systematic_mode){ // Same numerator and denominator, vary weights
-     weights= {  "weight " * yearWeight,
-                 "weight  * w_puUp" * yearWeight,
-                 "weight  * w_puDown" * yearWeight,
-                 "weight * w_btagLFUp" * yearWeight,
-                 "weight * w_btagLFDown" * yearWeight,
-                 "weight * w_btagHFUp" * yearWeight,
-                 "weight * w_btagHFDown" * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight,
-                 "weight " * yearWeight * (1+0.2*hasGenBs),
-                 "weight " * yearWeight * (1-0.2*hasGenBs),
-                 "weight " * yearWeight * higgsMistagSFUp,
-                 "weight " * yearWeight * higgsMistagSFDown,
-                 "weight " * VV_up * yearWeight,
-                 "weight " * VV_down * yearWeight,
-                  };
+     weights= {  "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_puUp"       * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_puDown"     * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagLFUp"   * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagLFDown" * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagHFUp"   * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagHFDown" * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * (1+0.2*hasGenBs),
+                 "weight * trig_eff"                * nanoWeight * yearWeight * (1-0.2*hasGenBs),
+                 "weight * trig_eff"                * nanoWeight * yearWeight * higgsMistagSFUp,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * higgsMistagSFDown,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * VV_up,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * VV_down,
+                };
      tag+="wjets1_";
      leglabels = {"Nominal", "PU up", "PU up/down", "b-tag mistag up","b-tag mistag up/down","b-tag HF up","b-tag HF up/down", "JES up", "JES up/down", "MET res up", "MET res up/down", "true b up", "true b up/down", "Higgs up", "Higgs up/down", "VV up", "VV up/down"};
 
@@ -812,10 +813,7 @@ void printDebug(vector<vector<NamedFunc> > &allcuts, vector<vector<vector<GammaP
   cout<<"-- Baseline cuts: "<<baseline<<endl<<endl;
   for(size_t ibin=0; ibin<allcuts[0].size(); ibin++){
     for(size_t iabcd=0; iabcd<allcuts.size(); iabcd++){
-      cout<<"MC: "    <<setw(9)<<RoundNumber(allyields[bkg]  [iabcd][ibin].Yield(), digits)
-	  <<"  top: "<<setw(9)<<RoundNumber(allyields[top] [iabcd][ibin].Yield(), digits)
-	  <<"  wjets: "<<setw(9)<<RoundNumber(allyields[w] [iabcd][ibin].Yield(), digits)
-    <<" other: "<<setw(9)<<RoundNumber(allyields[other][iabcd][ibin].Yield(), digits);
+	  cout <<"wjets: "<<setw(9)<<RoundNumber(allyields[w] [iabcd][ibin].Yield(), digits) << " ";
 	  if(data_mode) cout<<" data: "<<setw(9)<<RoundNumber(allyields[data][iabcd][ibin].Yield(), digits)<<"  - "<< allcuts[iabcd][ibin].Name()<<endl;
 	  else cout<< allcuts[iabcd][ibin].Name()<<endl;
     } // Loop over ABCD cuts
