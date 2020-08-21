@@ -13,7 +13,7 @@
   LegendEntrySize = 0.041
   LegendMaxSize = 0.28
   BottomPlotHeight = 0.33
-  LegendMarkerWidth = 0.12
+  LegendMarkerWidth = 0.5
   LegendPad = 0.028
   LegendDensity = 1.
   ExtraLabelSize = 0.043

@@ -3356,7 +3356,34 @@ float deepTag2018 = 0.8365;
       return nHiggs;
     });
 
+   const NamedFunc reduced_MET("reduced_MET",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0;
+      int year = b.year();
 
+      if(year==2016){
+        met_var = b.pfmet();
+      }else{
+        met_var = 0.97*b.pfmet();
+      }
+
+      return met_var;
+    });
+
+   const NamedFunc reducedMET_mT("reducedMET_mT",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0;
+      float mt_var=0;
+      int year = b.year();
+
+      if(year==2016){
+        met_var = b.pfmet();
+      }else{
+        met_var = 0.97*b.pfmet();
+      }
+
+      mt_var = sqrt(2*b.leps_pt()->at(0)*met_var * (1-(cos(b.leps_phi()->at(0)-b.pfmet_phi()))));
+      return mt_var;
+
+    });
 
  
 }

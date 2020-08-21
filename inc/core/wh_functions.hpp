@@ -190,6 +190,8 @@ namespace WH_Functions{
   extern const NamedFunc mct_subt_jerdown;
   extern const NamedFunc nanoWeight;
   extern const NamedFunc genPt_ak8_higgsTagger;
+  extern const NamedFunc reduced_MET;
+  extern const NamedFunc reducedMET_mT;
 
 
   extern const NamedFunc max_genjet_bquark_pt_ratio;

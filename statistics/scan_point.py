@@ -23,6 +23,12 @@ if __name__ == "__main__":
 
     mchi = int(wspace_name.split("mChi-")[1].split("_")[0])
     mlsp = int(wspace_name.split("mLSP-")[1].split("_")[0])
+    
+    f_sig_xsec = ROOT.TFile("xsec_tchi_13TeV.root","read")
+    h_sig_xsec = f_sig_xsec.Get("h_xsec_c1n2")
+
+    xsec = h_sig_xsec.GetBinContent(h_sig_xsec.FindBin(mchi));
+    exsec = h_sig_xsec.GetBinError(h_sig_xsec.FindBin(mchi));
 
     temp_dir = "%s/tmp_%i_%i" %(base_dir,mchi,mlsp)
     if not os.path.exists(temp_dir): os.mkdir(temp_dir)
@@ -42,6 +48,8 @@ if __name__ == "__main__":
     output=stream.read()
     print output
 
+
+    obs = float(output.split("Observed Limit: r <")[1].split("\n")[0])
     exp = float(output.split("Expected 50.0%: r <")[1].split("\n")[0])
     exp_p1 = float(output.split("Expected 84.0%: r <")[1].split("\n")[0])
     exp_m1 = float(output.split("Expected 16.0%: r <")[1].split("\n")[0])
@@ -56,7 +64,6 @@ if __name__ == "__main__":
     # output=stream.read()
     # print output
 
-    # obs = float(output.split("Expected 50.0%: r <")[1].split("\n")[0])
     # ### hack for now, this is not correct variation for observed limit.
     # obs_p1 = float(output.split("Expected 84.0%: r <")[1].split("\n")[0])
     # obs_m1 = float(output.split("Expected 16.0%: r <")[1].split("\n")[0])
@@ -68,10 +75,10 @@ if __name__ == "__main__":
 
     scan_summary_name = base_dir.split("workspaces")[0] + "limits.txt"
     scan_summary =open(scan_summary_name,"a")
-    xsec = 1
-    obs = 999
-    obs_m1= 999
-    obs_p1 = 999
+    # xsec = 1
+    # obs = 999
+    obs_m1= obs * (xsec - exsec)/xsec
+    obs_p1 = obs * (xsec + exsec)/xsec
     sigobs=0
     sigexp=0
 

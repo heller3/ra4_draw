@@ -43,7 +43,7 @@ namespace{
   bool original_analysis=false;
   bool dilep_mode=false;
   bool data_CR=true;
-  bool blind=true;
+  bool blind=false;
   enum Bkgs {bkg, top, w, other, data};
 
 }
@@ -53,7 +53,7 @@ void copy_file( const char* srce_file, const char* dest_file )
     std::ofstream dest( dest_file, std::ios::binary ) ;
     dest << srce.rdbuf() ;
 }
-void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors, vector<float> W_transfer_errs, vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
+void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<float> mct_transfer_errs,vector<vector<float> > W_transfer_factors, vector<float> W_transfer_errs, vector<GammaParams>  sigyields, TString mass_tag,TString analysis_tag);
 
 int main(){
   gErrorIgnoreLevel=6000; // Turns off ROOT errors due to missing branches
@@ -222,15 +222,18 @@ int main(){
 	  vector<TString> leglabels;
 
 
-  TString analysis_tag = "nominal";
-  if(boosted) analysis_tag = "boosted";
+  TString analysis_tag = "blind";
+  // if(boosted) analysis_tag = "boosted";
+  if(!blind)analysis_tag="unblind";
   if(original_analysis) analysis_tag="original";
-  if(data_CR)analysis_tag+="dataCR";
+  if(data_CR)analysis_tag+="_dataCR";
+
+  // analysis_tag+="fix_rmct_stat";
 
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
-  vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; analysis_tag+="_4metbins";
-  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; analysis_tag+="fix_top_systs";
+  vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<400","pfmet>400"}; // analysis_tag+="_4metbins";
+  vector<NamedFunc> boosted_metbins = {"pfmet>125&&pfmet<=300","pfmet>300"}; //analysis_tag+="fix_top_systs";
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<450","pfmet>450"}; analysis_tag+="_4metbins_450";
  // if(original_analysis) vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200"}; 
 	//vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>350"};	analysis_tag+="_met350";
@@ -528,7 +531,7 @@ int main(){
     cout<<"Now writing cards"<<endl;
 
     for(int isig=0;isig<nsig;isig++){
-       writeCard(bin_names,allyields,mct_transfer_factors, W_transfer_factors, W_transfer_errs, sig_by_mass[isig],mass_tag[isig],analysis_tag);
+       writeCard(bin_names,allyields,mct_transfer_factors,mct_transfer_errs, W_transfer_factors, W_transfer_errs, sig_by_mass[isig],mass_tag[isig],analysis_tag);
     }
 	
   //double seconds = (chrono::duration<double>(chrono::high_resolution_clock::now() - begTime)).count();
@@ -542,7 +545,7 @@ int main(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<vector<float> > W_transfer_factors, vector<float> W_transfer_errs, vector<GammaParams> sigyields,TString mass_tag,TString analysis_tag){
+void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,vector<vector<float> > mct_transfer_factors, vector<float> mct_transfer_errs, vector<vector<float> > W_transfer_factors, vector<float> W_transfer_errs, vector<GammaParams> sigyields,TString mass_tag,TString analysis_tag){
 
  	TString outpath = Form("statistics/%s/datacards/datacard_%s_.txt",analysis_tag.Data(),mass_tag.Data());
  	// if(boosted) outpath+="boosted_";
@@ -566,7 +569,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     // --------- write header
     ofstream fcard(outpath);
     int nbg=3;
-    int nsyst = 90;//3 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
+    int nsyst = 89;//2 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
     fcard<<"imax "<<nbins/3<<"  number of channels\n";
     fcard<<"jmax "<<nbg<<"  number of backgrounds\n";
     fcard<<"kmax "<<nsyst<<"  number of nuisance parameters\n";
@@ -605,15 +608,15 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     float sys_W_HF = 1.20;
     float sys_VV_xsec = 1.10;
     float sys_other_xsec = 1.25;
-    float sys_Higgs = 1.15;
-    float sys_sig_filler = 1.15;
+    float sys_Higgs = 1.08;
+    //float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_lumi)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_lumi);
     //fcard<<endl<<left<<setw(wsyst)<<"bkg_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     //for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler)<<left<<setw(wbin)<<Form("%.2f",sys_filler);
-    fcard<<endl<<left<<setw(wsyst)<<"sig_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_sig_filler)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-";
+  //  fcard<<endl<<left<<setw(wsyst)<<"sig_flat"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    //for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<Form("%.2f",sys_sig_filler)<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<"-";
     
     //MCT Control region stats
     for (size_t ibin(0); ibin<nbins; ibin+=3){
@@ -690,9 +693,13 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     // R_mCT statistic
     for (size_t ibin(0); ibin<nbins; ibin+=3){
       int k=1;
+      float rmct_stat=0;
       fcard<<endl<<left<<setw(wname)<<Form("rmct_stat_%i lnN",static_cast<int>(ibin/3))<<setw(wdist)<<" ";
        for(size_t j(0);j<k+(nbg+1)*(ibin/3);j++) fcard<<left<<setw(wbin)<<"-";
-       fcard<<left<<setw(wbin)<<Form("%.2f",stat_rmct[ibin/3]);
+       if (mct_transfer_factors[ibin/3][0]>0) rmct_stat = mct_transfer_errs[ibin/3]/mct_transfer_factors[ibin/3][0];
+       else rmct_stat = 0;
+       fcard<<left<<setw(wbin)<<Form("%.2f", 1+rmct_stat);
+       // fcard<<left<<setw(wbin)<<Form("%.2f",stat_rmct[ibin/3]);
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
