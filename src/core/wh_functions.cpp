@@ -499,15 +499,10 @@ float medDeepCSV2018 = 0.4184;
 	      SF = signalSF2018[binSF];
 	      SF_unc = signalSF2018_unc[binSF];	    
 	    } // else if { // This should never happen
-//	    int delta;
-//	    delta=0;
-//	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018) ) && eff>0){
+ 	    int delta;
+ 	    delta=0;
 	    PMC *= eff;
-	    PData *= eff*(SF);//delta*SF_unc);
-//	    }
-//	    else {
-//	      PMC *= (1-eff);
-//	      PData *= (1-eff*(SF+delta*SF_unc));
+	    PData *= eff*(SF+delta*SF_unc);
 	  }
 	  // No Gen Higgs
 	} else {
