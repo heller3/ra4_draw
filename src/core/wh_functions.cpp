@@ -451,11 +451,8 @@ float medDeepCSV2018 = 0.4184;
       float PFull = 1.;
       float PData=1.;
       float PMC=1.;
-      //      float eff=0.;
       float effFast=0.;
       float effFull=0.;
-//     float SF=1.;
-//     float SF_unc=0.;
       float SFFast = 1.;
       float SFFast_unc = 0.;
       float SFFull = 1.;
@@ -500,26 +497,19 @@ float medDeepCSV2018 = 0.4184;
 	    if(2016==b.year()) {
 	      effFast = fastEff2016_750_1[binEff];
 	      effFull = fullEff2016_750_1[binEff];
-//	      SFFast = effFull/effFast;
-//	      SFFast_unc = 0.05;
 	      SFFull = signalSF2016[binSF];
 	      SFFull_unc = signalSF2016_unc[binSF];
 	    } else if(2017==b.year()) {
 	      effFast = fastEff2017_750_1[binEff];
 	      effFull = fullEff2017_750_1[binEff];
-//	      SFFast = effFull/effFast;
-//	      SFFast_unc = 0.05;
 	      SFFull = signalSF2017[binSF];
 	      SFFull_unc = signalSF2017_unc[binSF];
 	    } else if(2018==b.year()) {
 	      effFast = fastEff2018_750_1[binEff];
 	      effFull = fullEff2018_750_1[binEff];
-//	      SFFast = effFull/effFast;
-//	      SFFast_unc = 0.05;
 	      SFFull = signalSF2018[binSF];
 	      SFFull_unc = signalSF2018_unc[binSF];	    
 //	    } else { // This should never happen
-//	      printf("This should never happen\n");
 	    }
 	    SFFast = effFull/effFast;
 	    SFFast_unc = 0.05;
@@ -542,7 +532,6 @@ float medDeepCSV2018 = 0.4184;
 	  }
 	  // No Gen Higgs
 	} else {
-	  //	  printf("no gen\n");
 	  int nBinFat=0;
 	  if (b.FatJet_pt_nom()->at(i) > 250){
 	    for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
@@ -584,14 +573,6 @@ float medDeepCSV2018 = 0.4184;
 	    PMC *= (1-effFull);
 	    PData *= (1-effFull*(SFFull+delta*SFFull_unc));
 	  }
-//	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018) ) && eff>0){
-//	    PMC *= eff;
-//	    PData *= eff*(SF+delta*SF_unc);
-//	  }
-//	  else {
-//	    PMC *= (1-eff);
-//	    PData *= (1-eff*(SF+delta*SF_unc));
-//	  }
 	}
       }
       float weight=(PFull/PFast)*(PData/PMC);
