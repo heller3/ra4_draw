@@ -513,8 +513,8 @@ float medDeepCSV2018 = 0.4184;
 	    }
 	    SFFast = effFull/effFast;
 	    SFFast_unc = 0.05;
- 	    int delta;
- 	    delta=0;
+	    int delta;
+	    delta=0;
 	    if (!(effFull > 0)) {printf("effFull is %f\n", effFull);}
 	    if (!(effFast > 0)) {printf("effFast is %f\n", effFast);}
 	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018))){// && (effFull > 0) && (effFast > 0)){
@@ -561,6 +561,276 @@ float medDeepCSV2018 = 0.4184;
 	  
 	  int delta;
 	  delta=0;
+	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018)) && (effFull > 0) && (effFast > 0)){
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= effFull;
+	    PData *= effFull*(SFFull+delta*SFFull_unc);
+	  }
+	  else {
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= (1-effFull);
+	    PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	  }
+	}
+      }
+      float weight=(PFull/PFast)*(PData/PMC);
+      //     printf("Weight: %f\n", weight);
+      return weight;
+    });
+
+  const NamedFunc signalHiggsMistagSFUp("signalHiggsMistagSFUp",[](const Baby &b) -> NamedFunc::ScalarType{
+      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
+      float PFast = 1.;
+      float PFull = 1.;
+      float PData=1.;
+      float PMC=1.;
+      float effFast=0.;
+      float effFull=0.;
+      float SFFast = 1.;
+      float SFFast_unc = 0.;
+      float SFFull = 1.;
+      float SFFull_unc = 0.;
+      
+      // Find Higgs idx
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+	// Gen Higgs
+	if ((b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0) && (deltaR(b.FatJet_eta()->at(i), b.FatJet_phi()->at(i), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8)) { // consider only Fat Jets with gen H
+	  float pt = 0;
+	  if ((pt = b.FatJet_pt_nom()->at(i)) > 250) {
+	    unsigned binSF = 0;
+	    unsigned binEff = 0;
+	    for(unsigned iBinSF(0); iBinSF<binsSF.size(); iBinSF++) { // Lookup pt bin for SF
+	      if(binsSF.size() == (iBinSF+1)) {
+		binSF = iBinSF;
+	      } else if ((binsSF[iBinSF] < pt) && (binsSF[iBinSF+1] > pt)) {
+		binSF = iBinSF;
+		break;
+	      }
+	    }
+	    for(unsigned iBinEff(0); iBinEff<binsEff.size(); iBinEff++) { // Lookup pt bin for eff
+	      if(binsEff.size() == (iBinEff+1)) {
+		binEff = iBinEff;
+	      } else if ((binsEff[iBinEff] < pt) && (binsEff[iBinEff+1] > pt)) {
+		binEff = iBinEff;
+		break;
+	      }
+	    }
+	    if(2016==b.year()) {
+	      effFast = fastEff2016_750_1[binEff];
+	      effFull = fullEff2016_750_1[binEff];
+	      SFFull = signalSF2016[binSF];
+	      SFFull_unc = signalSF2016_unc[binSF];
+	    } else if(2017==b.year()) {
+	      effFast = fastEff2017_750_1[binEff];
+	      effFull = fullEff2017_750_1[binEff];
+	      SFFull = signalSF2017[binSF];
+	      SFFull_unc = signalSF2017_unc[binSF];
+	    } else if(2018==b.year()) {
+	      effFast = fastEff2018_750_1[binEff];
+	      effFull = fullEff2018_750_1[binEff];
+	      SFFull = signalSF2018[binSF];
+	      SFFull_unc = signalSF2018_unc[binSF];	    
+//	    } else { // This should never happen
+	    }
+	    SFFast = effFull/effFast;
+	    SFFast_unc = 0.05;
+	    int delta;
+	    delta = 1;
+	    if (!(effFull > 0)) {printf("effFull is %f\n", effFull);}
+	    if (!(effFast > 0)) {printf("effFast is %f\n", effFast);}
+	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018))){// && (effFull > 0) && (effFast > 0)){
+	      PFast *= effFast;
+	      PFull *= effFast*(SFFast+delta*SFFast_unc);
+	      PMC *= effFull;
+	      PData *= effFull*(SFFull+delta*SFFull_unc);
+	    }
+	    else {
+	      PFast *= (1-effFast);
+	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
+	      PMC *= (1-effFull);
+	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	    }
+	  }
+	  // No Gen Higgs
+	} else {
+	  int nBinFat=0;
+	  if (b.FatJet_pt_nom()->at(i) > 250){
+	    for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+	      if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+		if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
+		  nBinFat++;
+		}
+	      }
+	    }
+	  }
+	  if (nBinFat==0){
+	    effFull=0.0;
+	    SFFull=1.;
+	    SFFull_unc=0.;
+	  }
+	  else if (nBinFat==1){
+	    effFull=0.25;
+	    SFFull=1.13;
+	    SFFull_unc=0.28;
+	  }
+	  else if (nBinFat==2){
+	    effFull=0.67;
+	    SFFull=0.95;
+	    SFFull_unc=0.08;
+	  }
+	  //else {eff=0.;} // this should really never happen
+	  
+	  int delta;
+	  delta = 1;
+	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018)) && (effFull > 0) && (effFast > 0)){
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= effFull;
+	    PData *= effFull*(SFFull+delta*SFFull_unc);
+	  }
+	  else {
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= (1-effFull);
+	    PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	  }
+	}
+      }
+      float weight=(PFull/PFast)*(PData/PMC);
+      //     printf("Weight: %f\n", weight);
+      return weight;
+    });
+
+  const NamedFunc signalHiggsMistagSFDown("signalHiggsMistagSFDown",[](const Baby &b) -> NamedFunc::ScalarType{
+      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
+      float PFast = 1.;
+      float PFull = 1.;
+      float PData=1.;
+      float PMC=1.;
+      float effFast=0.;
+      float effFull=0.;
+      float SFFast = 1.;
+      float SFFast_unc = 0.;
+      float SFFull = 1.;
+      float SFFull_unc = 0.;
+      
+      // Find Higgs idx
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+	// Gen Higgs
+	if ((b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0) && (deltaR(b.FatJet_eta()->at(i), b.FatJet_phi()->at(i), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8)) { // consider only Fat Jets with gen H
+	  float pt = 0;
+	  if ((pt = b.FatJet_pt_nom()->at(i)) > 250) {
+	    unsigned binSF = 0;
+	    unsigned binEff = 0;
+	    for(unsigned iBinSF(0); iBinSF<binsSF.size(); iBinSF++) { // Lookup pt bin for SF
+	      if(binsSF.size() == (iBinSF+1)) {
+		binSF = iBinSF;
+	      } else if ((binsSF[iBinSF] < pt) && (binsSF[iBinSF+1] > pt)) {
+		binSF = iBinSF;
+		break;
+	      }
+	    }
+	    for(unsigned iBinEff(0); iBinEff<binsEff.size(); iBinEff++) { // Lookup pt bin for eff
+	      if(binsEff.size() == (iBinEff+1)) {
+		binEff = iBinEff;
+	      } else if ((binsEff[iBinEff] < pt) && (binsEff[iBinEff+1] > pt)) {
+		binEff = iBinEff;
+		break;
+	      }
+	    }
+	    if(2016==b.year()) {
+	      effFast = fastEff2016_750_1[binEff];
+	      effFull = fullEff2016_750_1[binEff];
+	      SFFull = signalSF2016[binSF];
+	      SFFull_unc = signalSF2016_unc[binSF];
+	    } else if(2017==b.year()) {
+	      effFast = fastEff2017_750_1[binEff];
+	      effFull = fullEff2017_750_1[binEff];
+	      SFFull = signalSF2017[binSF];
+	      SFFull_unc = signalSF2017_unc[binSF];
+	    } else if(2018==b.year()) {
+	      effFast = fastEff2018_750_1[binEff];
+	      effFull = fullEff2018_750_1[binEff];
+	      SFFull = signalSF2018[binSF];
+	      SFFull_unc = signalSF2018_unc[binSF];	    
+//	    } else { // This should never happen
+	    }
+	    SFFast = effFull/effFast;
+	    SFFast_unc = 0.05;
+	    int delta;
+	    delta = -1;
+	    if (!(effFull > 0)) {printf("effFull is %f\n", effFull);}
+	    if (!(effFast > 0)) {printf("effFast is %f\n", effFast);}
+	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018))){// && (effFull > 0) && (effFast > 0)){
+	      PFast *= effFast;
+	      PFull *= effFast*(SFFast+delta*SFFast_unc);
+	      PMC *= effFull;
+	      PData *= effFull*(SFFull+delta*SFFull_unc);
+	    }
+	    else {
+	      PFast *= (1-effFast);
+	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
+	      PMC *= (1-effFull);
+	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	    }
+	  }
+	  // No Gen Higgs
+	} else {
+	  int nBinFat=0;
+	  if (b.FatJet_pt_nom()->at(i) > 250){
+	    for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+	      if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+		if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
+		  nBinFat++;
+		}
+	      }
+	    }
+	  }
+	  if (nBinFat==0){
+	    effFull=0.0;
+	    SFFull=1.;
+	    SFFull_unc=0.;
+	  }
+	  else if (nBinFat==1){
+	    effFull=0.25;
+	    SFFull=1.13;
+	    SFFull_unc=0.28;
+	  }
+	  else if (nBinFat==2){
+	    effFull=0.67;
+	    SFFull=0.95;
+	    SFFull_unc=0.08;
+	  }
+	  //else {eff=0.;} // this should really never happen
+	  
+	  int delta;
+	  delta = -1;
 	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018)) && (effFull > 0) && (effFast > 0)){
 	    PFast *= 1.;
 	    PFull *= 1.;

@@ -30,6 +30,8 @@ namespace WH_Functions{
   extern const NamedFunc nBoostedFatJet;
   extern const NamedFunc higgsMistagSF;
   extern const NamedFunc signalHiggsMistagSF;
+  extern const NamedFunc signalHiggsMistagSFUp;
+  extern const NamedFunc signalHiggsMistagSFDown;
   extern const NamedFunc nFatJet250;
   extern const NamedFunc nFatJet250b0;
   extern const NamedFunc nFatJet250b1;
