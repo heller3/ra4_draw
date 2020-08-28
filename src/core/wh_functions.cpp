@@ -775,12 +775,1336 @@ float deepTag2018 = 0.8365;
   // nFatJets with pt>250
   const NamedFunc nFatJet250("nFatJet250",[](const Baby &b) -> NamedFunc::ScalarType{
       int nloose=0;
-      for (unsigned i(0); i<b.FatJet_pt()->size(); i++){
-      	if (b.FatJet_pt()->at(i) > 250) nloose++;
+      //      for (unsigned i(0); i<b.FatJet_pt()->size(); i++){
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+	//if (b.FatJet_pt()->at(i) > 250) nloose++;
+	if (b.FatJet_pt_nom()->at(i) > 250) nloose++;
       }
       return nloose;
     });
 
+  float deepTag2016 = 0.8945;
+  float deepTag2017 = 0.8695;
+  float deepTag2018 = 0.8365;
+
+  const NamedFunc higgsMistagSF("higgsMistagSF",[](const Baby &b) -> NamedFunc::ScalarType{
+      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
+      float PData=1.;
+      float PMC=1.;
+      float eff=0.;
+      float SF=1.;
+      float SF_unc=0.;
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+        int nBinFat=0;
+	if (b.FatJet_pt_nom()->at(i) > 250){
+	  for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+	    if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+	      if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
+		nBinFat++;
+	      }
+	    }
+	  }
+        }
+        if (nBinFat==0){
+	  eff=0.0;
+	  SF=1.;
+	  SF_unc=0.;
+        }
+        else if (nBinFat==1){
+	  eff=0.25;
+	  SF=1.13;
+	  SF_unc=0.28;
+        }
+        else if (nBinFat==2){
+	  eff=0.67;
+	  SF=0.95;
+	  SF_unc=0.08;
+        }
+        //else {eff=0.;} // this should really never happen
+	
+        int delta;
+        delta=0;
+        if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018) ) && eff>0){
+	  PMC *= eff;
+	  PData *= eff*(SF+delta*SF_unc);
+        }
+        else {
+	  PMC *= (1-eff);
+	  PData *= (1-eff*(SF+delta*SF_unc));
+        }
+      }
+      float weight=PData/PMC;
+      //     printf("Weight: %f\n", weight);
+      return weight;
+    });
+
+  std::vector<unsigned> binsSF = {200,300,400,500,600};
+  std::vector<float> const signalSF2016 = {0.99, 1.00, 0.97, 0.91, 0.95};
+  std::vector<float> const signalSF2016_unc = {0.04, 0.06, 0.03, 0.05, 0.04};
+  std::vector<float> const signalSF2017 = {1.05, 1.05, 1.01, 1.06, 1.13};
+  std::vector<float> const signalSF2017_unc = {0.04, 0.02, 0.03, 0.03, 0.05};
+  std::vector<float> const signalSF2018 = {1.32, 1.35, 1.22, 1.31, 1.30};
+  //  std::vector<float> const signalSF2018_unc = {0.05, 0.03, 0.03, 0.04, 0.04};
+  std::vector<float> const signalSF2018_unc = {0.3, 0.3, 0.3, 0.3, 0.3};
+
+  std::vector<unsigned> binsEff = {200,400};		     
+  std::vector<float> const fastEff2016_750_1 = {0.702, 0.838};
+  std::vector<float> const fastEff2017_750_1 = {0.74, 0.865};
+  std::vector<float> const fastEff2018_750_1 = {0.816, 0.865};
+  std::vector<float> const fullEff2016_750_1 = {0.742, 0.84};
+  std::vector<float> const fullEff2018_750_1 = {0.824, 0.909};
+  std::vector<float> const fullEff2017_750_1 = fullEff2018_750_1;//placeholder
+
+  const NamedFunc signalHiggsMistagSF("signalHiggsMistagSF",[](const Baby &b) -> NamedFunc::ScalarType{
+      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
+      float PFast = 1.;
+      float PFull = 1.;
+      float PData=1.;
+      float PMC=1.;
+      float effFast=0.;
+      float effFull=0.;
+      float SFFast = 1.;
+      float SFFast_unc = 0.;
+      float SFFull = 1.;
+      float SFFull_unc = 0.;
+      
+      // Find Higgs idx
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+	// Gen Higgs
+	if ((b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0) && (deltaR(b.FatJet_eta()->at(i), b.FatJet_phi()->at(i), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8)) { // consider only Fat Jets with gen H
+	  float pt = 0;
+	  if ((pt = b.FatJet_pt_nom()->at(i)) > 250) {
+	    unsigned binSF = 0;
+	    unsigned binEff = 0;
+	    for(unsigned iBinSF(0); iBinSF<binsSF.size(); iBinSF++) { // Lookup pt bin for SF
+	      if(binsSF.size() == (iBinSF+1)) {
+		binSF = iBinSF;
+	      } else if ((binsSF[iBinSF] < pt) && (binsSF[iBinSF+1] > pt)) {
+		binSF = iBinSF;
+		break;
+	      }
+	    }
+	    for(unsigned iBinEff(0); iBinEff<binsEff.size(); iBinEff++) { // Lookup pt bin for eff
+	      if(binsEff.size() == (iBinEff+1)) {
+		binEff = iBinEff;
+	      } else if ((binsEff[iBinEff] < pt) && (binsEff[iBinEff+1] > pt)) {
+		binEff = iBinEff;
+		break;
+	      }
+	    }
+	    if(2016==b.year()) {
+	      effFast = fastEff2016_750_1[binEff];
+	      effFull = fullEff2016_750_1[binEff];
+	      SFFull = signalSF2016[binSF];
+	      SFFull_unc = signalSF2016_unc[binSF];
+	    } else if(2017==b.year()) {
+	      effFast = fastEff2017_750_1[binEff];
+	      effFull = fullEff2017_750_1[binEff];
+	      SFFull = signalSF2017[binSF];
+	      SFFull_unc = signalSF2017_unc[binSF];
+	    } else if(2018==b.year()) {
+	      effFast = fastEff2018_750_1[binEff];
+	      effFull = fullEff2018_750_1[binEff];
+	      SFFull = signalSF2018[binSF];
+	      SFFull_unc = signalSF2018_unc[binSF];	    
+//	    } else { // This should never happen
+	    }
+	    SFFast = effFull/effFast;
+	    SFFast_unc = 0.05;
+	    int delta;
+	    delta=0;
+	    if (!(effFull > 0)) {printf("effFull is %f\n", effFull);}
+	    if (!(effFast > 0)) {printf("effFast is %f\n", effFast);}
+	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018))){// && (effFull > 0) && (effFast > 0)){
+	      PFast *= effFast;
+	      PFull *= effFast*(SFFast+delta*SFFast_unc);
+	      PMC *= effFull;
+	      PData *= effFull*(SFFull+delta*SFFull_unc);
+	    }
+	    else {
+	      PFast *= (1-effFast);
+	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
+	      PMC *= (1-effFull);
+	      float zero = 0.0;
+	      PData *= std::max((1-effFull*(SFFull+delta*SFFull_unc)), zero);
+	      //	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	    }
+	  }
+	  // No Gen Higgs
+	} else {
+	  int nBinFat=0;
+	  if (b.FatJet_pt_nom()->at(i) > 250){
+	    for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+	      if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+		if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
+		  nBinFat++;
+		}
+	      }
+	    }
+	  }
+	  if (nBinFat==0){
+	    effFull=0.0;
+	    SFFull=1.;
+	    SFFull_unc=0.;
+	  }
+	  else if (nBinFat==1){
+	    effFull=0.25;
+	    SFFull=1.13;
+	    SFFull_unc=0.28;
+	  }
+	  else if (nBinFat==2){
+	    effFull=0.67;
+	    SFFull=0.95;
+	    SFFull_unc=0.08;
+	  }
+	  //else {eff=0.;} // this should really never happen
+	  
+	  int delta;
+	  delta=0;
+	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018)) && (effFull > 0) && (effFast > 0)){
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= effFull;
+	    PData *= effFull*(SFFull+delta*SFFull_unc);
+	  }
+	  else {
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= (1-effFull);
+	    PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	  }
+	}
+      }
+      float weight=(PFull/PFast)*(PData/PMC);
+      return weight;
+    });
+
+  const NamedFunc signalHiggsMistagSFUp("signalHiggsMistagSFUp",[](const Baby &b) -> NamedFunc::ScalarType{
+      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
+      float PFast = 1.;
+      float PFull = 1.;
+      float PData=1.;
+      float PMC=1.;
+      float effFast=0.;
+      float effFull=0.;
+      float SFFast = 1.;
+      float SFFast_unc = 0.;
+      float SFFull = 1.;
+      float SFFull_unc = 0.;
+      
+      // Find Higgs idx
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+	// Gen Higgs
+	if ((b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0) && (deltaR(b.FatJet_eta()->at(i), b.FatJet_phi()->at(i), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8)) { // consider only Fat Jets with gen H
+	  float pt = 0;
+	  if ((pt = b.FatJet_pt_nom()->at(i)) > 250) {
+	    unsigned binSF = 0;
+	    unsigned binEff = 0;
+	    for(unsigned iBinSF(0); iBinSF<binsSF.size(); iBinSF++) { // Lookup pt bin for SF
+	      if(binsSF.size() == (iBinSF+1)) {
+		binSF = iBinSF;
+	      } else if ((binsSF[iBinSF] < pt) && (binsSF[iBinSF+1] > pt)) {
+		binSF = iBinSF;
+		break;
+	      }
+	    }
+	    for(unsigned iBinEff(0); iBinEff<binsEff.size(); iBinEff++) { // Lookup pt bin for eff
+	      if(binsEff.size() == (iBinEff+1)) {
+		binEff = iBinEff;
+	      } else if ((binsEff[iBinEff] < pt) && (binsEff[iBinEff+1] > pt)) {
+		binEff = iBinEff;
+		break;
+	      }
+	    }
+	    if(2016==b.year()) {
+	      effFast = fastEff2016_750_1[binEff];
+	      effFull = fullEff2016_750_1[binEff];
+	      SFFull = signalSF2016[binSF];
+	      SFFull_unc = signalSF2016_unc[binSF];
+	    } else if(2017==b.year()) {
+	      effFast = fastEff2017_750_1[binEff];
+	      effFull = fullEff2017_750_1[binEff];
+	      SFFull = signalSF2017[binSF];
+	      SFFull_unc = signalSF2017_unc[binSF];
+	    } else if(2018==b.year()) {
+	      effFast = fastEff2018_750_1[binEff];
+	      effFull = fullEff2018_750_1[binEff];
+	      SFFull = signalSF2018[binSF];
+	      SFFull_unc = signalSF2018_unc[binSF];	    
+//	    } else { // This should never happen
+	    }
+	    SFFast = effFull/effFast;
+	    SFFast_unc = 0.05;
+	    int delta;
+	    delta = 1;
+	    if (!(effFull > 0)) {printf("effFull is %f\n", effFull);}
+	    if (!(effFast > 0)) {printf("effFast is %f\n", effFast);}
+	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018))){// && (effFull > 0) && (effFast > 0)){
+	      PFast *= effFast;
+	      PFull *= effFast*(SFFast+delta*SFFast_unc);
+	      PMC *= effFull;
+	      PData *= effFull*(SFFull+delta*SFFull_unc);
+	    }
+	    else {
+	      PFast *= (1-effFast);
+	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
+	      PMC *= (1-effFull);
+	      float zero = 0.0;
+	      PData *= std::max((1-effFull*(SFFull+delta*SFFull_unc)), zero);
+	    }
+	  }
+	  // No Gen Higgs
+	} else {
+	  int nBinFat=0;
+	  if (b.FatJet_pt_nom()->at(i) > 250){
+	    for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+	      if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+		if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
+		  nBinFat++;
+		}
+	      }
+	    }
+	  }
+	  if (nBinFat==0){
+	    effFull=0.0;
+	    SFFull=1.;
+	    SFFull_unc=0.;
+	  }
+	  else if (nBinFat==1){
+	    effFull=0.25;
+	    SFFull=1.13;
+	    SFFull_unc=0.28;
+	  }
+	  else if (nBinFat==2){
+	    effFull=0.67;
+	    SFFull=0.95;
+	    SFFull_unc=0.08;
+	  }
+	  //else {eff=0.;} // this should really never happen
+	  
+	  int delta;
+	  delta = 1;
+	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018)) && (effFull > 0) && (effFast > 0)){
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= effFull;
+	    PData *= effFull*(SFFull+delta*SFFull_unc);
+	  }
+	  else {
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= (1-effFull);
+	    PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	  }
+	}
+      }
+      float weight=(PFull/PFast)*(PData/PMC);
+      return weight;
+    });
+
+  const NamedFunc signalHiggsMistagSFDown("signalHiggsMistagSFDown",[](const Baby &b) -> NamedFunc::ScalarType{
+      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
+      float PFast = 1.;
+      float PFull = 1.;
+      float PData=1.;
+      float PMC=1.;
+      float effFast=0.;
+      float effFull=0.;
+      float SFFast = 1.;
+      float SFFast_unc = 0.;
+      float SFFull = 1.;
+      float SFFull_unc = 0.;
+      
+      // Find Higgs idx
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+
+      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
+	// Gen Higgs
+	if ((b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0) && (deltaR(b.FatJet_eta()->at(i), b.FatJet_phi()->at(i), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8)) { // consider only Fat Jets with gen H
+	  float pt = 0;
+	  if ((pt = b.FatJet_pt_nom()->at(i)) > 250) {
+	    unsigned binSF = 0;
+	    unsigned binEff = 0;
+	    for(unsigned iBinSF(0); iBinSF<binsSF.size(); iBinSF++) { // Lookup pt bin for SF
+	      if(binsSF.size() == (iBinSF+1)) {
+		binSF = iBinSF;
+	      } else if ((binsSF[iBinSF] < pt) && (binsSF[iBinSF+1] > pt)) {
+		binSF = iBinSF;
+		break;
+	      }
+	    }
+	    for(unsigned iBinEff(0); iBinEff<binsEff.size(); iBinEff++) { // Lookup pt bin for eff
+	      if(binsEff.size() == (iBinEff+1)) {
+		binEff = iBinEff;
+	      } else if ((binsEff[iBinEff] < pt) && (binsEff[iBinEff+1] > pt)) {
+		binEff = iBinEff;
+		break;
+	      }
+	    }
+	    if(2016==b.year()) {
+	      effFast = fastEff2016_750_1[binEff];
+	      effFull = fullEff2016_750_1[binEff];
+	      SFFull = signalSF2016[binSF];
+	      SFFull_unc = signalSF2016_unc[binSF];
+	    } else if(2017==b.year()) {
+	      effFast = fastEff2017_750_1[binEff];
+	      effFull = fullEff2017_750_1[binEff];
+	      SFFull = signalSF2017[binSF];
+	      SFFull_unc = signalSF2017_unc[binSF];
+	    } else if(2018==b.year()) {
+	      effFast = fastEff2018_750_1[binEff];
+	      effFull = fullEff2018_750_1[binEff];
+	      SFFull = signalSF2018[binSF];
+	      SFFull_unc = signalSF2018_unc[binSF];	    
+//	    } else { // This should never happen
+	    }
+	    SFFast = effFull/effFast;
+	    SFFast_unc = 0.05;
+	    int delta;
+	    delta = -1;
+	    if (!(effFull > 0)) {printf("effFull is %f\n", effFull);}
+	    if (!(effFast > 0)) {printf("effFast is %f\n", effFast);}
+	    if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018))){// && (effFull > 0) && (effFast > 0)){
+	      PFast *= effFast;
+	      PFull *= effFast*(SFFast+delta*SFFast_unc);
+	      PMC *= effFull;
+	      PData *= effFull*(SFFull+delta*SFFull_unc);
+	    }
+	    else {
+	      PFast *= (1-effFast);
+	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
+	      PMC *= (1-effFull);
+	      float zero = 0.0;
+	      PData *= std::max((1-effFull*(SFFull+delta*SFFull_unc)), zero);
+	      //	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	    }
+	  }
+	  // No Gen Higgs
+	} else {
+	  int nBinFat=0;
+	  if (b.FatJet_pt_nom()->at(i) > 250){
+	    for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
+	      if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
+		if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
+		  nBinFat++;
+		}
+	      }
+	    }
+	  }
+	  if (nBinFat==0){
+	    effFull=0.0;
+	    SFFull=1.;
+	    SFFull_unc=0.;
+	  }
+	  else if (nBinFat==1){
+	    effFull=0.25;
+	    SFFull=1.13;
+	    SFFull_unc=0.28;
+	  }
+	  else if (nBinFat==2){
+	    effFull=0.67;
+	    SFFull=0.95;
+	    SFFull_unc=0.08;
+	  }
+	  //else {eff=0.;} // this should really never happen
+	  
+	  int delta;
+	  delta = -1;
+	  if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018)) && (effFull > 0) && (effFast > 0)){
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= effFull;
+	    PData *= effFull*(SFFull+delta*SFFull_unc);
+	  }
+	  else {
+	    PFast *= 1.;
+	    PFull *= 1.;
+	    PMC *= (1-effFull);
+	    PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	  }
+	}
+      }
+      float weight=(PFull/PFast)*(PData/PMC);
+      return weight;
+    });
+
+  //%%%%%%%%%%%%%%%%%%%%%%%%%
+  // nFatJets with pt>250 and 0 b jets
+  const NamedFunc nFatJet250b0("nFatJet250b0",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nFatJet250_0b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+      if (b.FatJet_pt_nom()->size() > 0) {
+	if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	  //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	  int nBinFat = 0;					                
+	  for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+	    //	    if (deltaR(b.FatJet_eta()->at(i),			                
+	    //		       b.FatJet_phi()->at(i),			                
+	    if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+		       b.FatJet_phi()->at(highest_pt_idx),			                
+		       b.ak4pfjets_eta()->at(j),			                
+		       b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+	      if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						  + 0.6321*(b.year()==2016)
+						  + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		nBinFat++;                                                      
+	      }
+	    }
+	  }
+	  if (0==nBinFat) {                                                     // Consider FatJets with 0 b-tags
+	    nFatJet250_0b++;
+	  }
+	}
+      }
+      //    } 
+      if(nFatJet250_0b > 1) printf("b0 fjerr: %d\n", nFatJet250_0b);
+      return nFatJet250_0b;
+    });
+
+  // nFatJets with pt>250 and 1 b jet
+  const NamedFunc nFatJet250b1("nFatJet250b1",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nFatJet250_1b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {
+        old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	  //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	  int nBinFat = 0;					                
+	  for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+	    //	    if (deltaR(b.FatJet_eta()->at(i),			                
+	    //		       b.FatJet_phi()->at(i),			                
+	    if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+		       b.FatJet_phi()->at(highest_pt_idx),			                
+		       b.ak4pfjets_eta()->at(j),			                
+		       b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+	      if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						  + 0.6321*(b.year()==2016)
+						  + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		nBinFat++;                                                      
+	      }
+	    }
+	}
+	  if (1==nBinFat) {                                                     // Consider FatJets with 1 b-tag
+	    nFatJet250_1b++;
+	  }
+	}
+      }
+	//      } 
+      if(nFatJet250_1b > 1) printf("b1 fjerr: %d\n", nFatJet250_1b);
+      return nFatJet250_1b;
+    });
+  
+  // nFatJets with pt>250 and 2 b jets
+  const NamedFunc nFatJet250b2("nFatJet250b2",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nFatJet250_2b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+      if (b.FatJet_pt_nom()->size() > 0) {            
+	if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	  //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	  int nBinFat = 0;					                
+	  for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+	    //	    if (deltaR(b.FatJet_eta()->at(i),			                
+	    //		       b.FatJet_phi()->at(i),			                
+	    if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+		       b.FatJet_phi()->at(highest_pt_idx),			                
+		       b.ak4pfjets_eta()->at(j),			                
+		       b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+	      if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						  + 0.6321*(b.year()==2016)
+						  + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		nBinFat++;                                                      
+	      }
+	    }
+	  }
+	  if (2==nBinFat) {                                                     // Consider FatJets with 2 b-tags
+	    nFatJet250_2b++;
+	  }
+	}
+      }
+      //    } 
+      if(nFatJet250_2b > 1) printf("b2 fjerr: %d\n", nFatJet250_2b);
+      return nFatJet250_2b;
+    });
+
+  // Higgs-tagged nFatJets with pt>250 and 0 b jets  
+  const NamedFunc nHiggsFatJet250b0("nHiggsFatJet250b0",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nHiggsFatJet250_0b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {      
+        old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                  // iterate all FatJets
+      if (b.FatJet_pt_nom()->size() > 0) {            
+	if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								//      if(b.FatJet_deepTagMD_HbbvsQCD()->at(i) > (0.8945*(b.year()==2016)
+								+ 0.8695*(b.year()==2017)
+								+ 0.8365*(b.year()==2018))) {
+	  if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	    //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	    int nBinFat = 0;					                
+	    for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+	      //	    if (deltaR(b.FatJet_eta()->at(i),			                
+	      //		       b.FatJet_phi()->at(i),			                
+	      if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			 b.FatJet_phi()->at(highest_pt_idx),			                
+			 b.ak4pfjets_eta()->at(j),			                
+			 b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						    + 0.6321*(b.year()==2016)
+						    + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		  nBinFat++;                                                      
+		}
+	      }
+	    }
+	    if (0==nBinFat) {                                                     // Consider FatJets with 0 b-tags
+	      nHiggsFatJet250_0b++;
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nHiggsFatJet250_0b > 1) printf("Higgs b0 fjerr: %d\n", nHiggsFatJet250_0b);
+      return nHiggsFatJet250_0b;
+    });
+  
+  // Higgs-tagged nFatJets with pt>250 and 1 b jet
+  const NamedFunc nHiggsFatJet250b1("nHiggsFatJet250b1",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nHiggsFatJet250_1b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                  // iterate all FatJets
+      if (b.FatJet_pt_nom()->size() > 0) {        
+	if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								//      if(b.FatJet_deepTagMD_HbbvsQCD()->at(i) > (0.8945*(b.year()==2016)
+								+ 0.8695*(b.year()==2017)
+								+ 0.8365*(b.year()==2018))) {
+	  if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	    //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	    int nBinFat = 0;					                
+	    for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+	      //	    if (deltaR(b.FatJet_eta()->at(i),			                
+	      //		       b.FatJet_phi()->at(i),			                
+	      if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			 b.FatJet_phi()->at(highest_pt_idx),			                
+			 b.ak4pfjets_eta()->at(j),			                
+			 b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						    + 0.6321*(b.year()==2016)
+						    + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		  nBinFat++;                                                      
+		}
+	      }
+	    }
+	    if (1==nBinFat) {                                                     // Consider FatJets with 1 b-tag
+	      nHiggsFatJet250_1b++;
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nHiggsFatJet250_1b > 1) printf("Higgs b1 fjerr: %d\n", nHiggsFatJet250_1b);
+      return nHiggsFatJet250_1b;
+    });
+    
+  // Higgs-tagged nFatJets with pt>250 and 2 b jets
+  const NamedFunc nHiggsFatJet250b2("nHiggsFatJet250b2",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nHiggsFatJet250_2b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                  // iterate all FatJets
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								//      if(b.FatJet_deepTagMD_HbbvsQCD()->at(i) > (0.8945*(b.year()==2016)
+								+ 0.8695*(b.year()==2017)
+								+ 0.8365*(b.year()==2018))) {
+	  if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	    //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	    int nBinFat = 0;					                
+	    for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+	      //	    if (deltaR(b.FatJet_eta()->at(i),			                
+	      //		       b.FatJet_phi()->at(i),			                
+	      if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			 b.FatJet_phi()->at(highest_pt_idx),			                
+			 b.ak4pfjets_eta()->at(j),			                
+			 b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						    + 0.6321*(b.year()==2016)
+						    + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		  nBinFat++;                                                      
+		}
+	      }
+	    }
+	    if (2==nBinFat) {                                                     // Consider FatJets with 2 b-tags
+	      nHiggsFatJet250_2b++;
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nHiggsFatJet250_2b > 1) printf("Higgs b2 fjerr: %d\n", nHiggsFatJet250_2b);
+      return nHiggsFatJet250_2b;
+    });
+
+  //%%%%%%%%%%%%%%% 
+  // Considering only Fat Jets with gen H
+
+  // nFatJets (with gen H) with pt>250
+  const NamedFunc nGenHFatJet250("nGenHFatJet250",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenHFatJet250_ = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	  //	  printf("Ok I found a higgs, but is it at idx = 0?     %d\n", higgsIdx);
+	}
+      }
+//      if (0 == higgsIdxCount) {
+//	printf("No higgs in gen_id(). sample type: %d\n", b.SampleType());
+//      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if (0 < higgsIdxCount) { // Only consider scenarios where higgsIdxCount was actually incremented. If you don't, and it wasn't incremented, you'd be finding deltaR for the first particle due to "unsigned higgsIdx = 0;"
+	if (10 == b.SampleType()) {printf("Ok sample type is: %d and higgsIdx is: h%d\n", b.SampleType(), higgsIdx);}
+	//	if (0 == higgsIdx) {printf("0 == higgs but not all the way in %d\n", higgsIdx);}
+	if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	  //	  if (0 == higgsIdx) {printf("TOTAL I'm zero but I'm NOT all the way in %d %d\n", higgsIdx, higgsIdxCount);}				  
+	  //  if (0 == higgsIdxCount) {printf("Ok so the sizes are non-zero but yet there is no higgsIdxCount. If I don't see this, then that is good\n");}
+	  if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) { // consider only Fat Jets with gen H
+	    if (b.FatJet_pt_nom()->size() > 0) {            
+	      if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                                                                            // consider only > 250 GeV pt Fat Jets
+		//		if (0 == higgsIdx) {printf("TOTAL I'm zero AND I'm all the way in %d %d %d\n", higgsIdx, higgsIdxCount, b.gen_id()->at(higgsIdx));}
+//		printf("pfmet: %f\nmct: %f\nmbb: %f\nngoodbtags: %d\nnvetoleps: %d\nngoodjets: %d\nmt_met_lep: %f\n",
+//		       b.pfmet(),
+//		       b.mct(),
+//		       b.mbb(),
+//		       b.ngoodbtags(),
+//		       b.nvetoleps(),
+//		       b.ngoodjets(),
+//		       b.mt_met_lep());
+		nGenHFatJet250_++;
+	      }
+	    }
+	  }
+	}
+      } //else {printf("No higgs\n");}
+      return nGenHFatJet250_;
+    });
+  
+  // Higgs-tagged nFatJets (with gen H) with pt>250 
+  const NamedFunc nGenHHiggsFatJet250("nGenHHiggsFatJet250",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nGenHHiggsFatJet250_ = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {      
+        old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	  //	  printf("Ok I found a higgs, but is it at idx = 0?     %d\n", higgsIdx);
+	}	
+      }
+//      if (0 == higgsIdxCount) {
+//	printf("No higgs in gen_id(). sample type: %d\n", b.SampleType());
+//      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if (0 < higgsIdxCount) { // Only consider scenarios where higgsIdxCount was actually incremented. If you don't, and it wasn't incremented, you'd be finding deltaR for the first particle due to "unsigned higgsIdx = 0;"
+	if (10 == b.SampleType()) {printf("Ok sample type is: %d and higgsIdx is: h%d\n", b.SampleType(), higgsIdx);}
+	//	if (0 == higgsIdx) {printf("0 == higgs but not all the way in %d\n", higgsIdx);}
+	if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	  //	  if (0 == higgsIdx) {printf("HIGGS I'm zero but I'm NOT all the way in %d %d\n", higgsIdx, higgsIdxCount);}				  
+	  //	if (0 == higgsIdxCount) {printf("Ok so the sizes are non-zero but yet there is no higgsIdxCount. If I don't see this, then that is good\n");}	
+	  if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) { // consider only Fat Jets with gen H
+	    if (b.FatJet_pt_nom()->size() > 0) {            
+	      if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								      + 0.8695*(b.year()==2017)
+								      + 0.8365*(b.year()==2018))) {                                                         // considered only Higgs-Tagged Fat Jets
+		if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                                                                          // consider only > 250 GeV pt Fat Jets
+		  //		if (0 == higgsIdx) {printf("not zero %d\n", higgsIdx);}		 
+		  //		  if (0 == higgsIdx) {printf("HIGGS I'm zero AND I'm all the way in %d %d %d\n", higgsIdx, higgsIdxCount, b.gen_id()->at(higgsIdx));}				  
+//		  printf("pfmet: %f\nmct: %f\nmbb: %f\nngoodbtags: %d\nnvetoleps: %d\nngoodjets: %d\nmt_met_lep: %f\n",
+//			 b.pfmet(),
+//			 b.mct(),
+//			 b.mbb(),
+//			 b.ngoodbtags(),
+//			 b.nvetoleps(),
+//			 b.ngoodjets(),
+//			 b.mt_met_lep());
+		  nGenHHiggsFatJet250_++;
+		}
+	      }
+	    }
+	  }
+	}
+      } //else {printf("No higgs\n");}
+      return nGenHHiggsFatJet250_;
+    });
+
+  // nFatJets (with gen H) with pt>250 and 0 b jets
+  const NamedFunc nGenHFatJet250b0("nGenHFatJet250b0",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nFatJet250_0b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) {
+	  //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	  if (b.FatJet_pt_nom()->size() > 0) {
+	    if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	      //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	      int nBinFat = 0;					                
+	      for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+		//	    if (deltaR(b.FatJet_eta()->at(i),			                
+		//		       b.FatJet_phi()->at(i),			                
+		if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			   b.FatJet_phi()->at(highest_pt_idx),			                
+			   b.ak4pfjets_eta()->at(j),			                
+			   b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		  if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						      + 0.6321*(b.year()==2016)
+						      + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		    nBinFat++;                                                      
+		  }
+		}
+	      }
+	      if (0==nBinFat) {                                                     // Consider FatJets with 0 b-tags
+		nFatJet250_0b++;
+	      }
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nFatJet250_0b > 1) printf("b0 fjerr: %d\n", nFatJet250_0b);
+      return nFatJet250_0b;
+    });
+
+  // nFatJets (with gen H) with pt>250 and 1 b jet
+  const NamedFunc nGenHFatJet250b1("nGenHFatJet250b1",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nFatJet250_1b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {
+        old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) {
+	  //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	  if (b.FatJet_pt_nom()->size() > 0) {      
+	    if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	      //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	      int nBinFat = 0;					                
+	      for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+		//	    if (deltaR(b.FatJet_eta()->at(i),			                
+		//		       b.FatJet_phi()->at(i),			                
+		if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			   b.FatJet_phi()->at(highest_pt_idx),			                
+			   b.ak4pfjets_eta()->at(j),			                
+			   b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		  if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						      + 0.6321*(b.year()==2016)
+						      + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		    nBinFat++;                                                      
+		  }
+		}
+	}
+	      if (1==nBinFat) {                                                     // Consider FatJets with 1 b-tag
+		nFatJet250_1b++;
+	      }
+	    }
+	  }
+	}
+      }
+      //      } 
+      if(nFatJet250_1b > 1) printf("b1 fjerr: %d\n", nFatJet250_1b);
+      return nFatJet250_1b;
+    });
+  
+  // nFatJets (with gen H) with pt>250 and 2 b jets
+  const NamedFunc nGenHFatJet250b2("nGenHFatJet250b2",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nFatJet250_2b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) {
+	  //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	  if (b.FatJet_pt_nom()->size() > 0) {            
+	    if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+	      //	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+	      int nBinFat = 0;					                
+	      for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+		//	    if (deltaR(b.FatJet_eta()->at(i),			                
+		//		       b.FatJet_phi()->at(i),			                
+		if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			   b.FatJet_phi()->at(highest_pt_idx),			                
+			   b.ak4pfjets_eta()->at(j),			                
+			   b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		  if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+						      + 0.6321*(b.year()==2016)
+						      + 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		    nBinFat++;                                                      
+		  }
+		}
+	      }
+	      if (2==nBinFat) {                                                     // Consider FatJets with 2 b-tags
+		nFatJet250_2b++;
+	      }
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nFatJet250_2b > 1) printf("b2 fjerr: %d\n", nFatJet250_2b);
+      return nFatJet250_2b;
+    });
+  
+  // Higgs-tagged nFatJets (with gen H) with pt>250 and 0 b jets  
+  const NamedFunc nGenHHiggsFatJet250b0("nGenHHiggsFatJet250b0",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nHiggsFatJet250_0b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;
+      if (b.FatJet_pt_nom()->size() > 0) {      
+        old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) {
+	  //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                  // iterate all FatJets
+	  if (b.FatJet_pt_nom()->size() > 0) {            
+	    if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								    //      if(b.FatJet_deepTagMD_HbbvsQCD()->at(i) > (0.8945*(b.year()==2016)
+								    + 0.8695*(b.year()==2017)
+								    + 0.8365*(b.year()==2018))) {
+	      if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+		//	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+		int nBinFat = 0;					                
+		for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+		  //	    if (deltaR(b.FatJet_eta()->at(i),			                
+		  //		       b.FatJet_phi()->at(i),			                
+		  if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			     b.FatJet_phi()->at(highest_pt_idx),			                
+			     b.ak4pfjets_eta()->at(j),			                
+			     b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		    if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+							+ 0.6321*(b.year()==2016)
+							+ 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		      nBinFat++;                                                      
+		    }
+		  }
+		}
+		if (0==nBinFat) {                                                     // Consider FatJets with 0 b-tags
+		  nHiggsFatJet250_0b++;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nHiggsFatJet250_0b > 1) printf("Higgs b0 fjerr: %d\n", nHiggsFatJet250_0b);
+      return nHiggsFatJet250_0b;
+    });
+  
+  // Higgs-tagged nFatJets (with gen H) with pt>250 and 1 b jet
+  const NamedFunc nGenHHiggsFatJet250b1("nGenHHiggsFatJet250b1",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nHiggsFatJet250_1b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) {
+	  //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                  // iterate all FatJets
+	  if (b.FatJet_pt_nom()->size() > 0) {        
+	    if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								    //      if(b.FatJet_deepTagMD_HbbvsQCD()->at(i) > (0.8945*(b.year()==2016)
+								    + 0.8695*(b.year()==2017)
+								    + 0.8365*(b.year()==2018))) {
+	      if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+		//	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+		int nBinFat = 0;					                
+		for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+		  //	    if (deltaR(b.FatJet_eta()->at(i),			                
+		  //		       b.FatJet_phi()->at(i),			                
+		  if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			     b.FatJet_phi()->at(highest_pt_idx),			                
+			     b.ak4pfjets_eta()->at(j),			                
+			     b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		    if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+							+ 0.6321*(b.year()==2016)
+							+ 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		      nBinFat++;                                                      
+		    }
+		  }
+		}
+		if (1==nBinFat) {                                                     // Consider FatJets with 1 b-tag
+		  nHiggsFatJet250_1b++;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nHiggsFatJet250_1b > 1) printf("Higgs b1 fjerr: %d\n", nHiggsFatJet250_1b);
+      return nHiggsFatJet250_1b;
+    });
+  
+  // Higgs-tagged nFatJets (with Gen H) with pt>250 and 2 b jets
+  const NamedFunc nGenHHiggsFatJet250b2("nGenHHiggsFatJet250b2",[](const Baby &b) -> NamedFunc::ScalarType{
+      int nHiggsFatJet250_2b = 0;
+      unsigned highest_pt_idx = 0;
+      float old_pt = 0;      
+      if (b.FatJet_pt_nom()->size() > 0) {      
+	old_pt = b.FatJet_pt_nom()->at(0);
+      }
+      float new_pt = 0;
+      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                // iterate all FatJets
+	new_pt = b.FatJet_pt_nom()->at(i);
+	if (new_pt > old_pt) {                                                  // find highest pt index
+	  old_pt = new_pt;
+	  highest_pt_idx = i;
+	}
+      }
+      if (0 != highest_pt_idx) {
+	printf("HIGHEST_PT_IDX NOT 0\n");
+      }
+      unsigned higgsIdx = 0;
+      int higgsIdxCount = 0;
+      for (unsigned i = 0; i < b.gen_id()->size(); i++) {
+	if (b.gen_id()->at(i) == 25) {
+	  higgsIdx = i;
+	  higgsIdxCount++;
+	}
+      }
+      if (1 < higgsIdxCount) {
+	printf("More than one Higgs in baby: %d! Check!\n", higgsIdxCount);
+      }
+      if ((b.FatJet_eta()->size() > 0) && (b.FatJet_phi()->size() > 0) && (b.gen_eta()->size() > 0) && (b.gen_phi()->size() > 0)) {
+	if (deltaR(b.FatJet_eta()->at(highest_pt_idx), b.FatJet_phi()->at(highest_pt_idx), b.gen_eta()->at(higgsIdx), b.gen_phi()->at(higgsIdx)) < 0.8) {
+	  //      for (unsigned i = 0; i < b.FatJet_pt_nom()->size(); i++) {                  // iterate all FatJets
+	  if (b.FatJet_pt_nom()->size() > 0) {      
+	    if(b.FatJet_deepTagMD_HbbvsQCD()->at(highest_pt_idx) > (0.8945*(b.year()==2016)
+								    //      if(b.FatJet_deepTagMD_HbbvsQCD()->at(i) > (0.8945*(b.year()==2016)
+								    + 0.8695*(b.year()==2017)
+								    + 0.8365*(b.year()==2018))) {
+	      if (b.FatJet_pt_nom()->at(highest_pt_idx) > 250) {                                   // consider only > 250 GeV pt ones
+		//	if (b.FatJet_pt_nom()->at(i) > 250) {                                   // consider only > 250 GeV pt ones
+		int nBinFat = 0;					                
+		for (unsigned j = 0; j < b.ak4pfjets_eta()->size(); j++) {            // iterate all Jets
+		  //	    if (deltaR(b.FatJet_eta()->at(i),			                
+		  //		       b.FatJet_phi()->at(i),			                
+		  if (deltaR(b.FatJet_eta()->at(highest_pt_idx),			                
+			     b.FatJet_phi()->at(highest_pt_idx),			                
+			     b.ak4pfjets_eta()->at(j),			                
+			     b.ak4pfjets_phi()->at(j)) < 0.8) {                       // match Jet and FatJet
+		    if (b.ak4pfjets_deepCSV()->at(j) > (0.4941*(b.year()==2017)
+							+ 0.6321*(b.year()==2016)
+							+ 0.4184*(b.year()==2018))) { // check if Jet is b-tagged
+		      nBinFat++;                                                      
+		    }
+		  }
+		}
+		if (2==nBinFat) {                                                     // Consider FatJets with 2 b-tags
+		  nHiggsFatJet250_2b++;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+      //    } 
+      if(nHiggsFatJet250_2b > 1) printf("Higgs b2 fjerr: %d\n", nHiggsFatJet250_2b);
+      return nHiggsFatJet250_2b;
+    });
+
+  // returns highest fat jet pt
+  const NamedFunc highest_FatJet_pt("highest_FatJet_pt",[](const Baby &b) -> NamedFunc::ScalarType{
+      printf("in here\n");
+      float highest_pt = 0;
+      float new_highest_pt = 0;
+      for (unsigned i = 0; b.FatJet_pt_nom()->size(); i++) {
+	new_highest_pt = b.FatJet_pt_nom()->at(i);
+	if (new_highest_pt > highest_pt) {
+	  highest_pt = new_highest_pt;
+	}
+      }
+      printf("highest pt is %f\n", highest_pt);
+      return highest_pt;
+    });
+
+  //%%%%%%%%%%%%%%%%%%%%%%%%%
 
   // first attempt for boosted higgs part
   const NamedFunc nBoostedFatJet("nBoostedFatJet",[](const Baby &b) -> NamedFunc::ScalarType{
