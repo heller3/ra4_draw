@@ -435,7 +435,8 @@ float medDeepCSV2018 = 0.4184;
   std::vector<float> const signalSF2017 = {1.05, 1.05, 1.01, 1.06, 1.13};
   std::vector<float> const signalSF2017_unc = {0.04, 0.02, 0.03, 0.03, 0.05};
   std::vector<float> const signalSF2018 = {1.32, 1.35, 1.22, 1.31, 1.30};
-  std::vector<float> const signalSF2018_unc = {0.05, 0.03, 0.03, 0.04, 0.04};
+  //  std::vector<float> const signalSF2018_unc = {0.05, 0.03, 0.03, 0.04, 0.04};
+  std::vector<float> const signalSF2018_unc = {0.3, 0.3, 0.3, 0.3, 0.3};
 
   std::vector<unsigned> binsEff = {200,400};		     
   std::vector<float> const fastEff2016_750_1 = {0.702, 0.838};
@@ -527,7 +528,9 @@ float medDeepCSV2018 = 0.4184;
 	      PFast *= (1-effFast);
 	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
 	      PMC *= (1-effFull);
-	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	      float zero = 0.0;
+	      PData *= std::max((1-effFull*(SFFull+delta*SFFull_unc)), zero);
+	      //	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
 	    }
 	  }
 	  // No Gen Higgs
@@ -576,7 +579,6 @@ float medDeepCSV2018 = 0.4184;
 	}
       }
       float weight=(PFull/PFast)*(PData/PMC);
-      //     printf("Weight: %f\n", weight);
       return weight;
     });
 
@@ -662,7 +664,8 @@ float medDeepCSV2018 = 0.4184;
 	      PFast *= (1-effFast);
 	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
 	      PMC *= (1-effFull);
-	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	      float zero = 0.0;
+	      PData *= std::max((1-effFull*(SFFull+delta*SFFull_unc)), zero);
 	    }
 	  }
 	  // No Gen Higgs
@@ -711,7 +714,6 @@ float medDeepCSV2018 = 0.4184;
 	}
       }
       float weight=(PFull/PFast)*(PData/PMC);
-      //     printf("Weight: %f\n", weight);
       return weight;
     });
 
@@ -797,7 +799,9 @@ float medDeepCSV2018 = 0.4184;
 	      PFast *= (1-effFast);
 	      PFull *= (1-effFast*(SFFast+delta*SFFast_unc));
 	      PMC *= (1-effFull);
-	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
+	      float zero = 0.0;
+	      PData *= std::max((1-effFull*(SFFull+delta*SFFull_unc)), zero);
+	      //	      PData *= (1-effFull*(SFFull+delta*SFFull_unc));
 	    }
 	  }
 	  // No Gen Higgs
@@ -846,7 +850,6 @@ float medDeepCSV2018 = 0.4184;
 	}
       }
       float weight=(PFull/PFast)*(PData/PMC);
-      //     printf("Weight: %f\n", weight);
       return weight;
     });
 
