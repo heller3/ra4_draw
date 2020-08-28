@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 #datacard directory
-dir_datacards = "../statistics/testdir/datacards/"
+dir_datacards = "../statistics/cardsforDaniel/datacards/"
 list_datacards = os.listdir(dir_datacards)
 list_datacards.sort(key=lambda x: (x,len(x)))
 
@@ -22,8 +22,8 @@ variations = ["mChi",
               "lepSFdown",
               "L1prefireUp",
               "L1prefireDown",
-              "ISRUp",
-              "ISRDown",
+              "ISR",
+              #"ISRDown",
               "q2Up",
               "q2Down",
               "btagHFUp",
@@ -36,11 +36,11 @@ variations = ["mChi",
               "puDown",
               "JESup",
               "JESdown",
-              "JERup",
-              "JERdown",
+              "JER",
+              #"JERdown",
               #"genMET",
-              "FatJet_genPt",
-              "FastSimMETRed",
+              #"FatJet_genPt",
+              "bjetJES",
               "TriggerEff"]
 
 #Code to format variation title to match datacards
@@ -83,23 +83,23 @@ print("parsed signal systematics...")
 #print(df_sigSys.iloc[18,:])
 
 #find high, low, mean, median, mode of each row
-# df_dup = df_sigSys
-# maxValues = df_dup.max(axis=1)
-# minValues = df_dup.min(axis=1)
-# meanValues = df_dup.mean(axis=1)
-# medValues = df_dup.median(axis=1)
-# modeValues = df_dup.mode(axis=1)
+df_dup = df_sigSys
+maxValues = df_dup.max(axis=1)
+minValues = df_dup.min(axis=1)
+meanValues = df_dup.mean(axis=1)
+medValues = df_dup.median(axis=1)
+modeValues = df_dup.mode(axis=1)
 
-# print("maximums: ")
-# print(maxValues)
-# print("minimums: ")
-# print(minValues)
-# print("means: ")
-# print(meanValues)
-# print("medians: ")
-# print(medValues)
-# print("modes: ")
-# print(modeValues)
+print("maximums: ")
+print(maxValues)
+print("minimums: ")
+print(minValues)
+print("means: ")
+print(meanValues)
+print("medians: ")
+print(medValues)
+print("modes: ")
+print(modeValues)
 
 #open the datacard and append
 for iFile in range(len(datacards)):

@@ -211,6 +211,9 @@ namespace WH_Functions{
   extern const NamedFunc genPt_ak8_higgsTagger;
   extern const NamedFunc reduced_MET;
   extern const NamedFunc reducedMET_mT;
+  extern const NamedFunc fastsim_MET;
+  extern const NamedFunc fastsim_MT;
+  extern const NamedFunc fastsim_MCT;
 
 
   extern const NamedFunc max_genjet_bquark_pt_ratio;

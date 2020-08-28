@@ -4728,5 +4728,95 @@ float deepTag2018 = 0.8365;
 
     });
 
+   const NamedFunc fastsim_MET("fastsim_MET",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0;
+      double x = 0;
+      double y = 0;
+      TLorentzVector met;
+      TLorentzVector jets;
+      TLorentzVector finalvar;
+      int year = b.year();
+
+      if(year==2016){
+        met_var = b.pfmet();
+      }else{
+        for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+          TLorentzVector v1;
+          if(b.ak4pfjets_hadron_flavor()->at(i)==5){
+            v1.SetPtEtaPhiM((0.03*b.ak4pfjets_pt()->at(i)),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+          }/*else{
+            v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+          }*/
+          x += v1.Px();
+          y += v1.Py();
+        }//for loop over jet pt vector
+
+        jets.SetPtEtaPhiM(sqrt((x*x)+(y*y)), 0., atan2(x,y), 0.);
+        met.SetPtEtaPhiM(b.pfmet(),0.,b.pfmet_phi(),0.);
+        finalvar = met+jets;
+        met_var = finalvar.Pt();
+      }
+
+      return met_var;
+    });
+
+   const NamedFunc fastsim_MT("fastsim_MT",[](const Baby &b) -> NamedFunc::ScalarType{
+      float met_var=0;
+      float mt_var=0;
+      double x = 0;
+      double y = 0;
+      TLorentzVector met;
+      TLorentzVector jets;
+      TLorentzVector finalvar;
+      int year = b.year();
+
+      if(year==2016){
+        met_var = b.pfmet();
+      }else{
+        for(unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+          TLorentzVector v1;
+          if(b.ak4pfjets_hadron_flavor()->at(i)==5){
+            v1.SetPtEtaPhiM((0.03*b.ak4pfjets_pt()->at(i)),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+          }/*else{
+            v1.SetPtEtaPhiM(b.ak4pfjets_pt()->at(i),b.ak4pfjets_eta()->at(i),b.ak4pfjets_phi()->at(i),b.ak4pfjets_m()->at(i));
+          }*/
+          x += v1.Px();
+          y += v1.Py();
+        }//for loop over jet pt vector
+
+        jets.SetPtEtaPhiM(sqrt((x*x)+(y*y)), 0., atan2(x,y), 0.);
+        met.SetPtEtaPhiM(b.pfmet(),0.,b.pfmet_phi(),0.);
+        finalvar = met+jets;
+        met_var = finalvar.Pt();
+      }
+
+      mt_var = sqrt(2*b.leps_pt()->at(0)*met_var * (1-(cos(b.leps_phi()->at(0)-b.pfmet_phi()))));
+
+      return mt_var;
+    });
+
+
+    const NamedFunc fastsim_MCT("fastsim_MCT",[](const Baby &b) -> NamedFunc::ScalarType{
+  
+    float mct_var=0;
+    int year = b.year();
+    
+    if(year==2016){
+      mct_var = b.mct();
+    }else{
+      for (unsigned i(0); i<b.ak4pfjets_pt()->size(); i++){
+        if (b.ak4pfjets_hadron_flavor()->at(i) == 5){
+          for (unsigned j(i+1); j<b.ak4pfjets_pt()->size(); j++){
+            if (b.ak4pfjets_hadron_flavor()->at(j) == 5){
+              mct_var = sqrt(2*(0.97*b.ak4pfjets_pt()->at(j))*(0.97*b.ak4pfjets_pt()->at(i))*(1+cos(deltaPhi(b.ak4pfjets_phi()->at(i),b.ak4pfjets_phi()->at(j)))));
+            }
+          }
+        }
+      }
+    }
+
+    return mct_var;
+    });
+
  
 }
