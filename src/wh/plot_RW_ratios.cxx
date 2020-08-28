@@ -235,8 +235,8 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
 
   Palette colors("txt/colors.txt", "default");
   //vector<int> mcolors({kRed, kGreen+1, 4, kMagenta+2});
-  vector<int> mcolors({kGray+2,kRed-4,kRed-4, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange,kOrange,kBlue+2,kBlue+2,kGray,kGray,kRed+2,kRed+2});
-  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
+  vector<int> mcolors({kGray+2,kRed-4,kRed-4, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange,kOrange,kBlue+2,kBlue+2,kGray,kGray,kRed+2,kRed+2,kGreen+3,kGreen+3,kBlue-2,kBlue-2});
+  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
   if(data_mode){
     mcolors = {1,kRed+1};
     styles= {20,20};
@@ -420,9 +420,9 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> numerators = {numerator,numerator,numerator,numerator};
   vector<NamedFunc> numerators_0H = {numerator&&deepAK8bins[0],numerator&&deepAK8bins[0],numerator&&deepAK8bins[0],numerator&&deepAK8bins[0]};
   vector<NamedFunc> jup_numerators = {jup_numerator,jup_numerator,jup_numerator,jup_numerator};
-  vector<NamedFunc> jup_numerators_0H = {jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0]};
+  vector<NamedFunc> jup_numerators_0H = {jup_numerator&&jup_deepAK8bins[0],jup_numerator&&jup_deepAK8bins[0],jup_numerator&&jup_deepAK8bins[0],jup_numerator&&jup_deepAK8bins[0]};
   vector<NamedFunc> jdown_numerators = {jdown_numerator,jdown_numerator,jdown_numerator,jdown_numerator};
-  vector<NamedFunc> jdown_numerators_0H = {jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0]};
+  vector<NamedFunc> jdown_numerators_0H = {jdown_numerator&&jdown_deepAK8bins[0],jdown_numerator&&jdown_deepAK8bins[0],jdown_numerator&&jdown_deepAK8bins[0],jdown_numerator&&jdown_deepAK8bins[0]};
   vector<NamedFunc> resup_numerators = {resup_numerator,resup_numerator,resup_numerator,resup_numerator};
   vector<NamedFunc> resup_numerators_0H = {resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0]};
   vector<NamedFunc> resdown_numerators = {resdown_numerator,resdown_numerator,resdown_numerator,resdown_numerator};
@@ -431,9 +431,9 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> numerators_boosted = {numerator,numerator,numerator,numerator};
   vector<NamedFunc> numerators_boosted_1H = {numerator&& deepAK8bins[1],numerator&& deepAK8bins[1],numerator&& deepAK8bins[1],numerator&& deepAK8bins[1]};
   vector<NamedFunc> jup_numerators_boosted = {jup_numerator,jup_numerator,jup_numerator,jup_numerator};
-  vector<NamedFunc> jup_numerators_boosted_1H = {jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1]};
+  vector<NamedFunc> jup_numerators_boosted_1H = {jup_numerator&&jup_deepAK8bins[1],jup_numerator&&jup_deepAK8bins[1],jup_numerator&&jup_deepAK8bins[1],jup_numerator&&jup_deepAK8bins[1]};
   vector<NamedFunc> jdown_numerators_boosted = {jdown_numerator,jdown_numerator,jdown_numerator,jdown_numerator};
-  vector<NamedFunc> jdown_numerators_boosted_1H = {jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1]};
+  vector<NamedFunc> jdown_numerators_boosted_1H = {jdown_numerator&&jdown_deepAK8bins[1],jdown_numerator&&jdown_deepAK8bins[1],jdown_numerator&&jdown_deepAK8bins[1],jdown_numerator&&jdown_deepAK8bins[1]};
   vector<NamedFunc> resup_numerators_boosted = {resup_numerator,resup_numerator,resup_numerator,resup_numerator};
   vector<NamedFunc> resup_numerators_boosted_1H = {resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1]};
   vector<NamedFunc> resdown_numerators_boosted = {resdown_numerator,resdown_numerator,resdown_numerator,resdown_numerator};
@@ -521,8 +521,17 @@ int main(int argc, char *argv[]){
                  "weight * trig_eff"                * nanoWeight * yearWeight * VV_up,
                  "weight * trig_eff"                * nanoWeight * yearWeight * VV_down,
                 };
-     tag+="wjets1_";
+//     weights= {  "weight * trig_eff"                * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_q2Up"       * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_q2Down"     * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_pdfUp"      * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_pdfDown"    * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_alphasUp"      * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_alphasDown"    * nanoWeight * yearWeight,
+//                };
+     tag+="wjetsExp_";
      leglabels = {"Nominal", "PU up", "PU up/down", "b-tag mistag up","b-tag mistag up/down","b-tag HF up","b-tag HF up/down", "JES up", "JES up/down", "MET res up", "MET res up/down", "true b up", "true b up/down", "Higgs up", "Higgs up/down", "VV up", "VV up/down"};
+//     leglabels = {"Nominal", "Scale up", "Scale up/down", "PDF up", "PDF up/down", "a_S up", "a_S up/down"};
 
     // theory uncertainties (q2, alpha_s, PDF, ISR) tbd.
 
@@ -544,6 +553,16 @@ int main(int argc, char *argv[]){
                 "(1)",
                 "(1)",
             };
+
+//     cuts = {   "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//            };
+
 
     nsels = 2*weights.size();
 

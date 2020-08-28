@@ -65,6 +65,25 @@ float deepTag2018 = 0.8365;
     if (abs(0.000679649-abs(b.w_lumi_scale1fb()))<0.000001) weight = 1.020;
     //TTJets_1lep_tbar_f17v2
     else if (abs(abs(b.w_lumi_scale1fb())-0.00324188)<0.00001) weight = 1.014;
+    // in 2017, some mass points have no nano
+    else if (b.year()==2017 && b.mass_stop()==200  && b.mass_lsp()==25)  weight = 1/0.989598335734 ;
+    else if (b.year()==2017 && b.mass_stop()==275  && b.mass_lsp()==75)  weight = 1/0.957338965153 ;
+    else if (b.year()==2017 && b.mass_stop()==300  && b.mass_lsp()==50)  weight = 1/0.961527621195 ;
+    else if (b.year()==2017 && b.mass_stop()==375  && b.mass_lsp()==25)  weight = 1/0.951265229616 ;
+    else if (b.year()==2017 && b.mass_stop()==675  && b.mass_lsp()==1)   weight = 1/0.97484237468  ;
+    else if (b.year()==2017 && b.mass_stop()==675  && b.mass_lsp()==225) weight = 1/0.940583363342 ;
+    else if (b.year()==2017 && b.mass_stop()==725  && b.mass_lsp()==150) weight = 1/0.969029492202 ;
+    else if (b.year()==2017 && b.mass_stop()==725  && b.mass_lsp()==275) weight = 1/0.962572303505 ;
+    else if (b.year()==2017 && b.mass_stop()==725  && b.mass_lsp()==325) weight = 1/0.96882402384  ;
+    else if (b.year()==2017 && b.mass_stop()==725  && b.mass_lsp()==550) weight = 1/0.991338321477 ;
+    else if (b.year()==2017 && b.mass_stop()==725  && b.mass_lsp()==575) weight = 1/0.989381003202 ;
+    else if (b.year()==2017 && b.mass_stop()==825  && b.mass_lsp()==175) weight = 1/0.959898615009 ;
+    else if (b.year()==2017 && b.mass_stop()==875  && b.mass_lsp()==400) weight = 1/0.972290031009 ;
+    else if (b.year()==2017 && b.mass_stop()==900  && b.mass_lsp()==600) weight = 1/0.967833570056 ;
+    else if (b.year()==2017 && b.mass_stop()==925  && b.mass_lsp()==25)  weight = 1/0.972826712723 ;
+    else if (b.year()==2017 && b.mass_stop()==950  && b.mass_lsp()==550) weight = 1/0.972117321249 ;
+    else if (b.year()==2017 && b.mass_stop()==1000 && b.mass_lsp()==125) weight = 1/0.970782940802 ;
+    else if (b.year()==2017 && b.mass_stop()==1000 && b.mass_lsp()==425) weight = 1/0.974963353855 ;
 
     return weight;
   });

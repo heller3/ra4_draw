@@ -204,7 +204,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-        if (mchi!=800) continue;
+        //if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -228,7 +228,7 @@ int main(){
   if(original_analysis) analysis_tag="original";
   if(data_CR)analysis_tag+="_dataCR";
 
-  // analysis_tag+="fix_rmct_stat";
+   analysis_tag+="fix_Fall17Sig";
 
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
@@ -569,7 +569,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     // --------- write header
     ofstream fcard(outpath);
     int nbg=3;
-    int nsyst = 89;//2 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
+    int nsyst = 86;//2 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
     fcard<<"imax "<<nbins/3<<"  number of channels\n";
     fcard<<"jmax "<<nbg<<"  number of backgrounds\n";
     fcard<<"kmax "<<nsyst<<"  number of nuisance parameters\n";
@@ -602,13 +602,13 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     fcard<<endl;
     vector<double> sys_rmct {1.15, 1.28, 1.18, 1.80, 1.35, 1.35, 1.15, 1.28, 1.18, 1.80, 1.35, 1.35};
     vector<double> stat_rmct {1.14, 1.24, 1.15, 1.15, 1.4, 1.9, 1.1, 1.2, 1.4, 1.3, 1.38, 1.75};
-    float sys_lumi = 1.05;
+    float sys_lumi = 1.018; // from https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiLUM
     //float sys_filler = 1.40;
     //float w_filler = 1.20;
-    float sys_W_HF = 1.20;
-    float sys_VV_xsec = 1.10;
+    //float sys_W_HF = 1.20;
+    //float sys_VV_xsec = 1.10;
     float sys_other_xsec = 1.25;
-    float sys_Higgs = 1.08;
+    //float sys_Higgs = 1.08;
     //float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
@@ -703,14 +703,16 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
+    fcard<<endl<<left<<setw(wsyst)<<"other_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_other_xsec);
+
+    /*
+    // all following uncertainties should be replaced with the actual values
     fcard<<endl<<left<<setw(wsyst)<<"W_HF"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_W_HF)<<left<<setw(wbin)<<'-';
     
     fcard<<endl<<left<<setw(wsyst)<<"VV_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_VV_xsec)<<left<<setw(wbin)<<'-';
-
-    fcard<<endl<<left<<setw(wsyst)<<"other_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_other_xsec);
 
     fcard<<endl<<left<<setw(wsyst)<<"HiggsTag"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3){
@@ -722,6 +724,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
         fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-';
       }
     }
+    */
 
     fcard<<endl<<endl;
 

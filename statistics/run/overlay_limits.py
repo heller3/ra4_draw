@@ -34,8 +34,8 @@ six=ROOT.TColor(2006,0.906,0.878,0.094)
 colors = [1,2001,2002,2003,2004,2005,2006,6,2,3,4,6,7,5,1,8,9,29,38,46,1,2001,2002,2003,2004,2005,2006]
 
 plot_name = "overlay.pdf"
-variation_names = ["original_36","original","nominal_4metbins","boosted_4metbins"]
-variation_titles = ["2016 analysis with Re-Reco, 36 fb^{-1}","2016 analysis with Re-Reco, reloaded to 137 fb^{-1}","Run II selection re-optimization","Run II selection re-optimization + boosted tag"]
+variation_names = ["all", "2jet", "3jet", "boosted"]
+variation_titles = ["all SR","only 2 jet","only 3 jet","only boosted"]
 xparticle = "#lower[-0.12]{#tilde{#chi}}#lower[0.2]{#scale[0.85]{^{0}}}#kern[-1.3]{#scale[0.85]{_{2}}}";
 yparticle = "#lower[-0.12]{#tilde{#chi}}#lower[0.2]{#scale[0.85]{^{0}}}#kern[-1.3]{#scale[0.85]{_{1}}}";
 
@@ -51,7 +51,8 @@ def cosmetic_tgraph(graph,colorindex,central=True):
 	graph.SetTitle("; %s; %s" %(xparticle,yparticle) )
 
 def get_curves(var_name):
-	file = ROOT.TFile.Open("TChiWH_%s_limit_scan.root"%var_name)
+	#file = ROOT.TFile.Open("TChiWH_%s_limit_scan.root"%var_name)
+	file = ROOT.TFile.Open("TChiWH_unblind_dataCR_limit_scan_smooth1_%s.root"%var_name)
 	central = file.Get("TChiWHExpectedLimit")
 	up = file.Get("TChiWHExpectedLimitUp")
 	down = file.Get("TChiWHExpectedLimitDown")

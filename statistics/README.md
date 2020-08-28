@@ -16,6 +16,11 @@ Make sure your statistics/setup.sh file points to the location of your CMSSW rel
 	source setup.sh
 	./scan.sh  <name_of_variation_folder>
 
+To mask individual channels for studies, do
+```
+./scan.sh  <name_of_variation_folder> mask_<ch1_to_mask>=1,mask_<ch2_to_mask>=1
+```
+
 ```scan.sh``` will first convert all datacards into workspaces, and then call ```scan_point.py``` to generate and execute the appropriate combine commands. The outputs will be stored in a file called limits.txt inside the particular variation folder. There is the option to skip the workspace-making step by passing "0" after the variation folder name.
 
 
