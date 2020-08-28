@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 #datacard directory
-dir_datacards = "../statistics/testdir/datacards/"
+dir_datacards = "../statistics/cardsforDaniel/datacards/"
 list_datacards = os.listdir(dir_datacards)
 list_datacards.sort(key=lambda x: (x,len(x)))
 
