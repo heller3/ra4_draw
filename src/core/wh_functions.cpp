@@ -802,61 +802,6 @@ float deepTag2018 = 0.8365;
       return nloose;
     });
 
-  float deepTag2016 = 0.8945;
-  float deepTag2017 = 0.8695;
-  float deepTag2018 = 0.8365;
-
-  const NamedFunc higgsMistagSF("higgsMistagSF",[](const Baby &b) -> NamedFunc::ScalarType{
-      // based on method 1a of https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods
-      float PData=1.;
-      float PMC=1.;
-      float eff=0.;
-      float SF=1.;
-      float SF_unc=0.;
-      for (unsigned i(0); i<b.FatJet_pt_nom()->size(); i++){
-        int nBinFat=0;
-	if (b.FatJet_pt_nom()->at(i) > 250){
-	  for (unsigned j(0); j<b.ak4pfjets_eta()->size(); j++){
-	    if (deltaR(b.FatJet_eta()->at(i),b.FatJet_phi()->at(i),b.ak4pfjets_eta()->at(j),b.ak4pfjets_phi()->at(j))<0.8){
-	      if(b.ak4pfjets_deepCSV()->at(j)>(medDeepCSV2017*(b.year()==2017) + medDeepCSV2016*(b.year()==2016) + medDeepCSV2018*(b.year()==2018))){ //Then find closest gen b
-		nBinFat++;
-	      }
-	    }
-	  }
-        }
-        if (nBinFat==0){
-	  eff=0.0;
-	  SF=1.;
-	  SF_unc=0.;
-        }
-        else if (nBinFat==1){
-	  eff=0.25;
-	  SF=1.13;
-	  SF_unc=0.28;
-        }
-        else if (nBinFat==2){
-	  eff=0.67;
-	  SF=0.95;
-	  SF_unc=0.08;
-        }
-        //else {eff=0.;} // this should really never happen
-	
-        int delta;
-        delta=0;
-        if ( b.FatJet_deepTagMD_HbbvsQCD()->at(i)>(deepTag2017*(b.year()==2017) + deepTag2016*(b.year()==2016) + deepTag2018*(b.year()==2018) ) && eff>0){
-	  PMC *= eff;
-	  PData *= eff*(SF+delta*SF_unc);
-        }
-        else {
-	  PMC *= (1-eff);
-	  PData *= (1-eff*(SF+delta*SF_unc));
-        }
-      }
-      float weight=PData/PMC;
-      //     printf("Weight: %f\n", weight);
-      return weight;
-    });
-
   std::vector<unsigned> binsSF = {200,300,400,500,600};
   std::vector<float> const signalSF2016 = {0.99, 1.00, 0.97, 0.91, 0.95};
   std::vector<float> const signalSF2016_unc = {0.04, 0.06, 0.03, 0.05, 0.04};

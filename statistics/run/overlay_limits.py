@@ -34,29 +34,42 @@ six=ROOT.TColor(2006,0.906,0.878,0.094)
 colors = [1,2001,2002,2003,2004,2005,2006,6,2,3,4,6,7,5,1,8,9,29,38,46,1,2001,2002,2003,2004,2005,2006]
 
 plot_name = "overlay.pdf"
-variation_names = ["all", "2jet", "3jet", "boosted"]
-variation_titles = ["all SR","only 2 jet","only 3 jet","only boosted"]
+variation_names = ["all", "2jet", "3jet", "boosted", "2016", "ATLAS"]
+variation_titles = ["All signal regions","N_{jet}=2 regions only (N_{H}=0 and N_{H}=1)","N_{jet}=3 regions only (N_{H}=0 and N_{H}=1)","N_{H}=1 regions only", "2016 analysis (SUS-16-043)", "ATLAS 139fb^{-1}"]
 xparticle = "#lower[-0.12]{#tilde{#chi}}#lower[0.2]{#scale[0.85]{^{0}}}#kern[-1.3]{#scale[0.85]{_{2}}}";
 yparticle = "#lower[-0.12]{#tilde{#chi}}#lower[0.2]{#scale[0.85]{^{0}}}#kern[-1.3]{#scale[0.85]{_{1}}}";
 
 def cosmetic_tgraph(graph,colorindex,central=True):
-	graph.SetLineColor(colors[colorindex])
-	graph.SetMarkerColor(colors[colorindex])
-	graph.SetMarkerSize(0.75)
-	graph.SetMarkerStyle(20)
-	if not central:
-		graph.SetLineWidth(1)
-	# 	graph.SetMarkerSize(2.5)
-	# 	graph.SetMarkerStyle(29)
-	graph.SetTitle("; %s; %s" %(xparticle,yparticle) )
+    graph.SetLineColor(colors[colorindex])
+    graph.SetMarkerColor(colors[colorindex])
+    graph.SetMarkerSize(0.75)
+    graph.SetMarkerStyle(20)
+    if not central:
+        graph.SetLineWidth(1)
+        graph.SetLineStyle(2)
+    else:
+        graph.SetLineWidth(5)
+    # 	graph.SetMarkerSize(2.5)
+    # 	graph.SetMarkerStyle(29)
+    graph.SetTitle("; %s; %s" %(xparticle,yparticle) )
 
 def get_curves(var_name):
-	#file = ROOT.TFile.Open("TChiWH_%s_limit_scan.root"%var_name)
-	file = ROOT.TFile.Open("TChiWH_unblind_dataCR_limit_scan_smooth1_%s.root"%var_name)
-	central = file.Get("TChiWHExpectedLimit")
-	up = file.Get("TChiWHExpectedLimitUp")
-	down = file.Get("TChiWHExpectedLimitDown")
-	return central,up,down
+    #file = ROOT.TFile.Open("TChiWH_%s_limit_scan.root"%var_name)
+    file = ROOT.TFile.Open("TChiWH_unblind_dataCR_limit_scan_smooth1_%s.root"%var_name)
+    if var_name == "2016":
+        central = file.Get("gExp")
+        up = file.Get("gExpDn") # no up in file
+        down = file.Get("gExpDn")
+    elif var_name == "ATLAS":
+        central = file.Get("exp")
+        up = file.Get("exp") # no up in file
+        down = file.Get("exp")
+        #print central
+    else:
+        central = file.Get("TChiWHExpectedLimit")
+        up = file.Get("TChiWHExpectedLimitUp")
+        down = file.Get("TChiWHExpectedLimitDown")
+    return central,up,down
 
 
 c = ROOT.TCanvas("","",1000,800)
