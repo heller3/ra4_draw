@@ -317,13 +317,13 @@ void MakeLimitPlot(vector<double> vmx,
   TGraph cup = DrawContours(gup, 2, 2, 5, num_smooth_);
   TGraph cdown = DrawContours(gdown, 2, 2, 5, num_smooth_);
   TGraph cexp = DrawContours(gexp, 2, 1, 5, num_smooth_, 1.);
-  // TGraph cobsup = DrawContours(gobsup, 1, 2, 5, num_smooth_);
-  // TGraph cobsdown = DrawContours(gobsdown, 1, 2, 5, num_smooth_);
-  // TGraph cobs = DrawContours(gobs, 1, 1, 5, num_smooth_, 1.);
-    TLatex model = GetModelLabel(c.GetLeftMargin()+0.03, 1.-c.GetTopMargin()-0.03);
+  TGraph cobsup = DrawContours(gobsup, 1, 2, 5, num_smooth_);
+  TGraph cobsdown = DrawContours(gobsdown, 1, 2, 5, num_smooth_);
+  TGraph cobs = DrawContours(gobs, 1, 1, 5, num_smooth_, 1.);
+  TLatex model = GetModelLabel(c.GetLeftMargin()+0.03, 1.-c.GetTopMargin()-0.03);
 
   l.AddEntry(&cexp, "Expected", "l");
-//  l.AddEntry(&cobs, "Observed", "l");
+  l.AddEntry(&cobs, "Observed", "l");
 
   l.Draw("same");
 
@@ -336,13 +336,15 @@ void MakeLimitPlot(vector<double> vmx,
     filebase += to_string(num_smooth_);
   }
   model.Draw("same");
+  c.Print((filebase+"_test.root").c_str());
   c.Print((filebase+".pdf").c_str());
+  c.Print((filebase+".png").c_str());
   
   TFile file((filebase+".root").c_str(), "recreate");
   glim.GetHistogram()->Write((model_+"ObservedExcludedXsec").c_str());
-  // cobs.Write((model_+"ObservedLimit").c_str());
-  // cobsup.Write((model_+"ObservedLimitUp").c_str());
-  // cobsdown.Write((model_+"ObservedLimitDown").c_str());
+  cobs.Write((model_+"ObservedLimit").c_str());
+  cobsup.Write((model_+"ObservedLimitUp").c_str());
+  cobsdown.Write((model_+"ObservedLimitDown").c_str());
   cexp.Write((model_+"ExpectedLimit").c_str());
   cup.Write((model_+"ExpectedLimitUp").c_str());
   cdown.Write((model_+"ExpectedLimitDown").c_str());
