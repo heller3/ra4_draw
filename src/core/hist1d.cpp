@@ -1145,6 +1145,11 @@ std::vector<TH1D> Hist1D::GetBottomPlots(double &the_min, double &the_max) const
   case BottomType::ratio:
     for(auto &h: out){
       h.Divide(&denom);
+      for(int bin = 1; bin <= h.GetNbinsX(); ++bin){
+        if(h.GetBinContent(bin)==0 && h.GetBinError(bin)==0){
+          if(denom.GetBinContent(bin)>0) h.SetBinError(bin,1.841/denom.GetBinContent(bin)); //Garwood CI
+        }
+      }
     }
     break;
   case BottomType::diff:
