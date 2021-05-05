@@ -192,6 +192,10 @@ namespace WH_Functions{
   extern const NamedFunc fastsim_MET;
   extern const NamedFunc fastsim_MT;
   extern const NamedFunc fastsim_MCT;
+  //############################################################################
+  extern const NamedFunc signalHiggsMistagSF;
+  extern const NamedFunc signalHiggsMistagSFUp;
+  extern const NamedFunc signalHiggsMistagSFDown;
 
 
   extern const NamedFunc max_genjet_bquark_pt_ratio;

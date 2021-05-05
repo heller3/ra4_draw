@@ -379,9 +379,9 @@ void Hist1D::Print(double luminosity,
       bottom->cd();
 
 
-      if(bot_plots.size()>0) bot_plots.at(0).Draw("e0");
+      if(bot_plots.size()>0) bot_plots.at(0).Draw("E0");
       bottom_background.Draw("2 same");
-      string draw_opt = "e0 same";
+      string draw_opt = "E0 same";
       for(auto &h: bot_plots){
         h.Draw(draw_opt.c_str());
       }
@@ -1145,6 +1145,11 @@ std::vector<TH1D> Hist1D::GetBottomPlots(double &the_min, double &the_max) const
   case BottomType::ratio:
     for(auto &h: out){
       h.Divide(&denom);
+      for(int bin = 1; bin <= h.GetNbinsX(); ++bin){
+        if(h.GetBinContent(bin)==0 && h.GetBinError(bin)==0){
+          if(denom.GetBinContent(bin)>0) h.SetBinError(bin,1.841/denom.GetBinContent(bin)); //Garwood CI
+        }
+      }
     }
     break;
   case BottomType::diff:
