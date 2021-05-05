@@ -204,7 +204,7 @@ int main(){
       if(mass_plane->GetBinContent(ix,iy) > 0){
         int mchi = static_cast<int>(mass_plane->GetYaxis()->GetBinCenter(iy));
         int mlsp = static_cast<int>(mass_plane->GetXaxis()->GetBinCenter(ix));
-         // if (mchi!=800 || mlsp!=100) continue;
+        //if (mchi!=800) continue;
         pair_cuts.push_back(Form("mass_stop==%i&&mass_lsp==%i",mchi,mlsp));
         mass_tag.push_back(Form("mChi-%i_mLSP-%i_",mchi,mlsp));
         cout<<"Found mass point "<<mass_tag.back()<<endl;
@@ -228,7 +228,7 @@ int main(){
   if(original_analysis) analysis_tag="original";
   if(data_CR)analysis_tag+="_dataCR";
 
-  // analysis_tag+="fix_rmct_stat";
+   analysis_tag+="fix_Fall17Sig";
 
 
   // vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300"}; 
@@ -353,13 +353,13 @@ int main(){
 			
       // now take care of the 0b W+jets control region. no differentiation between boosted/resolved but the different met bin width
 			if(boosted){
-				if(ideepAK8==0) totcut = njetbins[inj] && metbins[imet] && w_control_region;
-				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins[inj] && boosted_metbins[imet] && w_control_region;
+				if(ideepAK8==0) totcut = njetbins_0b[inj] && metbins[imet] && w_control_region;
+				else if (ideepAK8>0 && imet<boosted_metbins.size()) totcut = njetbins_0b[inj] && boosted_metbins[imet] && w_control_region;
         else if (ideepAK8>0 && imet>=boosted_metbins.size()) continue; // stop adding boosted case after all boosted_metbins have been added.
         bin_name = "CR_0b_"+njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8];
 				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]+"_"+htagnames[ideepAK8]);
 			}
-			else{ totcut = njetbins[inj] && metbins[imet] && w_control_region;
+			else{ totcut = njetbins_0b[inj] && metbins[imet] && w_control_region;
         bin_name = "CR_0b_"+njetnames[inj]+"_"+metnames[imet];
 				// bin_names.push_back(njetnames[inj]+"_"+metnames[imet]);
 			}
@@ -517,7 +517,8 @@ int main(){
 		
       if(irow%3==1) cout<<"mCT ratio: "<<setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0],3)<< " +- "<<setw(7)<<RoundNumber(mct_transfer_errs[(irow-1)/3],3)<<", tot stat unc, MC CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[bkg][irow].Yield()),3) << ", CR data: "<<setw(7)<<allyields[data][irow].Yield()<<" "<< ", prediction:" << setw(7)<<RoundNumber(mct_transfer_factors[(irow-1)/3][0] * allyields[data][irow].Yield() ,3)<<", tot stat unc, data CR: "<<setw(7)<<RoundNumber(sqrt( pow(mct_transfer_errs[(irow-1)/3]/mct_transfer_factors[(irow-1)/3][0],2) + 1./allyields[data][irow].Yield()),3) << endl;	
 
-      vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; //should be somewhere else, just for test
+      vector<double> W_0b_data {384, 664, 280, 288, 181, 107, 262, 382, 120, 114, 74, 40}; // fixed triggers in 0b
+      //vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; //should be somewhere else, just for test
       if(irow%3==0) cout<<"R_W ratio for bin  "<<(irow/3)<<": "<<setw(7)<<RoundNumber(W_transfer_factors[irow/3][0],3)<< " +- "<<setw(7)<<RoundNumber(W_transfer_errs[irow/3],3)<<", tot stat unc, prediction:" << setw(7)<<RoundNumber(W_transfer_factors[irow/3][0] * W_0b_data[irow/3] ,3) << endl;	// not sure why we wait for irow%3==1, but ok.
 
 	    // allyields[w] = yield_table->Yield(proc_wjets.get(), lumi);
@@ -557,7 +558,8 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     uint nbins = bin_names.size();
 
     unsigned wname(21), wdist(2), wbin(12);
-    vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; // has to be double later on
+    vector<double> W_0b_data {384, 664, 280, 288, 181, 107, 262, 382, 120, 114, 74, 40}; // fixed triggers in 0b
+    //vector<double> W_0b_data {349, 595, 246, 250, 154, 96, 245, 352, 108, 103, 65, 39}; // has to be double later on
     for (size_t ibin(0); ibin<nbins; ibin+=3) 
       if(bin_names[ibin].length() > wbin) wbin = bin_names[ibin].length();
     wbin+=1;
@@ -567,7 +569,7 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     // --------- write header
     ofstream fcard(outpath);
     int nbg=3;
-    int nsyst = 89;//2 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
+    int nsyst = 86;//2 + nbins/3 + 3*nbins/3; //one nuisance for every met/njet bin + 3 per bin
     fcard<<"imax "<<nbins/3<<"  number of channels\n";
     fcard<<"jmax "<<nbg<<"  number of backgrounds\n";
     fcard<<"kmax "<<nsyst<<"  number of nuisance parameters\n";
@@ -600,13 +602,13 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
     fcard<<endl;
     vector<double> sys_rmct {1.15, 1.28, 1.18, 1.80, 1.35, 1.35, 1.15, 1.28, 1.18, 1.80, 1.35, 1.35};
     vector<double> stat_rmct {1.14, 1.24, 1.15, 1.15, 1.4, 1.9, 1.1, 1.2, 1.4, 1.3, 1.38, 1.75};
-    float sys_lumi = 1.05;
+    float sys_lumi = 1.018; // from https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiLUM
     //float sys_filler = 1.40;
     //float w_filler = 1.20;
-    float sys_W_HF = 1.20;
-    float sys_VV_xsec = 1.10;
+    //float sys_W_HF = 1.20;
+    //float sys_VV_xsec = 1.10;
     float sys_other_xsec = 1.25;
-    float sys_Higgs = 1.08;
+    //float sys_Higgs = 1.08;
     //float sys_sig_filler = 1.15;
     unsigned wsyst(14); unsigned wsystype(wname-wsyst);
     fcard<<endl<<left<<setw(wsyst)<<"lumi"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
@@ -701,24 +703,28 @@ void writeCard(vector<string> bin_names, vector<vector<GammaParams> > allyields,
        for(size_t j(0);j<(nbg+1)*nbins/3 - (k+1+(nbg+1)*(ibin/3));j++) fcard<<left<<setw(wbin)<<"-";
     }
 
+    fcard<<endl<<left<<setw(wsyst)<<"other_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
+    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_other_xsec);
+
+    /*
+    // all following uncertainties should be replaced with the actual values
     fcard<<endl<<left<<setw(wsyst)<<"W_HF"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_W_HF)<<left<<setw(wbin)<<'-';
     
     fcard<<endl<<left<<setw(wsyst)<<"VV_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_VV_xsec)<<left<<setw(wbin)<<'-';
 
-    fcard<<endl<<left<<setw(wsyst)<<"other_xsec"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
-    for (size_t ibin(0); ibin<nbins; ibin+=3) fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_other_xsec);
-
     fcard<<endl<<left<<setw(wsyst)<<"HiggsTag"<<setw(wsystype)<<"lnN"<<setw(wdist)<<" ";
     for (size_t ibin(0); ibin<nbins; ibin+=3){
-      if ((ibin/3)==1||(ibin/3)==3||(ibin/3)==7||(ibin/3)==9){
+      //if ((ibin/3)==1||(ibin/3)==3||(ibin/3)==7||(ibin/3)==9){
+      if (true){
         fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<Form("%.2f",sys_Higgs)<<left<<setw(wbin)<<'-';
       }
       else {
         fcard<<left<<setw(wbin)<<"-"<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-'<<left<<setw(wbin)<<'-';
       }
     }
+    */
 
     fcard<<endl<<endl;
 

@@ -13,6 +13,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Runs combine on workspace for single mass point")
     parser.add_argument("-i", "--infile", default="",
                         help="Workspace file to process")
+    parser.add_argument("-c", "--channelMasks", default="",
+                        help="Which channels to mask?")
 
     args = parser.parse_args()
     ## get directory and masses for this signal point
@@ -41,6 +43,8 @@ if __name__ == "__main__":
    # combine_cmd = ["combine", "-M AsymptoticLimits", "%s/%s"% (base_dir,wspace_name), "--noFitAsimov", "-n Pre"]
     # combine_cmd = "combine -M AsymptoticLimits %s/%s --noFitAsimov -n Pre -t -1" % (base_dir,wspace_name)
     combine_cmd = "combine -M AsymptoticLimits %s/%s --name Pre" % (base_dir,wspace_name)
+    if args.channelMasks:
+        combine_cmd += " --setParameters %s"%args.channelMasks
     print combine_cmd
     #print os.getcwd()
     #os.system(combine_cmd)

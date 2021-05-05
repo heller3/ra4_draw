@@ -10,6 +10,7 @@ then
 fi
 
 lim_dir=$1
+channel_mask=$2
 num_parallels=24
 make_workspaces=1
 
@@ -52,7 +53,7 @@ then
         filename="${filename%.*}"
         index=$((index+1))
 
-        text2workspace.py ${file} -o ${wspace_dir}/${filename}.root &
+        text2workspace.py ${file} -o ${wspace_dir}/${filename}.root --channel-masks &
         if (( $index % $num_parallels == 0 )) && [ $index -ne 0 ]
         then
             echo "Waiting for running jobs to finish..."
@@ -72,7 +73,12 @@ do
     filename="${filename%.*}"
     index=$((index+1))
 
-    ./scan_point.py -i $PWD/${wspace_dir}/${filename}.root &
+    if ((${#channel_mask}>0))
+    then
+        ./scan_point.py -i $PWD/${wspace_dir}/${filename}.root -c ${channel_mask} &
+    else
+        ./scan_point.py -i $PWD/${wspace_dir}/${filename}.root &
+    fi
     if (( $index % $num_parallels == 0 )) && [ $index -ne 0 ]
     then
         echo "Waiting for running jobs to finish..."

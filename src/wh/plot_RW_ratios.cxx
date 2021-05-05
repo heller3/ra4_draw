@@ -235,8 +235,8 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
 
   Palette colors("txt/colors.txt", "default");
   //vector<int> mcolors({kRed, kGreen+1, 4, kMagenta+2});
-  vector<int> mcolors({kGray+2,kRed-4,kRed-4, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange,kOrange,kBlue+2,kBlue+2,kGray,kGray,kRed+2,kRed+2});
-  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
+  vector<int> mcolors({kGray+2,kRed-4,kRed-4, kGreen-3,kGreen-3, kCyan-3,kCyan-3, kMagenta+2,kMagenta+2,kOrange,kOrange,kBlue+2,kBlue+2,kGray,kGray,kRed+2,kRed+2,kGreen+3,kGreen+3,kBlue-2,kBlue-2});
+  vector<int> styles({20, 22, 23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23,22,23});
   if(data_mode){
     mcolors = {1,kRed+1};
     styles= {20,20};
@@ -282,7 +282,7 @@ void plotRatio(vector<vector<vector<GammaParams> > > &allyields, oneplot &plotde
   line.SetLineStyle(3); line.SetLineWidth(1);
   line.DrawLine(minx, 1, maxx, 1);
   string syst_tag = "";
-  if(systematic_mode) syst_tag = "syst_";
+  if(systematic_mode) syst_tag = "syst_withH_";
   string fname="plots/ratio_"+syst_tag+CodeToPlainText(tag.Data())+"_"+CodeToPlainText(ytitle.Data())+"_"+plotdef.name.Data()+"_"+CodeToPlainText(plotdef.baseline.Name())+".pdf";
   can.SaveAs(fname.c_str());
   cout<<endl<<" open "<<fname<<endl;
@@ -351,11 +351,12 @@ int main(int argc, char *argv[]){
 
   auto  all_other = {mc2016_dir+"slim_*WW*.root"};
 
-  //auto all_wjets = {mc2016_dir+"slim_*WW*.root", mc2016_dir+"slim_*WZ*.root",mc2017_dir+"slim_*WW*.root", mc2017_dir+"slim_*WZ*.root",mc2018_dir+"slim_*WW*.root", mc2018_dir+"slim_*WZ*.root", mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_*W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
-  auto all_wjets = {mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
+
+  auto all_wjets = {mc2016_dir+"*slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim*W*Jets_NuPt200_s16v*.root",mc2017_dir+"*slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim*W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim*W*JetsToLNu_a18v1*",mc2018_dir+"slim*W*Jets_NuPt200_a18v1*.root",mc2016_dir+"slim*WW*.root", mc2016_dir+"slim*WZ*.root",mc2016_dir+"slim*ZZ*.root",mc2017_dir+"slim*WW*.root", mc2017_dir+"slim*WZ*.root",mc2017_dir+"slim*ZZ*.root",mc2018_dir+"slim*WW*.root", mc2018_dir+"slim*WZ*.root",mc2018_dir+"slim*ZZ*.root"};
+  //auto all_wjets = {mc2016_dir+"slim_W*JetsToLNu_s16v3*",mc2016_dir+"slim_W*Jets_NuPt200_s16v*.root",mc2017_dir+"slim_W*JetsToLNu_f17v2*",mc2017_dir+"slim_W*Jets_NuPt200_f17v2*.root",mc2018_dir+"slim_W*JetsToLNu_a18v1*",mc2018_dir+"slim_*W*Jets_NuPt200_a18v1*.root"};
 
   //// Contributions
-  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch"&&baselinef); // evt!=74125994
+  auto proc_wjets = Process::MakeShared<Baby_full>("W+jets 2016-2018", Process::Type::background, kCyan-3, all_wjets,"stitch&&evt!=74125994"&&baselinef);
   auto proc_top = Process::MakeShared<Baby_full>("top 2016-2018", Process::Type::background, kRed,all_top,"stitch"&&baselinef);
   auto proc_other = Process::MakeShared<Baby_full>("TTV and VV 2016-2018", Process::Type::background, kRed,all_other,baselinef);
   auto proc_data =  Process::MakeShared<Baby_full>("Data", Process::Type::data, colors("data"),{data2016_dir+"slim_*data_2016*.root",data2017_dir+"slim_*data_2017*.root",data2018_dir+"slim_*data_2018*.root"},baselinef&&"(HLT_SingleEl==1||HLT_SingleMu==1||HLT_MET_MHT==1)");
@@ -382,11 +383,11 @@ int main(int argc, char *argv[]){
 
   // Numerator definitaions
   string num_string = "pfmet>125&&mt_met_lep>150&&mct>200&&mbb>90&&mbb<150&&ngoodbtags==2";
-  NamedFunc numerator           = num_string;
-  NamedFunc jdown_numerator     = JMEvariation(num_string, "jdown");
-  NamedFunc jup_numerator       = JMEvariation(num_string, "jup");
-  NamedFunc resup_numerator     = METvariation(num_string, "resup");
-  NamedFunc resdown_numerator   = METvariation(num_string, "resdown");
+  NamedFunc numerator           = num_string && LeadingNonBJetPt_med<300.;
+  NamedFunc jdown_numerator     = JMEvariation(num_string, "jdown")&&LeadingNonBJetPt_med<300.;
+  NamedFunc jup_numerator       = JMEvariation(num_string, "jup")&&LeadingNonBJetPt_med<300.;
+  NamedFunc resup_numerator     = METvariation(num_string, "resup")&&LeadingNonBJetPt_med<300.;
+  NamedFunc resdown_numerator   = METvariation(num_string, "resdown")&&LeadingNonBJetPt_med<300.;
   
 
   vector<NamedFunc> deepAK8bins = {"nHiggs==0","nHiggs>=1"};
@@ -394,9 +395,9 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> jdown_deepAK8bins = {"jdown_nHiggs==0","jdown_nHiggs>=1"};
 
   // variations for 3rd jet missing - small effect?
-  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
-  vector<NamedFunc> jup_njetbins = {"jup_ngoodjets==2","jup_ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
-  vector<NamedFunc> jdown_njetbins = {"jdown_ngoodjets==2","jdown_ngoodjets==3"&&LeadingNonBJetPt_med<300.}; 
+  vector<NamedFunc> njetbins = {"ngoodjets==2","ngoodjets==3"}; 
+  vector<NamedFunc> jup_njetbins = {"jup_ngoodjets==2","jup_ngoodjets==3"}; 
+  vector<NamedFunc> jdown_njetbins = {"jdown_ngoodjets==2","jdown_ngoodjets==3"}; 
  
   vector<NamedFunc> metbins = {"pfmet>125&&pfmet<=200","pfmet>200&&pfmet<=300","pfmet>300&&pfmet<=400","pfmet>400"};
   vector<NamedFunc> jup_metbins = {"pfmet_jup>125&&pfmet_jup<=200","pfmet_jup>200&&pfmet_jup<=300","pfmet_jup>300&&pfmet_jup<=400","pfmet_jup>400"};
@@ -419,9 +420,9 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> numerators = {numerator,numerator,numerator,numerator};
   vector<NamedFunc> numerators_0H = {numerator&&deepAK8bins[0],numerator&&deepAK8bins[0],numerator&&deepAK8bins[0],numerator&&deepAK8bins[0]};
   vector<NamedFunc> jup_numerators = {jup_numerator,jup_numerator,jup_numerator,jup_numerator};
-  vector<NamedFunc> jup_numerators_0H = {jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0],jup_numerator&&deepAK8bins[0]};
+  vector<NamedFunc> jup_numerators_0H = {jup_numerator&&jup_deepAK8bins[0],jup_numerator&&jup_deepAK8bins[0],jup_numerator&&jup_deepAK8bins[0],jup_numerator&&jup_deepAK8bins[0]};
   vector<NamedFunc> jdown_numerators = {jdown_numerator,jdown_numerator,jdown_numerator,jdown_numerator};
-  vector<NamedFunc> jdown_numerators_0H = {jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0],jdown_numerator&&deepAK8bins[0]};
+  vector<NamedFunc> jdown_numerators_0H = {jdown_numerator&&jdown_deepAK8bins[0],jdown_numerator&&jdown_deepAK8bins[0],jdown_numerator&&jdown_deepAK8bins[0],jdown_numerator&&jdown_deepAK8bins[0]};
   vector<NamedFunc> resup_numerators = {resup_numerator,resup_numerator,resup_numerator,resup_numerator};
   vector<NamedFunc> resup_numerators_0H = {resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0],resup_numerator&&deepAK8bins[0]};
   vector<NamedFunc> resdown_numerators = {resdown_numerator,resdown_numerator,resdown_numerator,resdown_numerator};
@@ -430,9 +431,9 @@ int main(int argc, char *argv[]){
   vector<NamedFunc> numerators_boosted = {numerator,numerator,numerator,numerator};
   vector<NamedFunc> numerators_boosted_1H = {numerator&& deepAK8bins[1],numerator&& deepAK8bins[1],numerator&& deepAK8bins[1],numerator&& deepAK8bins[1]};
   vector<NamedFunc> jup_numerators_boosted = {jup_numerator,jup_numerator,jup_numerator,jup_numerator};
-  vector<NamedFunc> jup_numerators_boosted_1H = {jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1],jup_numerator&&deepAK8bins[1]};
+  vector<NamedFunc> jup_numerators_boosted_1H = {jup_numerator&&jup_deepAK8bins[1],jup_numerator&&jup_deepAK8bins[1],jup_numerator&&jup_deepAK8bins[1],jup_numerator&&jup_deepAK8bins[1]};
   vector<NamedFunc> jdown_numerators_boosted = {jdown_numerator,jdown_numerator,jdown_numerator,jdown_numerator};
-  vector<NamedFunc> jdown_numerators_boosted_1H = {jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1],jdown_numerator&&deepAK8bins[1]};
+  vector<NamedFunc> jdown_numerators_boosted_1H = {jdown_numerator&&jdown_deepAK8bins[1],jdown_numerator&&jdown_deepAK8bins[1],jdown_numerator&&jdown_deepAK8bins[1],jdown_numerator&&jdown_deepAK8bins[1]};
   vector<NamedFunc> resup_numerators_boosted = {resup_numerator,resup_numerator,resup_numerator,resup_numerator};
   vector<NamedFunc> resup_numerators_boosted_1H = {resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1],resup_numerator&&deepAK8bins[1]};
   vector<NamedFunc> resdown_numerators_boosted = {resdown_numerator,resdown_numerator,resdown_numerator,resdown_numerator};
@@ -502,26 +503,35 @@ int main(int argc, char *argv[]){
   vector<string> cuts;
   /////// Systematic weight mode //////
   if(systematic_mode){ // Same numerator and denominator, vary weights
-     weights= {  "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF * w_puUp" * yearWeight,
-                 "weight * w_higgsSF * w_puDown" * yearWeight,
-                 "weight * w_higgsSF* w_btagLFUp" * yearWeight,
-                 "weight * w_higgsSF* w_btagLFDown" * yearWeight,
-                 "weight * w_higgsSF* w_btagHFUp" * yearWeight,
-                 "weight * w_higgsSF* w_btagHFDown" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight,
-                 "weight * w_higgsSF" * yearWeight * (1+0.2*hasGenBs),
-                 "weight * w_higgsSF" * yearWeight * (1-0.2*hasGenBs),
-                 "weight * w_higgsSFUp" * yearWeight,
-                 "weight * w_higgsSFDown" * yearWeight,
-                 "weight * w_higgsSF" * VV_up * yearWeight,
-                 "weight * w_higgsSF" * VV_down * yearWeight,
-                  };
-     tag+="wjets1OnlyW_";
+     weights= {  "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_puUp"       * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_puDown"     * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagLFUp"   * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagLFDown" * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagHFUp"   * nanoWeight * yearWeight,
+                 "weight * trig_eff * w_btagHFDown" * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * (1+0.2*hasGenBs),
+                 "weight * trig_eff"                * nanoWeight * yearWeight * (1-0.2*hasGenBs),
+                 "weight * trig_eff"                * nanoWeight * yearWeight * higgsMistagSFUp,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * higgsMistagSFDown,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * VV_up,
+                 "weight * trig_eff"                * nanoWeight * yearWeight * VV_down,
+                };
+//     weights= {  "weight * trig_eff"                * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_q2Up"       * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_q2Down"     * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_pdfUp"      * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_pdfDown"    * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_alphasUp"      * nanoWeight * yearWeight,
+//                 "weight * trig_eff * w_alphasDown"    * nanoWeight * yearWeight,
+//                };
+     tag+="wjetsExp_";
      leglabels = {"Nominal", "PU up", "PU up/down", "b-tag mistag up","b-tag mistag up/down","b-tag HF up","b-tag HF up/down", "JES up", "JES up/down", "MET res up", "MET res up/down", "true b up", "true b up/down", "Higgs up", "Higgs up/down", "VV up", "VV up/down"};
+//     leglabels = {"Nominal", "Scale up", "Scale up/down", "PDF up", "PDF up/down", "a_S up", "a_S up/down"};
 
     // theory uncertainties (q2, alpha_s, PDF, ISR) tbd.
 
@@ -543,6 +553,16 @@ int main(int argc, char *argv[]){
                 "(1)",
                 "(1)",
             };
+
+//     cuts = {   "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//                "(1)",
+//            };
+
 
     nsels = 2*weights.size();
 
@@ -812,10 +832,7 @@ void printDebug(vector<vector<NamedFunc> > &allcuts, vector<vector<vector<GammaP
   cout<<"-- Baseline cuts: "<<baseline<<endl<<endl;
   for(size_t ibin=0; ibin<allcuts[0].size(); ibin++){
     for(size_t iabcd=0; iabcd<allcuts.size(); iabcd++){
-      cout<<"MC: "    <<setw(9)<<RoundNumber(allyields[bkg]  [iabcd][ibin].Yield(), digits)
-	  <<"  top: "<<setw(9)<<RoundNumber(allyields[top] [iabcd][ibin].Yield(), digits)
-	  <<"  wjets: "<<setw(9)<<RoundNumber(allyields[w] [iabcd][ibin].Yield(), digits)
-    <<" other: "<<setw(9)<<RoundNumber(allyields[other][iabcd][ibin].Yield(), digits);
+	  cout <<"wjets: "<<setw(9)<<RoundNumber(allyields[w] [iabcd][ibin].Yield(), digits) << " ";
 	  if(data_mode) cout<<" data: "<<setw(9)<<RoundNumber(allyields[data][iabcd][ibin].Yield(), digits)<<"  - "<< allcuts[iabcd][ibin].Name()<<endl;
 	  else cout<< allcuts[iabcd][ibin].Name()<<endl;
     } // Loop over ABCD cuts
